@@ -60,7 +60,8 @@ class Blockchain:
                 return False
 
             # Check that the Proof of Work is correct
-            if not self.valid_proof(last_block['proof'], block['proof'], last_block_hash):
+            if not self.valid_proof(last_block['proof'], block['proof'],
+                last_block_hash):
                 return False
 
             last_block = block
@@ -154,7 +155,8 @@ class Blockchain:
         :param block: Block
         """
 
-        # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
+        # We must make sure that the Dictionary is Ordered,
+        # or we'll have inconsistent hashes
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
@@ -243,7 +245,8 @@ def new_transaction():
         return 'Missing values', 400
 
     # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+    index = blockchain.new_transaction(values['sender'], values['recipient'],
+        values['amount'])
 
     response = {'message': f'Transaction will be added to Block {index}'}
     return jsonify(response), 201
@@ -298,7 +301,8 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
-    parser.add_argument('-p', '--port', default=5001, type=int, help='port to listen on')
+    parser.add_argument('-p', '--port', default=5001, type=int,
+                        help='port to listen on')
     args = parser.parse_args()
     port = args.port
 
