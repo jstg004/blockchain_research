@@ -14,6 +14,7 @@ from flask_cors import CORS
 import requests, hashlib, binascii
 
 
+
 MINING_SENDER = "THE BLOCKCHAIN"
 MINING_REWARD = 1
 MINING_DIFFICULTY = 2

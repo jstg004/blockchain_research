@@ -8,7 +8,6 @@ To make SnakeCoin an actual cryptocurrency:
 '''
 
 
-
 import json, requests
 import hashlib as hasher
 import datetime as date
