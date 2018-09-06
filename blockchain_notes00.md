@@ -16,7 +16,7 @@
 * interactive cost-functions
   * the server issues a challenge to the client (CHAL())
 
-### pubicly auditable
+### publicly auditable
 
 * publicly auditable cost-functions can be efficiently verified by any third
   party without any trapdoor or secret information
@@ -291,7 +291,7 @@
 
 * blockchain - a technology tool of distributed consensus
 
-#### Ethereum
+#### Ethereum description
 
 * intends to provide a blockchain with a built-in fully fledged
   Turing-complete programming language that can be used to create "contracts"
@@ -396,7 +396,7 @@
 
 #### bitcoin
 
-* bitcoin builds a decentralized currency system by combingin the state
+* bitcoin builds a decentralized currency system by combining the state
   transition system with a consensus system
   * this ensures that everyone agrees on the order of transactions
   * requires nodes in the network to continuously attempt to produce packages
@@ -433,7 +433,7 @@
     by A
   * then the block will be valid only if A comes before B
 
-#### the proof of work condition in bitcoin:
+#### the proof of work condition in bitcoin
 
 * the double-SHA256 hash of every block (treated as a 256-bit number)
   must be less than a dynamically adjusted target
@@ -556,7 +556,7 @@
 * can construct a script such as the following example:
   > "this Bitcoin UTXO is yours if you can provide an SPV proof that you sent
   > a Dogecoin transaction of this denomination to me"
-    * this allows for a decentralized cross-cryptocurrency exchange
+  * this allows for a decentralized cross-cryptocurrency exchange
 
 #### the scripting language in bitcoin has limitations
 
@@ -703,7 +703,7 @@
 
 #### messages
 
-* contracts have the ability to send messages to other contrats
+* contracts have the ability to send messages to other contracts
 * messages are virtual objects that are never serialized
 * messages only exist in the Ethereum execution environment
 * message contents:
@@ -712,7 +712,7 @@
   3. amount of ether to transfer alongside the message
   4. data field (optional)
   5. a ```STARTGAS``` value
-* a message is like a transaction that is producted by a contract instead of an
+* a message is like a transaction that is produced by a contract instead of an
   external actor
 * a message is produced when a contract is executing code and the ```CALL```
   opcode is executed
@@ -742,14 +742,14 @@
   3. initialize ```GAS = STARTGAS```
      * take off a certain quantity of ```gas``` per byte to pay for the bytes in
        the transaction
-  4. transfer the transaction balue from the sender's account to the receiving
+  4. transfer the transaction value from the sender's account to the receiving
      account
      * if receiving account does not yet exist then create it
      * if receiving account is a contract then run the contract's code
        * the contract's code runs to completion or until the execution runs out
          of ```gas```
   5. if the value transfer failed because the sender did not have enough funds
-     or the code execution ran out of gas then revert all state changes execpt the payment of the fees
+     or the code execution ran out of gas then revert all state changes except the payment of the fees
      * add these fees to the miner's account
   6. otherwise, refund the fees for all remaining gas to the sender
      * send the fees paid for ```gas``` consumed to the miner
