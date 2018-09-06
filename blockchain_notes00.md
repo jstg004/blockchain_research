@@ -304,7 +304,7 @@
       * other more complex applications involving having digital assets being
         directly controlled by a piece of code implementing smart contracts
       * blockchain-based decentralized autonomous organizations (DAOs)
-    * these systems can be created withe ethereum by writing a logic with just
+    * these systems can be created with Ethereum by writing a logic with just
       a few lines of code
 
 #### proof of work
@@ -520,7 +520,7 @@
     * while still being assured that all of the data is correct
   * this works because hashes propagate upward
     * if a malicious user attempts to swap in a fake transaction into the
-      bottom of a Markel tree, the node above will be changed, this error
+      bottom of a Merkle tree, the node above will be changed, this error
       propagates up the tree until it changes the root of the tree
       * changing the root changes the hash of the block and the protocol
         registered it as a completely different block
@@ -619,7 +619,7 @@
 3. _modularity_
    * parts of the Ethereum protocol should be designed to be as modular and
      separable as possible
-   * Etherium development should be maximally done so as to benefit the entire
+   * Ethereum development should be maximally done so as to benefit the entire
      cryptocurrency ecosystem
 4. _agility_
    * details of the Ethereum protocol are not set in stone
@@ -780,7 +780,7 @@
       3. initialize gas = 2000
          * if transaction is 170 bytes long and the byte-fee is 5
            then subtract 850 gas = 1150 gas left over
-      4. subract 10 more ether from the sender's account
+      4. subtract 10 more ether from the sender's account
          add this ether to the contract's account
       5. run the code
          * code checks if the contract's storage at index ```2``` is used or not
@@ -800,7 +800,7 @@
   * parent executions do not need to revert
   * this makes it safe for a contract to call another contract
     * _example:_
-      * if A calls B with G gass
+      * if A calls B with G gas
       * then A's execution is guaranteed to lose as most G gas
 * the opcode ```CREATE``` creates a contract
   * the execution mechanics of ```CREATE``` are similar to ```CALL```
@@ -872,7 +872,7 @@
 1. check if the previous block referenced exists and is valid
 2. check the timestamp of the block is greater than that of the referenced block
    and less then 15 minutes into the future
-3. check the block number, difficulty, transacrion root, uncle root, and gas
+3. check the block number, difficulty, transaction root, uncle root, and gas
    limit are valid
 4. check that the PoW on the block is valid
 5. let ```S[0]``` be the state at the end of the previous block
@@ -902,3 +902,5 @@
   * if a transaction is added into block ```B```
   * the code execution spawned by that transaction will be executed by all nodes
     (now and in future) that download and validate block ```B```
+
+#### applications
