@@ -904,3 +904,32 @@
     (now and in future) that download and validate block ```B```
 
 #### applications
+
+* 3 types of applications on top of Ethereum
+  1. financial applications
+     * provides users with more powerful ways of managing and entering into
+       contracts using their money
+     * financial derivatives, hedging contracts, savings wallets, wills
+  2. semi-financial applications
+     * money is involved but there is also a heavy non-monetary side to what is
+       being done
+     * such as self-enforcing bounties for solutions to computational problems
+  3. non-financial
+     * online voting and decentralized governance
+
+##### token systems
+
+* a currency/token system is a database with 1 operation:
+  * subtract X units from A and give X units to B
+    * A must have at least X units before the transaction
+    * the transaction must be approved by A
+  * basic code for implementing a token system in Serpent code:
+
+    ``` Serpent
+    def send(to, value):
+        if self.storage[msg.sender] >= value:
+            self.storage[msg.sender] = self.storage[msg.sender] - value
+            self.storage[to] = self.storage[to] + value
+    ```
+    * this is a literal implementation of the banking system state function
+
