@@ -917,7 +917,7 @@
   3. non-financial
      * online voting and decentralized governance
 
-##### token systems
+#### token systems
 
 * a currency/token system is a database with 1 operation:
   * subtract X units from A and give X units to B
@@ -933,3 +933,30 @@
     ```
     * this is a literal implementation of the banking system state function
 
+#### financial derivatives and stable-value currencies
+
+* financial derivatives are the most common application of smart contracts
+  * typically require reference to external price ticker
+    * hedging against the volatility of a cryptocurrency in respect to US dollar
+  * need to do this through a data feed maintained by a specific party
+    * this provides and interface that allows other contracts to send a message
+      to that contract and get back a response that provides the price
+  * _hedging contract_ _example:_
+    1. wait for party A to input 1000 ether
+    2. wait for party B to input 1000 ether
+    3. record the USD value of 1000 ether
+       * calculated by querying the data feed contract ($x)
+    4. after 30 days, allow A or B to reactivate the contract in order to send
+       $x worth of ether to A and the rest to B
+       * calculated by querying the data feed contract again, updated conversion
+* the above type of contract allows any non-cryptographic asset to be uplifted
+  into a cryptographic asset - if user can be trusted
+  * still have to rely on a trusted party?
+* issuers are not alway trustworthy
+* banking system can be too weak
+* a decentralized market of speculators bet that the price of a cryptographic
+  reference asset (like ETH) will go up
+  * this provides the role of funds to backup an asset
+  * hedging contract holds their funds in escrow
+  * this os not fully decentralized
+    * a trusted source is required for the price tracker
