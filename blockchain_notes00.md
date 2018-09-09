@@ -960,3 +960,174 @@
   * hedging contract holds their funds in escrow
   * this os not fully decentralized
     * a trusted source is required for the price tracker
+
+##### identity and reputation systems
+
+* _namecoin-like_ _contract_ _example:_
+
+  ''' none
+  def register(name, value):
+      if !self.storage[name]:
+          self.storage[name] = value
+  '''
+
+  * the above example is a database inside the Ethereum network that can be
+    added to, but not modified or removed from
+
+##### decentralized file storage
+
+* Ethereum contracts can allow for development of decentralized file storage
+  * individuals users can earn small quantities of money by renting out their own hard drives and unused space
+  * _example:_
+    1. the contract splits the desired data up into blocks
+       * each block is encrypted
+    2. a Merkle tree is built out of the data
+    3. a contract is created with the rule that every N blocks the contract
+      picks a random index in the Merkle tree
+       * the source of randomness is the previous block hash, accessible from
+         contract code
+    4. give X ether to the 1st entity to supply a transaction with a simplified
+       payment verification-like proof of ownership of the block at that
+       specific index in the tree
+    5. when a user wants to re-download their file, they use a micropayment
+       channel protocol to recover the file
+* -- I do not see this being practical without all data being almost everywhere       and the cryptography being really really good. --
+
+##### decentralized autonomous organizations (DAO)
+
+* a virtual entity that has a certain set of members or shareholders have the
+  right to spend the entity's funds and modify its code
+* members collectively decide how the organization allocates its funds
+* a piece of self-modifying code that changes only if 2/3rds of members agree
+  on a change
+  * de-facto mutability is achived by having chunks of the code in separate
+    contracts
+    * the address of which contracts to call stored in modifiable storage
+* there are 3 different transaction types distinguished by the data provided
+  in the transaction
+  1. ```[0,i,K,V]``` to register a proposal with index ```i``` to change the
+     address at storage index ```K``` to value ```V```
+  2. ```[1,i]``` to register a vote in favor of proposal ```i```
+  3. if enough votes in favor, then ```[2,i]``` to finalize proposal ```i```
+  * the contract has clauses for each of these
+    * maintains records of all open storage changes and a list of who voted for
+      them
+    * maintains a list of all members
+  * when any storage change gets 2/3rds of the vote, a finalizing transaction
+    executes the change
+* liquid democracy vote delegation:
+  * anyone can assign someone to vote for them
+  * alows DAO to grow organically
+  * -- To me this sounds like it could cause a lot of issues. --
+
+#### Greedy Heaviest Observed Subtree (GHOST) protocol
+
+* blockchains with fast confirmation times suffer from reduced security due to
+  high stale rate
+  * blocks take a certain time to propagate throught he network
+  * if miner A mins a block and then miner B mines another block before miner
+    A's block propagates to B, miner B's blocks end up wasted and will not
+    contribute to network security 
+* centralization issue:
+  * if miner A is a mining pool with 30% hashpower and B has 10% hashpower,
+    miner A will have a risk of producing a stale block 70% of the time
+    * B will have the risk of producing a stale block 90% of the time
+    * if block is short enough for the stale rate to be high, A will be
+      substantially more efficient by virue of its size
+* GHOST seeks to solve this by including stale blocks in the calculation of
+  which chain is the longest
+  * the parent and further ancestors of a block and the stale descendants of
+    the block's ancestor are added to the calculation of which blocks has the
+    largest total proof of work backing it
+  * Ethereum also provides block rewards to stales
+    * a stale block receives 87.5% of its base reward
+    * the nephew block that includes the stale block receives the remaining
+      12.5%
+    * transaction fees are not awarded to uncles
+* in Ethereum the GHOST protocol only goes down 7 levels and is defined as:
+  * a block must specify a parent and must specify 0 or more uncles
+  * an uncle included in block ```B``` must have the following properties:
+    * must be a direct child of the ```k```-th generation ancestor of ```B```
+      where ```2 <= k <= 7```
+    * cannot be an ancestor of ```B```
+    * uncle must be a valid block header
+    * uncle must be different from all uncles included in previous blocks
+      * all other uncles included in the same block (non-double-inclusion)
+  * for every uncle ```U``` in block ```B``` gets an addtional 3.125% added to
+    its coinbase reward
+    * the miner U gets 93.75% of a standard coinbase reward
+
+#### fees
+
+* every transaction published into the blockchain imposes on the network the
+  cost of needed to download and verify it
+  * there is a need for a regulatory mechanism to prevent abuse
+    * this typically involves transaction fees
+* bitcoin has voluntary fees
+  * miners act as the gatekeepers and set dynamic minimums
+  * supply and demand between miners and transaction senders determine the price
+  * every transaction that a miner includes will need to be processed by every
+    node in the network
+    * majority of the cost of transaction processing ir created by 1rd parties
+    * this can be canceled out:
+      1. a transaction leads to ```k``` operations, offering the reward ```kR```
+         to any miner that includes it where ```R``` is set by the sender and
+         ```k``` and ```R``` are visible to the miner beforehand
+      2. an operation has a processing cost of ```C``` to any node
+         * all nodes have equal efficiency
+      3. ```N``` mining nodes, each with exactly equal processing power
+      4. no non-mining full nodes exist
+      * a miner would be willing to process a transaction if the expected reward
+        is greater than the cost
+      * expected reward is ```kR/N```
+        * miner has ```1/N``` chance of processing the next block
+      * processing cost for the miner is ```kC```
+      * miners will include transactions where ```kR/N > kC``` or ```R > NC```
+        * ```R``` is the per-operation fee provided by the sender
+        * ```NC``` is the cost to the entire network together of processing an
+          operation
+      * miners have the incentive to include only those transactions for which
+        total utilitarian benefit exceeds the cost
+    * deviations from the above assumptions:
+      1. miner pays a higher cost to process the transaction than the other
+         verifying nodes
+         * extra verification time delays block propagation - increases chances
+           the block will become a stale
+         * provides a tendency for the miner to include fewer transactions
+      2. non-mining full nodes exist
+         * increases ```NC```
+      3. mining power distribution may end up radically inegalitarian in
+         practice
+      4. malicious actors can set up contracts where their cost is much lower
+         than the cost paid by other verifying nodes
+      * #1 and #2 cancel eachother out
+      * to solve the issues in #3 and #4a floating cap is implemented
+        * no block can have more operations than ```BLK_LIMIT_FACTOR``` times
+          the long-term exponential moving average
+
+          ``` none
+          blk.oplimit = floor((blk.parent.oplimit * (EMAFACTOR - 1) +
+              floor(parent.opcount + BLK_LIMIT_FACTOR))) / EMA_FACTOR)
+          ```
+
+          * ```BLK_LIMIT_FACTOR``` and ```EMA_FACTOR``` are constants that will
+            be set to 65536 and 1.5, but can change
+* in bitcoin larger blocks take longer to propagate
+  * larger blocks have a higher probability of becoming stales
+* in Ethereum highly gas-consuming blocks can also take longer to propagate
+  * physically larger
+  * take longer to process the transaction state transitions to validate
+
+#### computing and Turing-completeness
+
+* EVM code can encode any computation that can be conceivably caried out
+* EVM allows looping in 2 ways:
+  1. ```JUMP``` instruction aloows the program to jump back to a previous spot
+     in the code
+     * ```JUMPI``` instruction performs conditional jumping
+       * allows for statements like: ```while x < 27: x = x * 2```
+  2. contracts can call other contracts
+     * this could cause a halting problem
+  * solution requires a transaction to set a max number of computational steps
+    * if execution take s longer, then computation is reverted but fees are
+      still paid
