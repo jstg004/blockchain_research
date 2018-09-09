@@ -917,7 +917,7 @@
   3. non-financial
      * online voting and decentralized governance
 
-#### token systems
+##### token systems
 
 * a currency/token system is a database with 1 operation:
   * subtract X units from A and give X units to B
@@ -933,7 +933,7 @@
     ```
     * this is a literal implementation of the banking system state function
 
-#### financial derivatives and stable-value currencies
+##### financial derivatives and stable-value currencies
 
 * financial derivatives are the most common application of smart contracts
   * typically require reference to external price ticker
