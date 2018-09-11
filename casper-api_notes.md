@@ -338,3 +338,70 @@
          * this CST is taken out of circulation
        * a share of the remaining CST is bought and sold by traders
   3. CST velocity of circulation
+     * turnover ratio of CST characterizes the number of times on CST can be
+       used in 1 year
+     * as data volumes increase - providers will be keeping their CST and
+       reserving them in the system
+     * CST value is dependent on the amount of CST reserved by providers
+     * CST capacity is determined by Casper API  based on the current CST market
+       value
+     * the Casper API cannot change CST capacity on the fly
+       * CST capacity update is set to 1 month
+     * CST capacity change is by design one of market-making instruments along
+       with CST sales by the Reserve Fund of the system
+
+### market-making logic
+
+* the Casper API project implies the creation of a Reserve Fund that consists
+  of a certain amount of CST and USD
+  * this is considered one of the items of expenditure present in the project's
+    financial model
+
+#### Fund's objectives
+
+* utilized for market-making and marketing
+1. market-making
+   * implies certain actions taken by the Casper API that directly or indirectly
+     affect the market value of CST
+   * Casper API market interventions follow strict logic and will be predicable
+     * ensures providers capacities are in use by 70% on average
+     * ensures a CST payback period of no longer than 12 months for providers
+       by changing CST capacity according to current CST price on exchanges
+   * conducting market-making
+     1. monthly CST capacity correction is calculated  according to current CST
+        price on exchanges and the projected CST payback periord for providers
+        * if there is an increase in the CST payback period as result of an
+          increase in CST price - the Casper API increases CST capacity
+          * reduces the CST payback period (for providers) to its target
+            boundaries
+     2. Fund interventions in the market
+        * CST capacity change cannot occur more often than once a month
+          * some imbalances may be observed on the market
+          * inflow of new users can drive the value of CST up
+            * can make payback period longer for providers who sell CST at a
+              higher price
+          * during the rise in demand providers may begin leaving the system
+            * this increases the load on the remaining providers - destabilizes
+              the entire system
+          * Casper API uses its own CST to sell on exchanges during times of
+            price hikes until CST capacity can be changed
+        * if CST price drops within a month - Casper API will buy CST on
+          exchanges using Fund's fiat money
+          * once CST capacity changes - providers will either have a surplus or
+            a deficit of CST
+            * this leads to CST price correction
+          * Casper API buys enough CST for cheap in the amount required to
+            restore the initial amount of tokens in the Fund
+            * sells back during reverse interventions
+2. marketing
+   * the Fund's resources can be used to conduct marketing activities
+   * the Fund's CST can be allocated towards select DApps in the for of grants
+     * projects can later begin using the Casper API platform and strengthen
+       the company's (DApps?) position on the market
+
+#### Fund resources
+
+* amount of the Fund's resources allocated towards marketing also depend on the
+  sum raised during ICO and the number of CST sold
+* amount of fiat at the Fund's disposal depends on the sum raised during the ICO
+* amount of CST in the Reserve Fund depends on the amount of CST sold during ICO
