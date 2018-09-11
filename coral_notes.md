@@ -49,4 +49,32 @@
 
 ## the Coral Content Distribution Network
 
-* 
+* the CoralCDN is composed of 3 main parts
+  1. a network of cooperative HTTP proxies that handle user's requests
+  2. a network of DNS nameservers for ```nyucd.net``` that map clients to nearby
+     Coral HTTP proxies
+  3. the underlying Coral indexing infrastructure and clustering machinery on
+     which the above two parts are built
+
+### usage models
+
+* CoralCDN is transparent to clients
+
+#### publishers
+
+* a wb site published for ```x.com``` can change selected URLs in their pages
+  to Coralized URLs
+  * ```http://www.x.com.nyud.net:8090/y.jpg```
+
+#### third parties
+
+* an interested 3rd partycan Coralize a URL before publishing it
+  * causes all embedded relative links to use CoralCDN as well
+
+#### users
+
+* Coral-aware users can manually construct Coralized URLs when surfing slow or
+  overloaded web sites
+  * all relative links and HTTP redirects are automatically Coralized
+
+### system overview
