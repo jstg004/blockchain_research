@@ -180,3 +180,161 @@
   * not rewarded for incoming connections, user uploads for free
   * user pays for monthly file storage and each download
 
+## finances and business
+
+### CST
+
+* provides the opportunity to perform in-system transactions
+* designed to allow greater system flexibility in real time
+  * provides grounds for future growth and development of the system
+* all CST tokens are issues during the ICO
+* may be divided up to 0.00000001 CST
+
+### CST token use cases
+
+* CST may be purchased, exchanged, sold, leased, or rented out
+* token holder may register in the system as a provider
+* providers can become a participant in the system by putting storage volumes
+  into the Casper API network
+  * 25.6GB of storage volume for each CST token
+  * rewarded in CST
+  * providers need to meet technical requirements
+    * server uptime and connection speed
+* any CST token holder is eligible to fully dispose the tokens
+* any Casper API use may lease their tokens or rent out to any Casper API user
+  * if leased, the lessee acquires te right to use the token
+    * just like any other user/provider
+    * lease in ensured by the smart contract
+    * lease price is based on market conditions
+* decentralized applications (DAapps)
+  * act as users of the service
+  * have separate fixed USD rates for data storage and transmission (GB/month)
+* the Casper API will provide payment processing and user access to network
+* the Casper API will withhold a certain part of incoming payments to ensure
+  the network and the software run normally
+  * the rest is converted to CST according to current exchange rate and sent to
+    the smart contract
+    * these tokens serve as a reward for the providers
+    * distributed among providers according to pricing and individual
+      contribution to the system
+* the system allows for providers to be rewarded in fiat currency
+  * have ability to put tokens back into circulation again
+* growing number of investors encourages token purchasing performed by Casper API
+  * contributes to token exchange rate increase
+* Casper API reservers 8% of the tokens and part of the funds raised during ICO
+  * this reserve ensures stability of the inner financial system
+  * helps the company provide a fully functioning service at the early stages
+    * if providers are not active enough
+  * allows for more stable CST/USD exchange rate
+
+### ICO - main terms and conditions
+
+* IDO is condicted on the Ethereum platform through a smart contract
+* CST token emission or mining is impossible after the ned of the ICO
+* if the system fails to reach the soft cap during the ICO
+  * raised funds will be returned to investors
+  * funds raised during Pre-ICO are non-refundable
+
+### providers compensation formula
+
+* if all the technical requirements for equipment and uptime are met:
+
+  ``` none
+  ([monthly rate for 1GB of storage] * [actual storage volume utilized] + 
+   [rate for 1GB transferred] * [actual data transmitted]) * 0.85/4
+  ```
+
+### CST value projection and CST holder privileges
+
+* long-term CST growth driver will be the volume of data within the system
+  * number of TB the users will purchase through the Casper API
+
+* the Fisher equation:
+  * MV = PQ where:
+    * M = money supply
+    * V = velocity of circulation
+    * P = price level in the economy
+    * Q = the output produced by the economy
+  * applying this equation to the Casper API economics assumes that PQ is the
+    volume of money transfers in the system that rely on CST
+  * money supply in this model:
+
+    ``` none
+    amount of CST in circulation * market exchange rate of CST/USD
+    ```
+
+* basic equation for CST/USD exchange rate projection:
+
+  ``` none
+  CST exchange rate =
+      USD transaction volume per year / CST in circulation /
+      CST velocity of circulation
+  ```
+
+* making a projection for each of 3 above figures:
+  1. USD transaction volume per year:
+     * provider storage and transfer serices are paid for in CST
+     * transaction volume is the target market volume for Casper API included in
+       in the financial model multiplied by the rates set in the system for
+       services
+     * Casper API allows users to pay for services in both CST or fiat money
+     * if user pays in fiat money - Casper API transfers CST for the provider
+       from the reserve fund or purchases CST on exchanges (if needed)
+       * if services are paid for with fiat currency - Casper API deducts a fee
+       * CST is purchased for the amount of money left over after the fee is
+         deducted
+  2. amount of CST in circulation
+     * not the total supply of CST on te market
+     * represents the CST in transactions within the system
+       * the CST that users buy to pay providers for the services
+       * the CST that providers sell to receive their revenue in fiat money
+     * relative categories for CST holders
+       * investors:
+         * purchased CST during the ICO (Pre-ICO or after on exchanges)
+         * hold tokens for long periods of time (1 - 5 years)
+         * this volume of CST is virtually out of the market
+       * providers:
+         * reserve CST in the system to provide their resources
+         * receive CST from users as rewards for their services provided
+         * may dispose of CST received for the following purposes:
+           * reserve further - increasing resources on offer in the system
+           * sell and take the revenue in fiat currencies - transactor
+           * keep the tokens to sell later at a higher price - trader
+           * keep the tokens and rent them out to other providers
+         * transactors within the system
+           * transactors are CST buys and sells linked to the system function
+             * users buying CST to pay for services
+             * providers selling the CST they earned
+         * Reserve Fund of the system
+           * serves as market maker
+           * this fund keeps a stable number of CST
+           * CST are sold during price hikes to be bought back later and restore
+             the previous amount of CST ni this fund
+         * traders
+           * those who buy CST for speculative reasons
+           * seek profit from price difference
+     * to determine the volume of CST in circulation:
+       * deduct the amount of tokens held by investors from the total amount on
+         the market
+       * deduct the CST stored in the Reserve Fund of the system
+         * in short-term - a fraction of this CST can be used for market-making
+         * in long-term - amount of CST in the Fund must be stable
+     * after deducting CST held by investors and the fund - a share of CST is
+       distributed among providers and traders with remainder of CST circulating
+       in transactions
+     * the amount of CST reserved by providers is determined by:
+       * storage volume in the system
+       * CST capacity - total capacity provider can put up after reserving 1 CST
+     * financial model includes a potential provider (data center) profit for
+       1TB of storage
+       * based on current CST capacity and CST exchange rate projections - the
+         payback period for providers per 1 CST is estimated
+       * the Casper API determines the CST capacity based on the resulting
+         payback period so that CST payback period stays within the target
+         boundaries
+       * with the resulting CST capacity and the data storage capacity utilized
+         in the system - the amount of CST that providers must reserve to
+         service a required storage volume is derived
+         * this CST is taken out of circulation
+       * a share of the remaining CST is bought and sold by traders
+  3. CST velocity of circulation
