@@ -14,7 +14,7 @@
 
 ### P2P architecture
 
-* all network participants connect to each other - relying on large nodes\
+* all network participants connect to each other - relying on large nodes
   * allows for some DDoS protection
 * no geographic limits
   * users are able to receive their data from the nearest provider
