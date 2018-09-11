@@ -78,3 +78,79 @@
   * all relative links and HTTP redirects are automatically Coralized
 
 ### system overview
+
+#### steps for a client to access a Coralized URL
+
+  1. client sends a DNS request for ```www.x.com.nyud.net``` to its local resolver
+  2. clients resolver attempts to resolve the host name using some Coral DNS
+     server(s)
+     * could start at one of the few registered under the ```.net``` domain
+  3. when a query is received - a Coral DNS server probes the client to
+     determine its round-trip-time and last few network hops
+  4. based on probe results - DNS server checks Coral to see if there are any
+     known nameservers or HTTP proxies near client's resolver
+  5. DNS server replies - returns and servers found through Coral
+     * if none are found - returns a random set of nameservers and proxies
+     * if DNS server is close to client - returns nodes that are close to itself
+  6. client's resolver returns the address of a Coral HTTP proxy for
+     ```www.x.com.nyud.net```
+  7. client sends the HTTP request ```http://www.x.com.nyud.net:8090/```
+     to the specified proxy
+     * if proxy is chaching the file locally - returns file and stops
+     * if not cached than process continues to step 8
+  8. proxy looks up web object's URL in Coral
+  9. if Coral returns the address of a node caching the object - proxy fetches
+     the object from this node
+     * if no address is returned - proxy downloads the object from the origin
+       server ```www.x.com```
+  10. proxy stores the web object and returns it to the client browser
+  11. proxy stores a reference to itself in Coral
+      * records the fact that it is now caching the URL
+
+### Coral indexing abstraction
+
+* DSHTs are designed for applications applications storing soft-state key/value
+  pairs - where multiple values may be stored under the same key
+  * the CoralCDN uses this mechanism to map a variety of keys to addresses of
+    CoralCDN nodes
+* each Coral node belongs to several distinct DSHTs - called clusters
+  * each cluster is characterized by a max desired network round-trip-time (RTT) - called diameter
+  * system is parameterized by a fixed hierarchy of diameters - known as levels
+  * every node is a member of 1 DSHT at each level
+* Coral queries nodes in higher-level fast clusters before those in lower-level
+  slower clusters
+  * this reduces latency of lookups and increases chances of returning values
+    stored by nearby nodes
+
+#### Coral interface for higher-level applications
+
+* ```put(key, val, ttl, [levels])```
+  * inserts a mapping from the key to some arbitrary value
+  * specifies the time-to-live of the reference
+  * caller can optionally specify a subset of the cluster hierarchy
+    * this restricts the operation to certain levels
+* ```get(key, [levels])```
+  * retrieves some subset of the values stored under a key
+  * can optionally specify a subset of the cluster hierarchy
+* ```nodes(level, count, [target], [services])```
+  * returns ```count``` neighbors belong to the node's cluster as specified by
+    ``level```
+  * ```target```- if supplied - specifies the IP address of a machine to which
+    the returned nodes would ideally be near
+  * Coral can probe ```target``` and exploit network topology hints stored in
+    DSHT to satisfy the request
+  * if ```services``` is specified - Coral will only return nodes running the
+    specidied service
+* ```levels()```
+  * returns the number of levels in Coral's hierarchy and their corresponding
+    RTT thresholds
+
+## application layer components
+
+* Coral DNS server directs browsers fetching Coralized URLs to Coral HTTP
+  proxies
+  * proxies exploit each others caches - minimize transfer latency and load on
+    origin web servers
+
+### Coral DNS server
+
