@@ -282,11 +282,43 @@
 
 ### hierarchical operations
 
+* several levels of DSHTs are used for locality-optimized routing and data
+  placement - these are called clusters
+* each Coral node has the same node ID in all clusters it belongs to
+  * a node projects its presence to the same location in each of its clusters
+  * this structure is reflected in Coral's basic routing infrastructure
+    * supports switching between a nodee's distinct DSHTs midway through a
+       lookup
+
+#### hierarchical retrieval algorithm
+
+* a requesting node ```R``` specifies the starting and stopping levels at which
+  Coral should search
+  * default: initiates the ```get``` query on its highest (L2) cluster to try
+    to take advantage of network locality
+  * if routing RPCs on this cluster hit some node storing key ```k```:
+    * the lookup halts at this point and returns corresponding stored value(s)
+      * this is done without-level clusters
+  * if a key is not found - the lookup will reach ```k```'s closest node
+    ```C2``` in this cluster - this indicates a failure at this level
+  * node ```R``` continues the search in its L1 cluster
+    * these clusters are usually concentric
+    * ```C2``` likely exists at the identical location in the identifier space
+      in all clusters
+  * ```R``` begins searching onward from ```C2``` in its L1 cluster
+    * already traversed the ID space up to ```C2```'s prefix
+
+#### hierarchical insertion algorithm
+
+* a node starts by performing a ```put``` on its L2 cluster
+  * nearby nodes can take advantage of locality
+  * this is only correct within the context of the local L2 cluster
+* 
 
 
 ### joining and managing clusters
 
-## implementation
+## implementatio
 
 ## evaluation
 
