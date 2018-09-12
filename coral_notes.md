@@ -313,12 +313,23 @@
 * a node starts by performing a ```put``` on its L2 cluster
   * nearby nodes can take advantage of locality
   * this is only correct within the context of the local L2 cluster
-* 
-
+* if the key is not already loaded - the node continues its insertion in the L1
+  cluster from the point at which the key was inserted in L2
+  * Coral traverses the ID space only once
+  * loose hierarchical cache p a lower level cluster contains nearly all data
+    stored in the higher level clusters to which its members also belong
+* the headers of every Coral RPC include the sender's cluster information
+  * identifier, age, and size estimate of each of its non-global clusters
+  * the recipient uses this information to demultiplex requests properly
+    * a recipient should only consider a ```put``` and ```get``` for those
+     levels on a cluster shared with the sender
+* nodes are added or removed from the local cluster specific routing tables
+  accordingly
+* cluster information is accumulated to drive cluster management
 
 ### joining and managing clusters
 
-## implementatio
+## implementation
 
 ## evaluation
 
