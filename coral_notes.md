@@ -154,3 +154,93 @@
 
 ### Coral DNS server
 
+* Coral DNS server (```dnssrv```) - returns IP addresses of Coral HTTP proxies
+  when browsers look up the host-names in Coralized URLs
+* attempts to return proxies near the requesting clients to improve locality
+  * whenever a DNS resolver (client) contacts a nearby ```dnssrv``` instance
+    the ```dnssrv``` returns proxies within an appropriate cluster and ensures
+    that future DNS requests from that client do not need to leae the cluster
+* using the ```nodes``` function - the ```dnssrv``` exploits Coral's on-the-fly
+  network measurement capabilities and stored topology hints to increase the
+  chances of clients discovering nearby DNS servers
+* every instance of ```dnssrv``` in an authoritative nameserver for the domain
+  ```nyucd.net```
+  * DNS maps any domain name ending in ```http.L2.L1.L0.nyucd.net``` to one or
+    more Coral HTTP proxies - (L2 = level 2, ect)
+    * for ```(n + 1)-level``` hierarchy - domain name extended out to ```Ln```
+    * these domains names can get unwieldy
+      * to aid this a DNS DNAME alias of ```nyud.net``` is established with a
+        target as ```http.L2.L1.L0.nyucd.net```
+        * this allows URLs to have more concise form
+        ```http://www.x.com.nyud.net:8090/```
+* to achieve locality - ```dnssrv``` measures its RTT to the resolver and then
+  categorizes it by level
+* the ```dnssrv``` returns the addresses of CoralProxies in the cluster whose
+  level corresponds to the client's level categorization
+  * if the RTT between the DNS client and the ```dnssrv``` is below the level-i
+    threshold (for the best i)
+    * ```dnssrv``` obtains a list of these nodes using the ```nodes``` function
+    * a ```dnssrv```` always returns CoralProxy addresses with short TTL fields
+* to achieve better locality:
+  * ```dnssrv``` also specifies the client's IP address as a target argument to
+    nodes
+    * causes Coral to probe the addresses of the last 5 network hops to the client - use this result to look for clustering hints in the DSHT
+* to avoid significantly delaying clients:
+  * Coral maps the netowrk hops using a built in traceroute type of mechanism
+    * combines concurrent probes and aggressive time-outs to minimize latency
+    * a Coral node caches results to avoid repeatedly probing the same client
+* the closer the ```dnssrv``` is to a client - the better its selection of
+  CoralProxy addresses will likely be for the client
+  * ```dnssrv``` exploits the authority section of DNS replies to lock a DNS
+    client into a good cluster whenever it sees a nearby ```dnssrv```
+* ```dnssrv``` selects the nameservers it returns from the appropriate cluster
+  level
+  * uses the ```target``` argument to exploit measurement and network hints
+  * gives nameservers in the authority section a long TTL
+    * this makes nearby ```dnssrv``` override any inferior nameservers that a
+      DNS server may be caching from previous queries
+    * if more distant than the level-1 timing threshold - ```dnssrv``` then
+      claims to return nameservers for domain ```L0.nyucd.net```
+    * clients closer than the level-1 timing threshold - returns nameservers for
+      ```L1.L0.nyucd.net```
+    * for clients closer the level-2 threshold - returns the nameservers for
+      domain ```L2.L1.L0.nyucd.net```
+  * DNS resolvers query the servers for the most specific known domain
+    * so the closer ```dnssrv``` instances to override the results of more
+      distant ones
+* CoralProxy addresses are returned with short TTL fields because browsers
+  do not handle bad HTTP servers well
+  * added precaustion to this - ```dnssrv``` only returns CoralProxy addresses
+    which it has recently verified 1st hand
+    * sometimes need to synchronously checking a proxy's status via UDP RPC
+      prior to replying to a DNS query
+* upstream bandwidth only clients can flag their proxy as non-recursive
+  * ```dnssrv``` will only return that proxy to clients on local networks
+
+### Coral HTTP proxy
+
+* CoralProxy satisfies HTTP requests for Coralized URLs
+* many Coral origin servers are likely to have slower network connections
+* Coral selects proxies only based on client locality
+  * CoralCDN is easier for proxy to fetch a particular URL
+* CoralProxy fetches web pages from other proxies whenever possible
+  * this minimizes load on origin servers
+  * each proxy keeps a local cache - so it can immediately fulfill requests
+    * when client requests a non-resident URL - CoralProxy 1st attempts to
+      locate a cached copy of the referenced resource which is using Coral
+      with the resource indexed by a hash of its URL
+    * if CoralProxy discovers 1 or more other proxies have the data
+      * then attempts to fetch the data from the proxy it 1st connects to
+    * if Coral provides no referrals or if no referrals return the data - then
+      CoralProxy fetches the resource directly from the origin
+* when CoralProxy fetches a web object it inserts a reference to itself in its
+  DSHT with a TTL of 20 seconds
+* once any CoralProxy obtains a complete file - it inserts a longer lived
+  reference to itself (something like 1 hour)
+  * these longer lived references overwrite shorter lived references
+  * can be stored on well selected nodes - even under high insertion load
+* CoralProxies periodically renew referrals to resources in their cache
+
+## Coral - hierarchical indexing system
+
+
