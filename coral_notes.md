@@ -243,4 +243,55 @@
 
 ## Coral - hierarchical indexing system
 
+### Coral's key-based routing layer
 
+* Coral's keys are opaque 160-bit ID values
+  * nodes are assigned IDs in the same 160-bit identifier space
+    * a node's ID is a hash of its IP address
+* a node is close to a key if the distance between the key and the node's ID is
+  small
+* Coral ```put``` operation stores a key/value pair at a node close to the key
+* Coral ```get``` operation searches for stored key/value pairs at nodes
+  successively closer to the key
+* every DSHT contains a routing table
+  * for any key ```k```, a node ```R```'s routing table allows it to find a node
+    closer to ```k```, unless ```R``` is already the closest node
+  * these routing tables are based on Kademlia
+    * Kademlia defines the distance between 2 values in the ID-space to be their
+      bitwise exclusive (XOR) - interpreted as an unsigned integer
+    * using XOR metric:
+      * IDs with longer matching prefixes (of most significant bits) are
+        numerically closer
+* the size of a node's routing table in a DSHT is logarithmic in the total
+
+### sloppy storage
+
+* the Coral sloppy storage technique caches key/value pairs at nodes whose IDs
+  are close to the key being referenced
+  * these cached values reduce hot spot congestion and tree saturation
+    throughout the indexing infrastructure
+    * frequently satisfy ```put``` and ```get``` requests at nodes other than
+      those closest to the key
+
+#### insertion algorithm
+
+* Coral performs a 2 phase operation to insert a key/value pair
+  * in the forward phase (1st phase) - Coral routes to nodes that are
+    successively closer to the key
+
+
+### hierarchical operations
+
+### joining and managing clusters
+
+## implementation
+
+## evaluation
+
+### server load
+
+### client latency
+
+### clustering
+
+### load balancing
