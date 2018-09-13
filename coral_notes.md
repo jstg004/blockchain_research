@@ -62,7 +62,7 @@
 
 #### publishers
 
-* a wb site published for ```x.com``` can change selected URLs in their pages
+* a web site published for ```x.com``` can change selected URLs in their pages
   to Coralized URLs
   * ```http://www.x.com.nyud.net:8090/y.jpg```
 
@@ -212,8 +212,8 @@
   do not handle bad HTTP servers well
   * added precaustion to this - ```dnssrv``` only returns CoralProxy addresses
     which it has recently verified 1st hand
-    * sometimes need to synchronously checking a proxy's status via UDP RPC
-      prior to replying to a DNS query
+    * sometimes need to synchronously checking a proxy's status via UDP
+    RPC (Remote Procedure Call) prior to replying to a DNS query
 * upstream bandwidth only clients can flag their proxy as non-recursive
   * ```dnssrv``` will only return that proxy to clients on local networks
 
@@ -328,6 +328,42 @@
 * cluster information is accumulated to drive cluster management
 
 ### joining and managing clusters
+
+* generally a peer contacts and existing node to join the system then a new
+  node makes several queries to send its routing tables
+* for non-global clusters:
+  * a node will only join an acceptable cluster
+    * acceptability requires that the latency to 80% of the nodes be lower
+      than the cluster's threshold
+    * a node can easily determine whether this condition holds by recording
+      minimum RTTs to some subset of nodes belonging to the cluster
+* a node ```R``` stores mappings form each router address to its own IP address
+  and UDP port number
+  * when a new node ```S``` (sharing a gateway with ```R```) joins the network
+    * if ```S``` is near ```R``` - then ```S``` finds 1 or more of ```R```'s
+      hints and cluster with the hint
+* nodes continuously collect clustering information form peers
+  * all RPCs include - RTTs, cluster membership, and estimate of cluster size
+  * every 5 minutes each node considers changing its cluster membership based
+    on the collected data
+  * if the collected data indicates that an alternative candidate cluster is
+    desireable
+    * then the node will validate the collected data by contacting
+      several nodes within the candidate cluster by routing to selected keys
+    * a node can form a new singleton cluster when the RTT constraints are not
+      met 50% of the time (when accessing its current cluster)
+* if probes indicate that 80% of a cluster's nodes are withing acceptable TTLs
+  and the cluster is larger - then it replaces the node's current cluster
+  * if multiple clusters are acceptable - then Coral chooses the largest cluster
+* Coral only has rough approximations of cluster size
+  * this is  based on its routing table size
+  * if nearby clusters ```A``` and ```B``` are of similar sizes - then
+    inaccurate estimations could lead to nodes oscillating back and forth
+    * to counter this Coral employs a preference function that shifts every hour
+* a node that switches clusteres remains in the routing tables of nodes in its
+  older cluster
+  * this allows old neighbors to still contact the node and learn of its new
+    cluster
 
 ## implementation
 
