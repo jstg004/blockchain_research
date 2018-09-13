@@ -44,3 +44,31 @@
 * trustee cannot determine how anyone voted
 
 ## functions
+
+* blind signatures include the features of true 2 key digital signature systems
+  combined with commutative style public key systems
+* the blind signature cryptostystem is comprised of the following functions:
+  1. a signing function ```s'``` known only to the signer
+     * the corresponding publically known invers ```s```
+     * ```s(s'(x)) = x```
+     * ```s``` gives no clue about ```s'```
+  2. a community function ```c``` and its inverse ```c'```
+     * both of these are known only to the provider
+     * ```c'(s'(c(x))) = s'(x)```, ```c(x)```, and ```s'``` give no clue about
+       ```x```
+  3. a redundancy checking predicate ````r```
+     * checks for sufficient redundancy to make searching for valid signatures
+       impractical
+
+## Protocol
+
+1. provider chooses ```x``` at random such that ```r(x)``` - forms ```c(x)```
+   and supplies ```c(x)``` to the signer
+2. signer signs ```c(x)``` by applying ```s'```
+   * then returns the signed matter ```s'(c(x))``` to the provider
+3. provider strips signed matter by application of ```c'```
+   * this yields ```c'(s'(c(x))) = s'(x)```
+4. anyone can check that the stripped matter ```s'(x)``` was formed by its
+   signer
+   * this is checked by applying the signer's public key ```s```
+     * ```r(s(s'(x)))```
