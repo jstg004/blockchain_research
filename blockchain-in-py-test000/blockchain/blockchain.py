@@ -71,7 +71,7 @@ class Blockchain:
             if transaction_verification:
                 self.transactions.append(transaction)
                 return len(self.chain) + 1
-        else:
+        else
             return False
 
     def create_block(self, nonce, previous_hash):
