@@ -90,3 +90,35 @@
        _**y != x<sub>i</sub>**_
      * the possibility that the same random number could be generated
        independently is ignored
+
+## untraceable payments system
+
+* the blind signature system can be used to make an untraceable payments system
+* the bank will sign anything with its private key
+  * anything signed is worth a fixed amount
+
+* bank, payer, and payee
+  * a single note is formed by the payer, the bank signs it, it is then stripped
+    by the payer and provided to the payee - this is cleared by the bank
+  1. payer chooses _**x**_ at random such that _**r(x)**_
+     * this forms the note _**c(x)**_
+  2. payer forwards the note _**c(x)**_ to the bank
+  3. the bank signs the note
+     * this forms _**s'(c(x))**_ and debits the payer's account
+  4. the bank returns the signed note _**s'(c(x))**_ to the payer
+  5. the payer strips the note by forming _**c'(s'(c(x))) = s'(x)**_
+  6. the payer checks the note by checking that _**s(s'(x)) = x**_
+     * if this equation is false then the payment can be stopped
+  7. the payer can make the payment by providing the note _**s'(x) directly to
+     the payee
+  8. the payee can check the note by forming _**r(s(s'(x)))**_
+     * the payment can be stopped if this is false
+  9. the payee forwards the note _**s'(x)**_ to the bank
+  10. the bank checks the note by forming _**r(s(s'(x)))**_
+      * the payment is stopped if this is false
+  11. the bank adds this note to a comprehensive list of cleared notes
+      * the payment is stopped if this note if already on this list
+  12. the bank credits the payees account
+  13. the bank informs the payee of the note acceptance
+* when the bank receives a note to be cleared from the payee - the bank does
+  not know which payer the note was originally issued to
