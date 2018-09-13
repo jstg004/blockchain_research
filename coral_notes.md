@@ -68,7 +68,7 @@
 
 #### third parties
 
-* an interested 3rd partycan Coralize a URL before publishing it
+* an interested 3rd party can Coralize a URL before publishing it
   * causes all embedded relative links to use CoralCDN as well
 
 #### users
@@ -96,7 +96,7 @@
      ```www.x.com.nyud.net```
   7. client sends the HTTP request ```http://www.x.com.nyud.net:8090/```
      to the specified proxy
-     * if proxy is chaching the file locally - returns file and stops
+     * if proxy is caching the file locally - returns file and stops
      * if not cached than process continues to step 8
   8. proxy looks up web object's URL in Coral
   9. if Coral returns the address of a node caching the object - proxy fetches
@@ -140,7 +140,7 @@
   * Coral can probe ```target``` and exploit network topology hints stored in
     DSHT to satisfy the request
   * if ```services``` is specified - Coral will only return nodes running the
-    specidied service
+    specified service
 * ```levels()```
   * returns the number of levels in Coral's hierarchy and their corresponding
     RTT thresholds
@@ -159,7 +159,7 @@
 * attempts to return proxies near the requesting clients to improve locality
   * whenever a DNS resolver (client) contacts a nearby ```dnssrv``` instance
     the ```dnssrv``` returns proxies within an appropriate cluster and ensures
-    that future DNS requests from that client do not need to leae the cluster
+    that future DNS requests from that client do not need to leave the cluster
 * using the ```nodes``` function - the ```dnssrv``` exploits Coral's on-the-fly
   network measurement capabilities and stored topology hints to increase the
   chances of clients discovering nearby DNS servers
@@ -186,7 +186,7 @@
     nodes
     * causes Coral to probe the addresses of the last 5 network hops to the client - use this result to look for clustering hints in the DSHT
 * to avoid significantly delaying clients:
-  * Coral maps the netowrk hops using a built in traceroute type of mechanism
+  * Coral maps the network hops using a built in traceroute type of mechanism
     * combines concurrent probes and aggressive time-outs to minimize latency
     * a Coral node caches results to avoid repeatedly probing the same client
 * the closer the ```dnssrv``` is to a client - the better its selection of
@@ -210,7 +210,7 @@
       distant ones
 * CoralProxy addresses are returned with short TTL fields because browsers
   do not handle bad HTTP servers well
-  * added precaustion to this - ```dnssrv``` only returns CoralProxy addresses
+  * added precaution to this - ```dnssrv``` only returns CoralProxy addresses
     which it has recently verified 1st hand
     * sometimes need to synchronously checking a proxy's status via UDP
     RPC (Remote Procedure Call) prior to replying to a DNS query
@@ -287,7 +287,7 @@
 * each Coral node has the same node ID in all clusters it belongs to
   * a node projects its presence to the same location in each of its clusters
   * this structure is reflected in Coral's basic routing infrastructure
-    * supports switching between a nodee's distinct DSHTs midway through a
+    * supports switching between a node's distinct DSHTs midway through a
        lookup
 
 #### hierarchical retrieval algorithm
@@ -360,7 +360,7 @@
   * if nearby clusters ```A``` and ```B``` are of similar sizes - then
     inaccurate estimations could lead to nodes oscillating back and forth
     * to counter this Coral employs a preference function that shifts every hour
-* a node that switches clusteres remains in the routing tables of nodes in its
+* a node that switches clusters remains in the routing tables of nodes in its
   older cluster
   * this allows old neighbors to still contact the node and learn of its new
     cluster
