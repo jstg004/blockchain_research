@@ -39,7 +39,7 @@
    them and check the signatures
 * the trustee never saw the ballot slips while signing them
   * they cannot know anything about the correspondence between the ballot
-    containing envelopes signed and the ballots made public\
+    containing envelopes signed and the ballots made public
 * trustee cannot determine how anyone voted
 
 ## functions
