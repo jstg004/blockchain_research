@@ -1,5 +1,7 @@
 # notes from _A Next-Generation Smart Contract & Decentralized Application Platform_
 
+* by Vitalik Buterin ~ 2013
+
 ## history
 
 * blockchain - a technology tool of distributed consensus

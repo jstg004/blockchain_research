@@ -1,5 +1,7 @@
 # notes from _Hashcash - A Denial of Service Counter-Measure_
 
+* by Adam Back ~ 2002
+
 ## cost-functions
 
 * efficiently verifiable as well as expensive to compute

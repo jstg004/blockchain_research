@@ -1,5 +1,7 @@
 # notes from _Bitcoin: A Peer-to-Peer Electronic Cash System_
 
+* by Satoshi Nakamoto ~ 2008
+
 ## transactions
 
 * electronic coin is defined as a chain of digital signatures

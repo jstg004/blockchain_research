@@ -1,5 +1,9 @@
 # notes on _Democratizing content publication with Coral_
 
+* by Michael J. Freedman, Eric Freudenthal, and David Mazières ~ 2004
+
+## introduction
+
 * CoralCDN is a p2p content distribution network that allows a user to run a
   web site that offers high performance and meets large demands for a low price
   * volunteer sites that run CoralCDN automatically replicate content as a side
@@ -14,8 +18,6 @@
   * this is achieved through Coral
     * Coral is a latency-optimized hierarchical indexing infrastructure based on
       a novel abstraction - _distributed sloppy hash table_ (DSHT)
-
-## introduction
 
 * availability of content on the Internet is mostly a function of the cost
   shouldered by the publisher
