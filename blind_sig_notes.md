@@ -11,13 +11,13 @@
   * this causes a carbon copy of that signature to be imprinted on a slip of
     paper inside that envelope
 
-#### to hold an election by secret ballot in different locations at the same time
+#### hold an election by secret ballot in different locations at the same time
 
 * an elector must be able to verify that their vote has been counted
 1. each elector places a ballot slip with their vote written on it in a
    carbon lined envelope
    * only authorized electors receive signed ballot slips
-2. the carbon lined envelop is placed in an outer envelope addressed to the 
+2. the carbon lined envelop is placed in an outer envelope addressed to the
    trustee
    * the return address written on the outer envelop is the elector's
    * this nested carbon lined envelope is then mailed to the trustee
@@ -28,7 +28,8 @@
    * the trustee uses a special signature which is only valid for this specific
     election
 4. the signed carbon lined envelope is then sent back in a new outer envelope
-   addressed to the elector listed as the return address on the original envelope
+   addressed to the elector listed as the return address on the original
+   envelope
 5. elector receives a signed envelope - the elector removes the outer
    envelope
    * then checks the signature on the carbon lined envelope
