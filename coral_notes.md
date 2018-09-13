@@ -364,15 +364,3 @@
   older cluster
   * this allows old neighbors to still contact the node and learn of its new
     cluster
-
-## implementation
-
-## evaluation
-
-### server load
-
-### client latency
-
-### clustering
-
-### load balancing
