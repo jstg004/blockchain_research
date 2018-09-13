@@ -48,27 +48,45 @@
 * blind signatures include the features of true 2 key digital signature systems
   combined with commutative style public key systems
 * the blind signature cryptostystem is comprised of the following functions:
-  1. a signing function ```s'``` known only to the signer
-     * the corresponding publically known invers ```s```
-     * ```s(s'(x)) = x```
-     * ```s``` gives no clue about ```s'```
-  2. a community function ```c``` and its inverse ```c'```
+  1. a signing function _**s'**_ known only to the signer
+     * the corresponding publically known invere _**s**_
+     * _**s(s'(x)) = x**_
+     * _**s**_ gives no clue about _**s'**_
+  2. a community function _**c**_ and its inverse _**c'**_
      * both of these are known only to the provider
-     * ```c'(s'(c(x))) = s'(x)```, ```c(x)```, and ```s'``` give no clue about
-       ```x```
-  3. a redundancy checking predicate ````r```
+     * _**c'(s'(c(x))) = s'(x)**_, _**c(x)**_, and _**s'**_ give no clue about
+       _**x**_
+  3. a redundancy checking predicate _**r**_
      * checks for sufficient redundancy to make searching for valid signatures
        impractical
 
 ## Protocol
 
-1. provider chooses ```x``` at random such that ```r(x)``` - forms ```c(x)```
-   and supplies ```c(x)``` to the signer
-2. signer signs ```c(x)``` by applying ```s'```
-   * then returns the signed matter ```s'(c(x))``` to the provider
-3. provider strips signed matter by application of ```c'```
-   * this yields ```c'(s'(c(x))) = s'(x)```
-4. anyone can check that the stripped matter ```s'(x)``` was formed by its
+1. provider chooses _**x**_ at random such that _**r(x)**_ - forms _**c(x)**_
+   and supplies _**c(x)**_ to the signer
+2. signer signs _**c(x)**_ by applying _**s'**_
+   * then returns the signed matter _**s'(c(x))**_ to the provider
+3. provider strips signed matter by application of _**c'**_
+   * this yields _**c'(s'(c(x))) = s'(x)**_
+4. anyone can check that the stripped matter _**s'(x)**_ was formed by its
    signer
-   * this is checked by applying the signer's public key ```s```
-     * ```r(s(s'(x)))```
+   * this is checked by applying the signer's public key _**s**_
+     * _**r(s(s'(x)))**_
+
+## properties
+
+* desired security properties:
+  1. digital signature - anyone can check that a stripped signature _**s'(x)**_
+     was formed using the signer's private key _**s'**_
+  2. blind signature - the signer knows nothing about the correspondence
+     between the elements of the set of stripped signed matter
+     _**s'(x<sub>i</sub>)**_ and the elements of the set of unstripped signed
+     matter _**s'(c(x<sub>i</sub>))**_
+  3. conservation of signatures - the provider can create at more only 1
+     stripped signature for each thing that is signed be that signer
+     * even with _**s'(c(x<sub>1</sub>)) ... s'(c(x<sub>n</sub>))**_ and choice
+       of _**c**_, _**c'**_, and _**x<sub>i</sub>**_
+     * it is impractical to produce _**s'(y)**_ such that _**r(y)**_ and
+       _**y != x<sub>i</sub>**_
+     * the possibility that the same random number could be generated
+       independently is ignored
