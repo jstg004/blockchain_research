@@ -122,3 +122,23 @@
   13. the bank informs the payee of the note acceptance
 * when the bank receives a note to be cleared from the payee - the bank does
   not know which payer the note was originally issued to
+
+## auditability
+
+* payers receive digital receipts from the payees
+  * this receipt could include a copy of the note
+  * the account the note was actually deposited to can be verified
+  * a receipt which indicates that a note was deposited to an account other
+    than the specified payee account would flag as fraud
+    * the fraudulent account which the payment ended up in can be traced
+    * uncleared notes which are reported can be held in a clearing house list
+      * prevents the reported fraudulent notes from being cleared
+
+## elaborations
+
+* this can be extended to different situations to provide:
+  * economy of mechanism
+  * disaggregation of services
+  * decentralization
+* the roles of the banks and the clearing houses can be separated
+* the keys used to sign the notes can be periodically changed for security
