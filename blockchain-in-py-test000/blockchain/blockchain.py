@@ -66,12 +66,11 @@ class Blockchain:
             self.transactions.append(transaction)
             return len(self.chain) + 1
         # Manages transactions from wallet to another wallet
-        else:
-            transaction_verification = self.verify_transaction_signature(sender_address, signature, transaction)
+        elif transaction_verification = self.verify_transaction_signature(sender_address, signature, transaction)
             if transaction_verification:
                 self.transactions.append(transaction)
                 return len(self.chain) + 1
-        else
+        else:
             return False
 
     def create_block(self, nonce, previous_hash):
