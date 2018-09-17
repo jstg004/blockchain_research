@@ -192,7 +192,7 @@ int main()
             calculateHash()
                 {
                     return SHA256(this.index + this.previousHash + this.timestamp +
-                                JSON.stringify(this.data)).toString();
+                                  JSON.stringify(this.data)).toString();
                 }
         }
 ```
