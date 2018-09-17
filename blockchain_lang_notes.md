@@ -82,26 +82,55 @@
 
 * polymorphism is an object oriented programming property
   * in C++ polymorphism can be used at compile time or run time
-* 2 ways C++ implements compile time polymorphism:
-  1. function overloading
-     * many functions of the same name but each has a different parameter intake
 
-     ``` C++
+##### 2 ways C++ implements compile time polymorphism
+
+###### function overloading
+
+* many functions of the same name but each has a different parameter intake
+
+``` C++
      #include <bits/stdc++.h>
      using namespace std;
 
      class A
-     {
-         void func (int x) //1st instance of the function takes only 1 int value
-         {
-             count<<x<<end1;
-         }
-         void func (double x) // 2nd instance of the function takes only 1 double value
-         {
-             count<<x<<endl;
-         }
-         
-     }
-     ```
+#include <bits/stdc++.h>
+using namespace std;
 
-  2. operator overloading
+class A
+    {
+        // first instance of the function takes only one integer value
+        void func (int x)
+        { cout<<x<<endl; }
+
+        // second instance of the function takes only one double value
+        void func (double x)
+        { cout<<x<<endl; }
+
+        // third instance of the function takes two integer values
+        void func (int x, int y)
+        { cout<<x=y<<endl; }
+    }
+
+int main()
+    {
+        //making one object of the class A
+        A obj1
+
+        //now we are going to call the functions
+        obj1.func(2);
+        obj1.func(2.65);
+        obj1.func(2,5);
+
+        return 0;
+    }
+ ```
+
+* when the above function is run - it outputs the following:
+  * 2
+  * 2.65
+  * 7
+* the same ```func()``` was used 3 different ways
+
+###### operator overloading
+
