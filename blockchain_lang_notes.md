@@ -90,10 +90,6 @@
 * many functions of the same name but each has a different parameter intake
 
 ``` C++
-     #include <bits/stdc++.h>
-     using namespace std;
-
-     class A
 #include <bits/stdc++.h>
 using namespace std;
 
