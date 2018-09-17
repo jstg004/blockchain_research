@@ -78,14 +78,12 @@
 
 ### compile time polymorphism
 
-#### polymorphism
-
 * polymorphism is an object oriented programming property
   * in C++ polymorphism can be used at compile time or run time
 
-##### 2 ways C++ implements compile time polymorphism
+#### 2 ways C++ implements compile time polymorphism
 
-###### function overloading
+##### function overloading
 
 * many functions of the same name but each has a different parameter intake
 
@@ -128,5 +126,148 @@ int main()
   * 7
 * the same ```func()``` was used 3 different ways
 
-###### operator overloading
+##### operator overloading
 
+* the same operator can more than one meaning
+  * ```+``` can be used for both mathematical addition and concatenation
+* polymorphism helps with dividing responsibilities between various functions
+  * this helps with performance
+
+### code isolation
+
+* C++ namespace features can be imported from one program to another
+  * namesapce helps in avoiding collisions
+  * classes can act as boundaries between various APIs - clear separation
+  * classes are either a user defined type or data structure which are declared
+    with a keyword class
+    * a class contains data and functions as its members
+    * functions can be accessed by declaring objects of the particular class
+
+## javascript
+
+* blockchain - a chain of blocks that contain data
+  * a linked list
+  * immutable - data goes into a black and cannot be changed
+* each block is connected to teh previous block with a hash pointer
+  * this hash pointer contains the hash of the previous block
+
+### to construct a block
+
+#### contents
+
+* index - the block's number in the chain
+* timestamp - time of the block's creation
+* data - data contained in the block
+* previous hash - hash of the subsequent block in the chain
+* hash - the hash of this block
+
+#### javascript blockchain
+
+* ```this``` keyword invoked inside a function enables access to values
+  contained inside a specific object which calls that particular function
+* a contructor is a special function which helps create and initialize an object
+  within a class
+  * each class is restricted to 1 constructor
+
+* below is an example of an out block:
+
+``` javascript
+    // call the crypto-js library for the sha256 function
+    const SHA256 = require("crypto-js/sha256");
+
+    // invoke a constructor inside class Block
+    // calls objects that have certain values
+    class Block
+    {
+        constructor(index, timestamp, data, previousHash = '')
+            {
+                this.index = index;
+                this.previousHash = previousHash;
+                this.timestamp = timestamp;
+                this.data = data;
+                this.hash = this.calculateHash();
+            }
+
+        // turn the block data into a string and hash it
+        calculateHash()
+            {
+                return SHA256(this.index + this.previousHash + this.timestamp +
+                              JSON.stringify(this.data)).toString();
+            }
+    }
+```
+
+* create the blockchain:
+
+``` javascript
+    class Blockchain
+    {
+        // section 1 genesis block creation:
+        // invoked immediately when a new chain is crested
+        constructor()
+        {
+            this.chain = [this.createGenesisBlock()];
+        }
+
+        createGenesisBlock()
+        {
+            return new Block(0, "01/01/2017", "Genesis block", "0");
+        }
+
+        // section 2 adding new blocks:
+        getLatestBlock() //must 1st find the latest block in the chain
+        {
+            return this.chain[this.chain.length - 1];
+        }
+
+        // compare the previous hash value to the new block with the hash value
+        // of the latest block
+        // if these 2 values match - the new block is legit and gets added to
+        // the blockchain
+        addBlock(newBlock)
+        {
+            newBlock.previousHash = this.getLatestBlock().hash;
+            newBlock.hash = newBlock.calculateHash();
+            this.chain.push(newBlock);
+        }
+
+        // section 3 validating the chain:
+        // check that the chain is correct and stable
+        // iterate from the current block to the genesis block
+        // if the previous hash of the current block is not equal to the hash of
+        // the previous block - return false
+        isChainValid()
+        {
+            for (let i = 1; i < this.chain.length; i++)
+            {
+                const currentBlock = this.chain[i];
+                const previousBlock = this.chain[i - 1];
+
+                if (currentBlock.hash !== currentBlock.calculateHash())
+                {
+                    return false;
+                }
+
+                if (currentBlock.previousHash !== previousBlock.hash)
+                {
+                    return false;
+                }
+            }
+                return true;
+        }
+    }
+```
+
+* create coins in the blockchain:
+
+``` javascript
+    // invoke a new object and activate the constructor
+    // the constructor 1st creates the genesis block
+    let BlockGeeksCoin = new Blockchain();
+
+    // after the genesis block is created the other blocks may be added
+    BlockGeekCoin.addBlock(new Block(1, "20/07/2017", { amount: 4 }));
+    BlockGeekCoin.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
+```
+
+## python
