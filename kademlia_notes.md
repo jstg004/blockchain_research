@@ -221,3 +221,7 @@
 * for the Kademlia system to work - it must be proven that most operations take
   ```[log n] + c``` time for some small constant ```c``` and a ```(key, value)```
   lookup returns a key stored in the system with overwhelming probability
+* for k-bucket covering the distance range _[2<sup> i</sup>, 2<sup> i+1</sup>]_
+  * define the index of the bucket to be _i_
+  * define the depth _h_ of a node to be _160 - i_
+    * _i_ is the smallest index of a non-empty bucket
