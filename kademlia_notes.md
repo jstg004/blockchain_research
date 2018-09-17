@@ -143,7 +143,7 @@
 * to store ```(key, value)``` pairs - participants locate the _k_ closest nodes
   to the key and sends them ```STORE``` RPCs
 * each node re-publishes ```(key, value)``` pairs as necessary
-  * this keeps them alive and ensures persistence of ```)key, value)``` pairs
+  * this keeps them alive and ensures persistence of ```(key, value)``` pairs
     with high probability
 * every original publisher of the ```(key, value)``` pair is required to
   republish it every 24 hours (can be changed to a different scale)
@@ -175,3 +175,49 @@
   * ```u``` refreshes all k-buckets further away than its closest neighbor
     * during these refreshes ```u``` populates its own k-bucket and inserts
       itself into the k-buckets of other nodes as necessary
+
+## routing table
+
+* Kademlia's basic routing table structure is a binary tree
+  * the leaves are represented by k-buckets
+  * each k-bucket contains nodes with some common prefix of their IDs
+    * this prefix is the k-bucket's position in the binary tree
+  * each k-bucket covers some range of the ID space
+  * together the k-buckets cover the entire 160-bit ID space with no overlap
+* nodes in the routing tree are allocated dynamically as needed
+
+## efficient key re-publishing
+
+* nodes must periodically republish keys in order to ensure persistence of 
+  ```(key, value)``` pairs
+* Kademlia republishes each ```(key, value)``` pair once an hour to compensate
+  for nodes leaving the network
+* given ```k``` number of nodes storing ```(key, value)``` pairs
+  * perform a node look up followed by ```k - 1 STORE``` RPCs every hour 
+  * when a node receives a ```STORE``` RPC for a given ```(key, value)``` pair
+    it assumes the RPC was also issued to the other ```k - 1``` nodes
+    * recipient will not republish the ```(key, value)``` pair in the next hour
+  * ensures that as long as republication intervals are not exactly synchronized
+    * only 1 node will republish a given ```(key, value)``` pair every hour
+* to counter unbalanced trees and avoid performing node lookups before
+  republishing keys - the nodes split k-buckets as required
+  * this ensures they have complete knowledge of a surrounding subtree with at
+    least ```k``` nodes
+  * if a node ```u``` refreshes all k-buckets in a subtree of ```k``` nodes
+    before republishing ```(key, value)``` pairs - the node will automatically
+    be able to figure out the ```k``` closest node to a given key
+    * bucket refreshes can be amortized over the republication of many keys
+* when a new node joins a system it must store any ```(key, value)``` to which
+  it is one of the ```k``` closest
+  * existing nodes know which ```(key, value)``` pairs the new node should store
+  * any node learning of a new node will issue ```STORE``` RPCs to transfer
+    relevant ```(key, value)``` pairs to the new node
+  * a node only transfers a ```(key, value)``` pair if it's own ID is closer to
+    the key than the IDs of other nodes
+    * this avoids redundant ```STORE``` RPCs
+
+## sketch of proof
+
+* for the Kademlia system to work - it must be proven that most operations take
+  ```[log n] + c``` time for some small constant ```c``` and a ```(key, value)```
+  lookup returns a key stored in the system with overwhelming probability
