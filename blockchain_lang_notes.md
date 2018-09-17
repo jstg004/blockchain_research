@@ -271,3 +271,122 @@ int main()
 ```
 
 ## python
+
+### create the block function
+
+``` python
+    import hashlib as hasher
+
+    class Block:
+        def __init__(self, index, timestamp, data, previous_hash):
+            self.index = index
+            self.timestamp = timestamp
+            self.data = data
+            self.previous_hash = previous_hash
+            self.hash = self.hash_block()
+
+        def hash_block(self):
+            sha = hasher.sha256()
+            sha.update(
+                       str(self.index) +
+                       str(self.timestamp) +
+                       str(self.data) +
+                       str(str.previous_hash)
+                      )
+            return sha.hexdigest()
+```
+
+### create genesis block
+
+``` pyhton
+    import datetime as date
+
+    def create_genesis_block():
+        return Block(0, date.datetime.now(), "Genesis BLock", "0")
+```
+
+### create subsequent blocks
+
+``` python
+    def next_block(last_block):
+        this_index = last_block.index + 1
+        this_timestamp = date.datetime.now()
+        this_data = "Hey! I'm block " + str(this_index)
+        this_hash = last_block.hash
+
+        return Block(this_index, this_timestamp, this_data, this_hash)
+```
+
+### create the blockchain
+
+``` python
+    blockchain = [create_genesis_block()]
+    previous_block = blockchain[0]
+    num_of_blocks_to_add = 15
+
+    for i in range(0, num_of_blocks_to_add):
+        block_to_add = next_block(previous_block)
+        blockchain.append(block_to_add)
+        previous_block = block_to_add
+```
+
+## solidity
+
+* a programming language for writing smart contracts on blockchain platforms
+  like Ethereum
+  * used in the creation of decentralized applications (DAPPs)
+* stack and memory model with 32-byte instruction word size
+* in the Ethereum virtual machine (EVM) there is access to the program stack
+  * this is a register space where memory addresses can stick to make the
+    program counter loop/jump - sequential program control
+    * expandable temporary memory - permanent storage written into the permanent
+      blockchain
+    * EVN requires total determinism within the smart contracts
+
+``` solidity
+contract BasicIterator
+    {
+        // resource 1 address type spot
+        address creator;
+
+        // reserve a chunk of storage for 10 8-bit unsigned int in an array
+        uint8[10] integers;
+
+        function BasicIterator()
+            {
+                creator = msg.sender;
+                uint8 x = 0;
+
+                // section 1: assigning values
+                while(x < integers.length)
+                    {
+                        integers[x] = x;
+                        x++;
+                    }
+            }
+
+        function getSum() constant returns (uint)
+            {
+                uint8 sum = 0;
+                uint8 x = 0;
+
+                // section 2: adding the integers in an array
+                while(x < integers.length)
+                    {
+                        sum = sum + integers[x];
+                        x++;
+                    }
+                return sum;
+            }
+
+        // section 3: killing the contract
+        function kill()
+            {
+                if (msg.sender == creator)
+                    {
+                        suicide(creator);
+                    }
+            }
+    }
+```
+
