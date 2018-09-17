@@ -165,7 +165,7 @@ int main()
 
 * ```this``` keyword invoked inside a function enables access to values
   contained inside a specific object which calls that particular function
-* a contructor is a special function which helps create and initialize an object
+* a constructor is a special function which helps create and initialize an object
   within a class
   * each class is restricted to 1 constructor
 
@@ -178,84 +178,83 @@ int main()
     // invoke a constructor inside class Block
     // calls objects that have certain values
     class Block
-    {
-        constructor(index, timestamp, data, previousHash = '')
-            {
-                this.index = index;
-                this.previousHash = previousHash;
-                this.timestamp = timestamp;
-                this.data = data;
-                this.hash = this.calculateHash();
-            }
+        {
+            constructor(index, timestamp, data, previousHash = '')
+                {
+                    this.index = index;
+                    this.previousHash = previousHash;
+                    this.timestamp = timestamp;
+                    this.data = data;
+                    this.hash = this.calculateHash();
+                }
 
-        // turn the block data into a string and hash it
-        calculateHash()
-            {
-                return SHA256(this.index + this.previousHash + this.timestamp +
-                              JSON.stringify(this.data)).toString();
-            }
-    }
+            // turn the block data into a string and hash it
+            calculateHash()
+                {
+                    return SHA256(this.index + this.previousHash + this.timestamp +
+                                JSON.stringify(this.data)).toString();
+                }
+        }
 ```
 
 * create the blockchain:
 
 ``` javascript
     class Blockchain
-    {
-        // section 1 genesis block creation:
-        // invoked immediately when a new chain is crested
-        constructor()
         {
-            this.chain = [this.createGenesisBlock()];
-        }
-
-        createGenesisBlock()
-        {
-            return new Block(0, "01/01/2017", "Genesis block", "0");
-        }
-
-        // section 2 adding new blocks:
-        getLatestBlock() //must 1st find the latest block in the chain
-        {
-            return this.chain[this.chain.length - 1];
-        }
-
-        // compare the previous hash value to the new block with the hash value
-        // of the latest block
-        // if these 2 values match - the new block is legit and gets added to
-        // the blockchain
-        addBlock(newBlock)
-        {
-            newBlock.previousHash = this.getLatestBlock().hash;
-            newBlock.hash = newBlock.calculateHash();
-            this.chain.push(newBlock);
-        }
-
-        // section 3 validating the chain:
-        // check that the chain is correct and stable
-        // iterate from the current block to the genesis block
-        // if the previous hash of the current block is not equal to the hash of
-        // the previous block - return false
-        isChainValid()
-        {
-            for (let i = 1; i < this.chain.length; i++)
-            {
-                const currentBlock = this.chain[i];
-                const previousBlock = this.chain[i - 1];
-
-                if (currentBlock.hash !== currentBlock.calculateHash())
+            // section 1 genesis block creation:
+            // invoked immediately when a new chain is crested
+            constructor()
                 {
-                    return false;
+                    this.chain = [this.createGenesisBlock()];
                 }
 
-                if (currentBlock.previousHash !== previousBlock.hash)
+            createGenesisBlock()
                 {
-                    return false;
+                    return new Block(0, "01/01/2017", "Genesis block", "0");
                 }
-            }
-                return true;
+
+            // section 2 adding new blocks:
+            getLatestBlock() //must 1st find the latest block in the chain
+                {
+                    return this.chain[this.chain.length - 1];
+                }
+
+            // compare the previous hash value to the new block with the hash value
+            // of the latest block
+            // if these 2 values match - the new block is legit and gets added to
+            // the blockchain
+            addBlock(newBlock)
+                {
+                    newBlock.previousHash = this.getLatestBlock().hash;
+                    newBlock.hash = newBlock.calculateHash();
+                    this.chain.push(newBlock);
+                }
+
+            // section 3 validating the chain:
+            // check that the chain is correct and stable
+            // iterate from the current block to the genesis block
+            // if the previous hash of the current block is not equal to the hash of
+            // the previous block - return false
+            isChainValid()
+                {
+                    for (let i = 1; i < this.chain.length; i++)
+                        {
+                            const currentBlock = this.chain[i];
+                            const previousBlock = this.chain[i - 1];
+
+                            if (currentBlock.hash !== currentBlock.calculateHash())
+                                {
+                                    return false;
+                                }
+                            if (currentBlock.previousHash !== previousBlock.hash)
+                                {
+                                    return false;
+                                }
+                        }
+                        return true;
+                }
         }
-    }
 ```
 
 * create coins in the blockchain:
@@ -389,4 +388,3 @@ contract BasicIterator
             }
     }
 ```
-
