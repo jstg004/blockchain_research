@@ -48,20 +48,6 @@ func NewBlockchain() *Blockchain{
 	return &Blockchain{[]*Block{NewGenesisBlock()}}
 }
 
-// check to make sure the blockchain is working correctly
-func main() {
-	bc := NewBlockchain()
-	bc.AddBlock("send 1 BTC to Ivan")
-	bc.AddBlock("send 2 more BTC to Ivan")
-
-	for _, block := range bc.blocks {
-		fmt.Printf("prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\b", block.data)
-		fmt.Printf("Hash: %x\n", block.Hash)
-		fmt.Println()
-	}
-}
-
 // below is the output of this code:
 //
 // Prev. hash:
