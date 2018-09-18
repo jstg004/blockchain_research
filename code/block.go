@@ -55,7 +55,7 @@ func main() {
 	bc.AddBlock("send 2 more BTC to Ivan")
 
 	for _, block := range bc.blocks {
-		fmt.Printf("prev. hash: %\n", block.PrevBlockHash)
+		fmt.Printf("prev. hash: %x\n", block.PrevBlockHash)
 		fmt.Printf("Data: %s\b", block.data)
 		fmt.Printf("Hash: %x\n", block.Hash)
 		fmt.Println()
