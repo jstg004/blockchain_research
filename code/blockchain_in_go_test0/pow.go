@@ -1,3 +1,6 @@
+// this is a work in progress and notes for this tutorial:
+// https://jeiwan.cc/posts/building-blockchain-in-go-part-1/
+
 // proof of work - hashcash - brute force algorithm
 // 1. take the block header
 // 2. add a counter to it (starts at 0)

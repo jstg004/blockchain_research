@@ -21,3 +21,14 @@
    various flags that can be on or off
 6. 't' + 32-byte transaction hash -> transaction index record
 
+## chainstate - key -> value pairs
+
+1. 'c' + 32-byte transaction hash -> unspent transaction output record for that
+   transaction
+2. 'B' -> 32-byte block hash: the block hash up to which the database represents
+   the unspent transaction outputs
+
+## key -> value pairs used in this go blockchain test
+
+1. 32-byte block-hash -> Block structure (serialized)
+2. 'l' -> the hash of the last block in a chain
