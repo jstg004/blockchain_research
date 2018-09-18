@@ -102,7 +102,8 @@
        it knows about which are closest to the target ID
        * these can come from a single k-bucket or from multiple k-buckets if the
          closest k-bucket is not full
-     * if there are fewer than _k_ nodes in all of the recipients k-buckets combined - it returns every node it knows about
+     * if there are fewer than _k_ nodes in all of the recipients k-buckets
+       combined - it returns every node it knows about
   4. ```FIND_VALUE```
      * returns ```(IP address, UDP port, Node ID)
      * if the RPC recipient has received a ```STORE``` RPC for the key it only
@@ -219,9 +220,79 @@
 ## sketch of proof
 
 * for the Kademlia system to work - it must be proven that most operations take
-  ```[log n] + c``` time for some small constant ```c``` and a ```(key, value)```
+  _[log n] + c_ time for some small constant _c_ and a _(key, value)_
   lookup returns a key stored in the system with overwhelming probability
 * for k-bucket covering the distance range _[2<sup> i</sup>, 2<sup> i+1</sup>]_
-  * define the index of the bucket to be _i_
-  * define the depth _h_ of a node to be _160 - i_
+  * define the index of the bucket - as _i_
+  * define the depth _h_ of a node - as _160 - i_
     * _i_ is the smallest index of a non-empty bucket
+  * define node _y_'s bucket height (in node _x_) - as the index of the bucket
+    where _x_ inserts _y_ minus the index of _x_'s least significant empty
+    bucket
+  * it is probable that the height of any given node will be within a constant
+    of _log n_ for a system with _n_ nodes
+    * bucket height of the closest node to an ID in the _k_<sup>th</sup> closest
+      node will likely be within a constant of _log k_
+
+### assume the invariant
+
+* every k-bucket of every node contains at least 1 contact - if a node exists=
+in the appropriate range
+* the node lookup procedure is correct and takes logarithmic time
+* if the closest node to the target ID has depth _h_
+* if node of this node's _h_ most significant k-buckets is empty
+  * the lookup procedure will find a node half as close in each step
+  * distance is 1 bit shorter
+  * turns up the node in _h - log k_ steps
+  * if 1 of the node's k-buckets is empty - it could be the case that the
+  target node resides in the range of the empty bucket
+  * if the case that the target node resides in the range of the empty bucket
+  * the final steps will not decrease the distance by half
+  * the search will proceed exactly as though the bit in the key
+    corresponding to the empty bucket had been flipped
+  * the lookup algorithm will always return the closest node in
+    _h - log k_ steps
+  * when the closest node is found - the currency switches from _a_ to _k_
+  * the number of steps to find the remaining _k - 1_ closest nodes can be
+    no more than the bucket height of the closest node in the
+    _k_<sup>th</sup> closest node
+    * unlikely to be more than a constant plus _log k_
+
+### prove the correctness of the invariant
+
+* the effects of bucket refreshing if the invariant holds
+* after being refreshed - a bucket will either:
+  * contain _k_ valid nodes
+  * or contain every node in its range if fewer than _k_ exist
+* new nodes that join will also be inserted into any buckets that are not full
+* only way to violate the invariant is if there exist _k + 11_ or more nodes in
+  the range of a particular bucket and the _k_ actually contained in the bucket
+  to fails with no intervening lookups or refreshes
+
+### the probability of failure
+
+* failure probability is much smaller than the probability of _k_ nodes
+  leaving within an hour
+  * every incoming or outgoing request updates nodes' buckets
+  * this results from the symmetry of the XOR metric
+    * because the IDs of the nodes (where a given node communicates during an
+      incoming or outgoing requests) are distributed exactly compatibly with the
+      node's bucket ranges
+* if the invariant fails for a single bucket in a single node - it only affects
+  running time - by adding a hop to some lookups
+  * a lookup will fail if _k_ nodes on a lookup path each lose _k_ nodes in the
+    same bucket with no intervening lookups or refreshes
+
+### (key, value) pair's recovery
+* when _(key, value)_ pair is published - it is populated at the _k_ nodes
+  closest to the key
+  * it is re-published every hour
+* less reliable/new nodes have a 50% probability of lasting 1 hour
+  * after 1 hour the _(key, value)_ pair will still be present on one of the
+    _k_ nodes closest to the key with the probability of _1 - 2<sup> -k</sup>_
+  * this property of the Kademlia system is not violated by the insertion of
+    new nodes that are close to the key
+    * when the node is inserted - it contacts the closest node - to fill its
+      buckets and receive any nearby _(ky, value)_ pairs needed to be stored
+    * if the _k_ closest nodes to a key fail and the _(key, value)_ pair has
+      not been cached elsewhere - the key is not stored (it is lost)
