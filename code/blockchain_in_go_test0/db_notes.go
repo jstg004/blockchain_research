@@ -71,7 +71,7 @@ func NewBlockchain() *Blockchain {
 	return &bc
 }
 
-// lockchain structure:
+// blockchain structure:
 type Blockchain struct {
 	tip []byte
 	db *bolt.DB
