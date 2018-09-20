@@ -1,6 +1,9 @@
 // my notes for this tutorial:
 // https://jeiwan.cc/posts/building-blockchain-in-go-part-1/
 
+// this code keeps a collection of wallets, saves them to a file, and loads the
+//    wallets from that file
+
 package main
 
 import (

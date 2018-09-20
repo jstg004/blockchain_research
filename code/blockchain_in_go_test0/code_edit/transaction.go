@@ -1,6 +1,17 @@
 // my notes for this tutorial:
 // https://jeiwan.cc/posts/building-blockchain-in-go-part-1/
 
+// transactions unlock previous outputs, redistribute their values, then lock
+//    lock the new outputs
+// the following data needs to be signed:
+// 1. public key hashes stored in unlocked outputs
+//    - this identifies the sender of the transaction
+// 2. public key hashes stored in new (locked) outputs
+//    - this identifies the recipient of a transaction
+// 3. values of the new outputs
+// the trimmed copy of the public key is signed
+//    - contains the inputs which store ScriptPubKey (from referenced outputs) 
+
 package main
 
 import (
@@ -62,6 +73,7 @@ func (tx *Transaction) Hash() []byte {
 	return hash[:]
 }
 
+// ---->
 // Sign signs each input of a Transaction
 func (tx *Transaction) Sign(privKey ecdsa.PrivateKey, prevTXs map[string]Transaction) {
 	if tx.IsCoinbase() {

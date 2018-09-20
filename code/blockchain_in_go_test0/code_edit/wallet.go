@@ -30,6 +30,12 @@
 //    - public/private keys are prepresentations of the data not encrypted
 //      versions of the data
 
+// every transaction input is signed by the creator of that transaction
+// every transaction must be verified before being inserted into a block
+// to verify:
+// 1. check if input has permission to use output form previous transaction
+// 2. check that the transaction signature is correct
+
 package main
 
 import (
@@ -46,7 +52,7 @@ import (
 const version = byte(0x00)
 const addressChecksumLen = 4
 
-// Wallet stores private and public keys
+// Wallet stores a key pair of private and public keys
 type Wallet struct {
 	PrivateKey ecdsa.PrivateKey
 	PublicKey  []byte
@@ -63,17 +69,18 @@ func NewWallet() *Wallet {
 // GetAddress returns wallet address
 func (w Wallet) GetAddress() []byte {
 	pubKeyHash := HashPubKey(w.PublicKey)
-
+	// prepend the version of the address generation algorithm to the hash
 	versionedPayload := append([]byte{version}, pubKeyHash...)
 	checksum := checksum(versionedPayload)
-
+	// appends the checksum to the versionedPayload
 	fullPayload := append(versionedPayload, checksum...)
+	//encodes fullPayload to Base58 to create the wallet address
 	address := Base58Encode(fullPayload)
 
 	return address
 }
 
-// HashPubKey hashes public key
+// HashPubKey hashes public key twice
 func HashPubKey(pubKey []byte) []byte {
 	publicSHA256 := sha256.Sum256(pubKey)
 
@@ -88,6 +95,8 @@ func HashPubKey(pubKey []byte) []byte {
 }
 
 // ValidateAddress check if address if valid
+// Base58 removes the following symbols from Base64:
+//    - 0 (zero), O (capital o), I (capital i), l (lowercase L)
 func ValidateAddress(address string) bool {
 	pubKeyHash := Base58Decode([]byte(address))
 	actualChecksum := pubKeyHash[len(pubKeyHash)-addressChecksumLen:]
@@ -102,16 +111,21 @@ func ValidateAddress(address string) bool {
 func checksum(payload []byte) []byte {
 	firstSHA := sha256.Sum256(payload)
 	secondSHA := sha256.Sum256(firstSHA[:])
-
+	// the checksum is the 1st 4 bytes of the secondSHA hash
 	return secondSHA[:addressChecksumLen]
 }
 
 func newKeyPair() (ecdsa.PrivateKey, []byte) {
-	curve := elliptic.P256()
+	curve := elliptic.P256() //elliptic curve
+	// a private key is generated using the elliptic curve:
 	private, err := ecdsa.GenerateKey(curve, rand.Reader)
 	if err != nil {
 		log.Panic(err)
 	}
+	// public key is generated from the private key:
+	//    - public keys are points on a curve
+	//    - combination of X and Y coordinates
+	//    - the X,Y coordinates are concatenated to form the public key
 	pubKey := append(private.PublicKey.X.Bytes(), private.PublicKey.Y.Bytes()...)
 
 	return *private, pubKey

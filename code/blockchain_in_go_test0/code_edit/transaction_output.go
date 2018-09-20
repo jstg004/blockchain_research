@@ -21,8 +21,9 @@ type TXOutput struct {
 	PubKeyHash []byte
 }
 
-// Lock signs the output
+// Lock signs the output - locks the output
 func (out *TXOutput) Lock(address []byte) {
+	//decode the public key hash of the recipient
 	pubKeyHash := Base58Decode(address)
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
 	out.PubKeyHash = pubKeyHash
