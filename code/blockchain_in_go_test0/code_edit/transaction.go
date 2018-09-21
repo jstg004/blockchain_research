@@ -67,15 +67,20 @@ func (tx *Transaction) Hash() []byte {
 
 	txCopy := *tx
 	txCopy.ID = []byte{}
-
+	// hash method serializes the transaction - hashes it with the SHA-256
 	hash = sha256.Sum256(txCopy.Serialize())
 
 	return hash[:]
 }
 
 // ---->
-// Sign signs each input of a Transaction
+// Sign - signs each input of a Transaction
+// this method takes a private key and a map of previous transactions
+// in order to sign the transaction - access to the outputs is needed
+//    - the outputs are referenced in the inputs of transactions
+//    - the transactions that store these outputs are needed
 func (tx *Transaction) Sign(privKey ecdsa.PrivateKey, prevTXs map[string]Transaction) {
+	//coinbase transactions are not signed - no real inputs contained in them
 	if tx.IsCoinbase() {
 		return
 	}
@@ -85,23 +90,29 @@ func (tx *Transaction) Sign(privKey ecdsa.PrivateKey, prevTXs map[string]Transac
 			log.Panic("ERROR: Previous transaction is not correct")
 		}
 	}
-
+	// a trimmed copy of the full transaction will be signed
 	txCopy := tx.TrimmedCopy()
+	// a copy includes all the inputs and outputs
+	// TXInput.Signature and TXInput.PubKey are set to nil
 
+	// iterate over each input in the copy:
 	for inID, vin := range txCopy.Vin {
 		prevTx := prevTXs[hex.EncodeToString(vin.Txid)]
+		// a double check in each input - set Signature to nil
 		txCopy.Vin[inID].Signature = nil
+		// PubKey is set to the PubKeyHash of the referenced output 
 		txCopy.Vin[inID].PubKey = prevTx.Vout[vin.Vout].PubKeyHash
 
 		dataToSign := fmt.Sprintf("%x\n", txCopy)
-
+		// ECDSA signature is a pair of numbers which are concatenated then
+		//    then stored in the input's Signature field
 		r, s, err := ecdsa.Sign(rand.Reader, &privKey, []byte(dataToSign))
 		if err != nil {
 			log.Panic(err)
 		}
 		signature := append(r.Bytes(), s.Bytes()...)
-
 		tx.Vin[inID].Signature = signature
+		// reset the PubKey field - doesn't affect further iterations
 		txCopy.Vin[inID].PubKey = nil
 	}
 }
@@ -161,13 +172,19 @@ func (tx *Transaction) Verify(prevTXs map[string]Transaction) bool {
 	}
 
 	txCopy := tx.TrimmedCopy()
-	curve := elliptic.P256()
-
+	curve := elliptic.P256() //same curve that was used to generate key pairs
+	// check signature in each input
 	for inID, vin := range tx.Vin {
 		prevTx := prevTXs[hex.EncodeToString(vin.Txid)]
 		txCopy.Vin[inID].Signature = nil
 		txCopy.Vin[inID].PubKey = prevTx.Vout[vin.Vout].PubKeyHash
 
+		// same data that was signed
+		// unpack values stored in TXInput.Signature and TXInput.PubKey
+		// - a singnature is pair of numbers
+		// - a public key is a pair of coordinate
+		// - they are unpacked from their concatenated state for use in
+		//   crypto/ecdsa functions
 		r := big.Int{}
 		s := big.Int{}
 		sigLen := len(vin.Signature)
@@ -181,7 +198,9 @@ func (tx *Transaction) Verify(prevTXs map[string]Transaction) bool {
 		y.SetBytes(vin.PubKey[(keyLen / 2):])
 
 		dataToVerify := fmt.Sprintf("%x\n", txCopy)
-
+		// create ecdsa.PublicKey using the public key extracted from the input
+		// - if all inputs are verified - return true
+		// - if at least 1 input fails verification - return false
 		rawPubKey := ecdsa.PublicKey{Curve: curve, X: &x, Y: &y}
 		if ecdsa.Verify(&rawPubKey, []byte(dataToVerify), &r, &s) == false {
 			return false
