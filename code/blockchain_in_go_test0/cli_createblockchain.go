@@ -16,6 +16,7 @@ func (cli *CLI) createBlockchain(address, nodeID string) {
 	defer bc.db.Close()
 
 	UTXOSet := UTXOSet{bc}
+	// reindexing occurs after a new blockchain is created
 	UTXOSet.Reindex()
 
 	fmt.Println("Done!")

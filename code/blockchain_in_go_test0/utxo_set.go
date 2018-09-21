@@ -28,7 +28,13 @@ type UTXOSet struct {
 }
 
 // FindSpendableOutputs finds and returns unspent outputs to reference in inputs
-// 
+// transactions are stored in blocks - this function iterates over each block
+//    - checks every transaction on the block chain
+// an index stores only unspent outputs
+// - the UTXO set does the following:
+//    - a cache built from all blockchain transactions
+//        - iterate over blocks once
+//    - used to calculate balance and validate new transactions
 func (u UTXOSet) FindSpendableOutputs(pubkeyHash []byte, amount int) (int, map[string][]int) {
 	unspentOutputs := make(map[string][]int)
 	accumulated := 0
@@ -60,6 +66,7 @@ func (u UTXOSet) FindSpendableOutputs(pubkeyHash []byte, amount int) (int, map[s
 }
 
 // FindUTXO finds UTXO for a public key hash
+// - finds all unspent outputs by iterating over blocks
 func (u UTXOSet) FindUTXO(pubKeyHash []byte) []TXOutput {
 	var UTXOs []TXOutput
 	db := u.Blockchain.db
@@ -110,6 +117,10 @@ func (u UTXOSet) CountTransactions() int {
 }
 
 // Reindex rebuilds the UTXO set
+// - uses FindUTXO to find unspent outputs and stores these outputs in a
+//    database - where caching occurs
+// - creates the UTXO set - then removes the bucket if it already exists
+//    - then gets all unspent outputs from blockchain - saves outputs to bucket
 func (u UTXOSet) Reindex() {
 	db := u.Blockchain.db
 	bucketName := []byte(utxoBucket)
@@ -154,6 +165,16 @@ func (u UTXOSet) Reindex() {
 
 // Update updates the UTXO set with transactions from the Block
 // The Block is considered to be the tip of a blockchain
+// transaction data - split into storages:
+//    - actual transactions stored in blockchain
+//    - unspent outputs - stored un the UTXO set
+// this separation requires solid synchronization mechanism
+//    - UTXO set always updated  - stores outputs of most recent transactions
+// when a block is mined - the UTXO set should be updated:
+//    - removing spent outputs
+//    - adding unspent outputs from newly mined transactions
+//    - if a transaction (whose outputs were removed) contains no more outputs
+//        - then that transaction in removed
 func (u UTXOSet) Update(block *Block) {
 	db := u.Blockchain.db
 

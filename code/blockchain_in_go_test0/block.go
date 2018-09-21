@@ -1,66 +1,95 @@
-// this is a work in progress and notes for this tutorial:
+// my notes for this tutorial:
 // https://jeiwan.cc/posts/building-blockchain-in-go-part-1/
 
 package main
 
-type Block struct {
-	Timestamp      int64 // current timestamp when block is created
-	Data          []byte // actual information contained in the block
-	PrevBlockHash []byte // hash of the previous block
-	Hash          []byte
-}
-
-// take block fields, concatenate them, then calculate a SHA-256 hash
-func (b *Block) SetHash() {
-	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-	headers := bytes.Join([][]byte{b.PrevBlockHash, b,Data, timestamp}, []byte{})
-	hash := sha256.Sum256(headers)
-	b.Hash = hash[:]
-}
-
-// implement a function that will simplify the creation of the block
-func NewBlock(data string, prevBlockHash []byte) * Block {
-	block := &Block{time.Now().Unix(), []byte(data), prevBLockHash, []byte{}}
-	block.SetHash()
-	return block
-}
+import (
+	"bytes"
+	"encoding/gob"
+	"log"
+	"time"
+)
 
 // a blockchain is a database with an ordered structure - a back-linked list
 // blocks are stored in the insertion order and each block is linked to the
-// previous block
+//     previous block
 // this is implemented using an array and a map
 // the array keeps ordered hashes
 // the map keeps hash block - pairs
-type Blockchain struct{
-	blocks []*Block
+// Block represents a block in the blockchain
+type Block struct {
+	Timestamp     int64 //current timestamp when block is crated
+	Transactions  []*Transaction
+	PrevBlockHash []byte //hash of the previous block
+	Hash          []byte
+	Nonce         int
+	Height        int
 }
 
-func (bc *Blockchain) AddBlock(data string) {
-	prevBlock := bc.blocks[len(bc.blocks)-1]
-	newBlock := NewBlock(data, prevBlock.Hash)
-	bc.blocks = apend(bc.blocks, newBlock)
+// NewBlock creates and returns Block
+func NewBlock(transactions []*Transaction, prevBlockHash []byte, height int) *Block {
+	block := &Block{time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0, height}
+	pow := NewProofOfWork(block)
+	nonce, hash := pow.Run()
+
+	block.Hash = hash[:]
+	block.Nonce = nonce
+
+	return block
 }
 
-// create the genesis block
-func NewGenesisBlock() *Block {
-	return NewBlock("Genesis Block", []byte{})
+// NewGenesisBlock creates and returns genesis Block
+func NewGenesisBlock(coinbase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinbase}, []byte{}, 0)
 }
 
-// implement a function that creates a blockchain with the genesis block
-func NewBlockchain() *Blockchain{
-	return &Blockchain{[]*Block{NewGenesisBlock()}}
+// HashTransactions returns a hash of the transactions in the block
+// using a hashing mechanism to provide a unique representation of the data
+// all transactions in a block should be uniquely identified by a single hash
+// get the hashes of each transaction - concatenate them
+//    - then get a hash of the concatenated combination
+// EDIT---V
+// represents all transactions containing in a block as a Merkle tree and uses
+// the root hash of the tree in the Proof-of-Work system. This approach allows
+// to quickly check if a block contains certain transaction, having only just
+// the root hash and without downloading all the transactions.
+func (b *Block) HashTransactions() []byte {
+	var transactions [][]byte
+
+	for _, tx := range b.Transactions {
+		// transactions are serialized - then used to build a Merkle tree
+		// root of the tree serves as the unique identifier of the block's
+		//    transactions
+		transactions = append(transactions, tx.Serialize())
+	}
+	mTree := NewMerkleTree(transactions)
+
+	return mTree.RootNode.Data
 }
 
-// below is the output of this code:
-//
-// Prev. hash:
-// Data: Genesis Block
-// Hash: aff955a50dc6cd2abfe81b8849eab15f99ed1dc333d38487024223b5fe0f1168
-//
-// Prev. hash: aff955a50dc6cd2abfe81b8849eab15f99ed1dc333d38487024223b5fe0f1168
-// Data: Send 1 BTC to Ivan
-// Hash: d75ce22a840abb9b4e8fc3b60767c4ba3f46a0432d3ea15b71aef9fde6a314e1
-//
-// Prev. hash: d75ce22a840abb9b4e8fc3b60767c4ba3f46a0432d3ea15b71aef9fde6a314e1
-// Data: Send 2 more BTC to Ivan
-// Hash: 561237522bb7fcfbccbc6fe0e98bbbde7427ffe01c6fb223f7562288ca2295d1
+// uses encoding/gob to serialize the block structs
+func (b *Block) Serialize() []byte {
+	var result bytes.Buffer //declare a buffer that stores the serialized data
+	encoder := gob.NewEncoder(&result) //initialize gob encoder & encode block
+
+	err := encoder.Encode(b)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return result.Bytes() //a byte array is returned
+}
+
+// this deserializing function receives the byte array as input and returns
+//    a block as the output
+func DeserializeBlock(d []byte) *Block {
+	var block Block
+
+	decoder := gob.NewDecoder(bytes.NewReader(d))
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return &block
+}
