@@ -200,6 +200,7 @@ func (bc *Blockchain) FindUTXO() map[string]TXOutputs {
 		Outputs:
 			for outIdx, out := range tx.Vout {
 				// Was the output spent?
+				//    - was it already referenced in an input?
 				if spentTXOs[txID] != nil {
 					for _, spentOutIdx := range spentTXOs[txID] {
 						if spentOutIdx == outIdx {
@@ -212,7 +213,8 @@ func (bc *Blockchain) FindUTXO() map[string]TXOutputs {
 				outs.Outputs = append(outs.Outputs, out)
 				UTXO[txID] = outs
 			}
-
+			// skip the outputs that were referenced in the inputs
+			//    - their values were moved to other outputs - don't count
 			if tx.IsCoinbase() == false {
 				for _, in := range tx.Vin {
 					inTxID := hex.EncodeToString(in.Txid)

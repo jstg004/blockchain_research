@@ -8,6 +8,10 @@ import (
 	"log"
 )
 
+// a reward is a coinbase transaction
+// when mining a new block - it takes transactions form the queue and prepends
+//    a coinbase transaction to them
+// coinbase transaction only has 1 output - contains the miner's public key hash
 func (cli *CLI) send(from, to string, amount int, nodeID string, mineNow bool) {
 	if !ValidateAddress(from) {
 		log.Panic("ERROR: Sender address is not valid")

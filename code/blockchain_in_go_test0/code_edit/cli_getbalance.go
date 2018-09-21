@@ -8,6 +8,8 @@ import (
 	"log"
 )
 
+// the account balance is the sum of values of all unspent transaction outputs
+//    locked by the account address
 func (cli *CLI) getBalance(address, nodeID string) {
 	if !ValidateAddress(address) {
 		log.Panic("ERROR: Address is not valid")

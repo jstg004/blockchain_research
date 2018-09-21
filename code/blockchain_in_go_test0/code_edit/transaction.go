@@ -237,6 +237,8 @@ func NewCoinbaseTX(to, data string) *Transaction {
 }
 
 // NewUTXOTransaction creates a new transaction
+// create a new transaction, put it in a block, and mine that block
+// find all unspent outputs - ensure they store enough value for transaction
 func NewUTXOTransaction(wallet *Wallet, to string, amount int, UTXOSet *UTXOSet) *Transaction {
 	var inputs []TXInput
 	var outputs []TXOutput

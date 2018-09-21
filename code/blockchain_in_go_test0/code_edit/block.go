@@ -44,6 +44,15 @@ func NewGenesisBlock(coinbase *Transaction) *Block {
 }
 
 // HashTransactions returns a hash of the transactions in the block
+// using a hashing mechanism to provide a unique representation of the data
+// all transactions in a block should be uniquely identified by a single hash
+// get the hashes of each transaction - concatenate them
+//    - then get a hash of the concatenated combination
+// EDIT---V
+// represents all transactions containing in a block as a Merkle tree and uses
+// the root hash of the tree in the Proof-of-Work system. This approach allows
+// to quickly check if a block contains certain transaction, having only just
+// the root hash and without downloading all the transactions.
 func (b *Block) HashTransactions() []byte {
 	var transactions [][]byte
 
