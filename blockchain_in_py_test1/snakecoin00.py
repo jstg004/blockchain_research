@@ -1,4 +1,6 @@
 '''
+my notes and codes from: https://github.com/schedutron/SnakeCoin
+
 To make SnakeCoin an actual cryptocurrency:
  - need control the amount of blocks (and coins) that can be
    created at a particular time.
