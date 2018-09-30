@@ -1,0 +1,11 @@
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/bin/Debug/netcoreapp2.1/blockchain_in_cs_test0.deps.json
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/bin/Debug/netcoreapp2.1/blockchain_in_cs_test0.runtimeconfig.json
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/bin/Debug/netcoreapp2.1/blockchain_in_cs_test0.runtimeconfig.dev.json
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/bin/Debug/netcoreapp2.1/blockchain_in_cs_test0.dll
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/bin/Debug/netcoreapp2.1/blockchain_in_cs_test0.pdb
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.csprojAssemblyReference.cache
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.csproj.CoreCompileInputs.cache
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.AssemblyInfoInputs.cache
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.AssemblyInfo.cs
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.dll
+/Users/jx01/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/obj/Debug/netcoreapp2.1/blockchain_in_cs_test0.pdb
