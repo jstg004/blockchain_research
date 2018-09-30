@@ -1,5 +1,4 @@
-﻿// ReSharper disable All
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NBitcoin;
@@ -18,31 +17,40 @@ namespace Transaction
             // Create a client
             QBitNinjaClient client = new QBitNinjaClient(Network.Main);
 
-            // parse transaction if to NBitcoin.uint256 for the client
+            // parse transaction ID to NBitcoin.uint256 for the client
             // this transaction number is from the tutorial book
+            // use QBitNinja.Client to get detailed information on transactions
             var transactionId = uint256.Parse(
                 "f13dc48fb035bbf0a6e989a26b3ecb57b84f85e0836e777d6edf60d87a4a2d94");
 
             // Query the transaction
+            // GetTransactionResponse contains the value and the scriptPubKey of
+            //    the inputs being spent in the transaction
             QBitNinja.Client.Models.GetTransactionResponse transactionResponse =
                 client.GetTransaction(transactionId).Result;
 
             NBitcoin.Transaction transaction = transactionResponse.Transaction;
-
+            Console.WriteLine("QBitNinja transactionResponse.TransactionId: ");
             Console.WriteLine(transactionResponse.TransactionId); 
+            Console.WriteLine("NBitcoin transaction.GetHash: ");
             Console.WriteLine(transaction.GetHash());
 
             // RECEIVED COINS
+            // there is 1 output sent to the ScriptPubKey
             List<ICoin> receivedCoins = transactionResponse.ReceivedCoins;
             foreach (Coin coin in receivedCoins)
             {
                 Money amount = coin.Amount;
 
+                Console.WriteLine("Amount of coins received: ");
                 Console.WriteLine(amount.ToDecimal(MoneyUnit.BTC));
                 var paymentScript = coin.ScriptPubKey;
-                Console.WriteLine(paymentScript);  // It's the ScriptPubKey
+                Console.WriteLine("ScriptPubKey: ");
+                Console.WriteLine(paymentScript);
                 var address = paymentScript.GetDestinationAddress(Network.Main);
+                Console.WriteLine("Destination address on mainNet: ");
                 Console.WriteLine(address);
+                Console.WriteLine("---------------------------------------");
                 Console.WriteLine();
             }
 
@@ -53,6 +61,7 @@ namespace Transaction
                 Coin coin = new Coin(transaction, output);
                 Money amount = coin.Amount;
 
+                Console.WriteLine("Amount of coins received: ");
                 Console.WriteLine(amount.ToDecimal(MoneyUnit.BTC));
                 var paymentScript = coin.GetScriptCode();
                 Console.WriteLine(paymentScript);  // It's the ScriptPubKey
