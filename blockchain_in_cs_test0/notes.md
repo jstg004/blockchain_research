@@ -35,3 +35,4 @@
   1. check the entire blockchain
   2. request a partial Merkle tree
      - Simple Payment Verification (SPV)
+     -
