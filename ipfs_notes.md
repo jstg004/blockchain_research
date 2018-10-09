@@ -12,11 +12,13 @@
 - nodes to not need to trust each other
 - all data is modeled as part of the same Merkle DAG
 
-## Distributed Hash Tables (DHTs)
+## Background
+
+### Distributed Hash Tables (DHTs)
 
 - used to coordinate and maintain metadata about p2p systems
 
-### Kademlia DHT
+#### Kademlia DHT
 
 - efficient lokup through large networks
   - queries on average contact nodes
@@ -27,7 +29,7 @@
 - wide usage in p2p applications
   - used in Gnutella and BitTorrent
 
-### Coral DSHT
+#### Coral DSHT
 
 - extends Kademlia
 1. Kademlia stores values in nodes whose IDs are nearest to the key
@@ -46,7 +48,7 @@
      - find nearby data without querying distant nodes
      - reduces latency of lookups
 
-### S/Kademlia DHT
+#### S/Kademlia DHT
 
 - extends Kademia to protect against malicious attackes
 - provides schemes to secure ```NodeId``` generation
@@ -103,4 +105,4 @@
 
 ### Self-Certified Filesystems - SFS
 
-- 
+-
