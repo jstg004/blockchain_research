@@ -1,6 +1,7 @@
 # notes from _IPFS - Content Addressed, Versioned, P2P File System_
 
-- code written in the Go programming language
+##### code written in the Go programming language
+
   - <https://golang.org/>
 
 - InterPlanetary File System (IPFS) is a p2p distributed file system
@@ -258,26 +259,26 @@
   - larger values are stored in the DHT as references
     - ```NodeId``` of peers who can serve the block
 
-##### DSHT interface:
+#### DSHT interface:
 
-    ```Go
-    type IPFSRouting interface {
-        FindPeer(node NodeId)
-        // gets a particular peer's network address
+```Go
+type IPFSRouting interface {
+    FindPeer(node NodeId)
+    // gets a particular peer's network address
 
-        SetValue(key []bytes, value []bytes)
-        // stores a small metadata value in DHT
+    SetValue(key []bytes, value []bytes)
+    // stores a small metadata value in DHT
 
-        GetValue(key []bytes)
-        // retrieves small metadata value from DHT
+    GetValue(key []bytes)
+    // retrieves small metadata value from DHT
 
-        ProvideValue(key Multihash)
-        // announces this node can serve a large value
+    ProvideValue(key Multihash)
+    // announces this node can serve a large value
 
-        FindValuePeers(key Multihash, min int)
-        // gets a number of peers serving a large value
-    }
-    ```
+    FindValuePeers(key Multihash, min int)
+    // gets a number of peers serving a large value
+}
+```
 
 - the IPFS routing system can be swapped for one that fits the user's needs
   - the interface above must be met as a requirement
