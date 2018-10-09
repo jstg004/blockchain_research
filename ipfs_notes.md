@@ -1,20 +1,18 @@
 # notes from _IPFS - Content Addressed, Versioned, P2P File System_
 
-##### code written in the Go programming language
-
-  - <https://golang.org/>
+##### code contained here is written in the Go programming language
 
 - InterPlanetary File System (IPFS) is a p2p distributed file system
-- seeks to connect all computing devices with the same system of files
+- IPFS seeks to connect all computing devices with the same system of files
   - provides high throughput content addressed block storage model
     - with content addressed hyper links
   - forms a generalized Merkle DAG
     - data structure with versioned file systems, blockchains, and Permanent Web
-- combines a distributed hashtable, an incentivized block exchange, and a
-  self-certifying namespace
-- no centralized single point of failure
-- nodes to not need to trust each other
-- all data is modeled as part of the same Merkle DAG
+  - combines a distributed hashtable, an incentivized block exchange, and a
+    self-certifying namespace
+  - no centralized single point of failure
+  - nodes do not need to trust each other
+  - all data is modeled as part of the same Merkle DAG
 
 ## Background
 
@@ -88,11 +86,11 @@
 
 - Version Control Systems provide facilities to model files
   changing over time
-  - distribute diferent versions efficiently
+  - distribute different versions efficiently
 - Git provides powerful Merkle DAG object model
   - captures changes to a filesystem tree in a distributed-
     friendly way
-  - immuteable objects represent
+  - immutable objects represent
     - Files ```(blob)```
     - Directories ```(trees)```
     - Changes ```(commit)```
@@ -156,7 +154,7 @@
   - created with S/Kademlia's static crypto puzzle
 - nodes store their public and private keys
   - they are encrypted with a passphrase
-- users can instatiate a new node identity on every launch if needed
+- users can instantiate a new node identity on every launch if needed
   - nodes are incentivized to remain the same
 
     ```Go
@@ -284,14 +282,38 @@ type IPFSRouting interface {
   - the interface above must be met as a requirement
 
 
-#### Exchange
+#### Block Exchange - BitSwap Protocol
 
+- a protocol inspired by the BitTorrent protocol
 - novel block exchange protocol
-- BitSwap
 - governs efficient block distribution
 - modelled as a market
 - data replication is incentivized
 - trade strategies are swappable
+- data distribution occurs when blocks are exchanged with peers
+- peers looking to acquire a set of blocks (```want_list```) and have another
+  set of blocks to offer in exchange (```have_list```)
+- not limited to the blocks in one torrent
+  - operates as a persistent marketplace where a node can acquire the blocks
+    blocks that they require
+    - the node can aquire the blocks regardless of what files those blocks are
+      part of
+    - blocks can come from completely unrelated files in the filesystem
+    - nodes come together to barter in the market place
+- BitSwap nodes must provide direct value to each other in the form of blocks
+  - in some cases nodes must work for their blocks
+    - if a node has nothing that its peers want - it seeks the pieces its
+      peers want
+      - lower priority than what the node wants itself
+    - this incentivizes nodes to cache and disseminate rare pieces
+      - this holds true even if the nodes are not interested in the rare pieces
+        directly
+
+##### BitSwap Credit
+
+- nodes must be incentivized to seed when they do not need anything specific
+- BitSwap nodes send blocks to their peers optimistically
+  - expect the debt to to be repaid
 
 #### Objects
 - Merkle DAG of content addressed immutable objects with links
