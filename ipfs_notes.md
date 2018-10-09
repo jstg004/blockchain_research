@@ -29,4 +29,8 @@
 
 ### Coral DSHT
 
-- 
+- extends Kademlia
+1. Kademlia stores values in nodes whose IDs are nearest to the key
+   - using XOR-distance
+   Coral stores addresses to peers who can provide the data blocks
+2. Coral relaxes the DHT API from '''get_value(key)'''
