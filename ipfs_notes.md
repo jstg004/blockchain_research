@@ -65,7 +65,7 @@
     the presence of a large fraction of adversaries in the network
   - achieves a success rate of 0.85 even with an adversarial fraction as large as 1/2 of the nodes
 
-### BLock Exchanges - BitTorrent
+### Block Exchanges - BitTorrent
 
 - succeeds in coordinated networks of trusting peers (swarms) to
   cooperate in distributing pieces of files to each other
@@ -259,24 +259,24 @@
 
 #### DSHT interface:
 
-    ```Go
-    type IPFSRouting interface {
-        FindPeer(node NodeId)
-        // gets a particular peer's network address
+```Go
+type IPFSRouting interface {
+    FindPeer(node NodeId)
+    // gets a particular peer's network address
 
-        SetValue(key []bytes, value []bytes)
-        // stores a small metadata value in DHT
+    SetValue(key []bytes, value []bytes)
+    // stores a small metadata value in DHT
 
-        GetValue(key []bytes)
-        // retrieves small metadata value from DHT
+    GetValue(key []bytes)
+    // retrieves small metadata value from DHT
 
-        ProvideValue(key Multihash)
-        // announces this node can serve a large value
+    ProvideValue(key Multihash)
+    // announces this node can serve a large value
 
-        FindValuePeers(key Multihash, min int)
-        // gets a number of peers serving a large value
-    }
-    ```
+    FindValuePeers(key Multihash, min int)
+    // gets a number of peers serving a large value
+}
+```
 
 - the IPFS routing system can be swapped for one that fits the user's needs
   - the interface above must be met as a requirement
@@ -420,7 +420,7 @@
     ```
 
 - lifetime of a peer connection:
-  1. Open: 
+  1. Open:
 
 #### Objects
 - Merkle DAG of content addressed immutable objects with links
