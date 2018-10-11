@@ -259,24 +259,24 @@
 
 #### DSHT interface:
 
-```Go
-type IPFSRouting interface {
-    FindPeer(node NodeId)
-    // gets a particular peer's network address
+    ```Go
+    type IPFSRouting interface {
+        FindPeer(node NodeId)
+        // gets a particular peer's network address
 
-    SetValue(key []bytes, value []bytes)
-    // stores a small metadata value in DHT
+        SetValue(key []bytes, value []bytes)
+        // stores a small metadata value in DHT
 
-    GetValue(key []bytes)
-    // retrieves small metadata value from DHT
+        GetValue(key []bytes)
+        // retrieves small metadata value from DHT
 
-    ProvideValue(key Multihash)
-    // announces this node can serve a large value
+        ProvideValue(key Multihash)
+        // announces this node can serve a large value
 
-    FindValuePeers(key Multihash, min int)
-    // gets a number of peers serving a large value
-}
-```
+        FindValuePeers(key Multihash, min int)
+        // gets a number of peers serving a large value
+    }
+    ```
 
 - the IPFS routing system can be swapped for one that fits the user's needs
   - the interface above must be met as a requirement
@@ -296,7 +296,7 @@ type IPFSRouting interface {
 - not limited to the blocks in one torrent
   - operates as a persistent marketplace where a node can acquire the blocks
     blocks that they require
-    - the node can aquire the blocks regardless of what files those blocks are
+    - the node can acquire the blocks regardless of what files those blocks are
       part of
     - blocks can come from completely unrelated files in the filesystem
     - nodes come together to barter in the market place
@@ -306,14 +306,121 @@ type IPFSRouting interface {
       peers want
       - lower priority than what the node wants itself
     - this incentivizes nodes to cache and disseminate rare pieces
-      - this holds true even if the nodes are not interested in the rare pieces
-        directly
+      - this holds true even if the nodes are not interested in the rare pieces directly
 
 ##### BitSwap Credit
 
 - nodes must be incentivized to seed when they do not need anything specific
 - BitSwap nodes send blocks to their peers optimistically
   - expect the debt to to be repaid
+- the protocol needs to incentivize nodes to seed when they do not need
+  specific blocks - they may have the blocks other nodes are seeking
+- BitSwap nodes send blocks to their peers optimistically
+- a credit system is protection against leeching nodes:
+  - peers track their balance (in bytes verified) with other nodes
+  - peers send blocks to debtor peers probabilistically, according to
+    a function that falls as debt increases
+- if a node decides not to send to a peer - that node then ignores the
+  peer for an ```ignore_cooldown``` timeout
+  - this prevents senders from trying to game the probability
+  - default BitSwap is 10 seconds
+
+##### BitSwap Strategy
+
+1. maximize he trade performance for the node - and entire exchange
+2. prevent freeloaders from exploiting and degrading the exchange
+3. be effective with and resistant to other unknown strategies
+4. be lenient to trusted peers
+
+- example of a function sigmoid - scaled by a debt ratio
+  - ```r = bytes_sent / (bytes_recv + 1)```
+  - given ```r``` - let the probability of sneding to a debtor be:
+    - ```P(send | r) = 1 - (1/ (1 + exp(6-3r)))```
+    - this function drops off quickly as the nodes' debt ratio
+      surpasses twice the established credit
+  - the debt ratio if a measure of trust
+    - favorable to debts between nodes that have previously exchanged
+      large amounts of data successfully
+    - unfavorable to unknown/untrusted nodes
+    - provides resistance to attackers who would create many new nodes
+      - known as sybill attack
+    - protects previously successful trade relationships
+      - even if one of the nodes is not valuable at the time
+    - eventually chokes relationships that have deteriorated until
+      they improve
+
+##### BitSwap Ledger
+
+- BitSwap nodes keep ledgers accounting the transfers with other nodes
+  - allows doe nodes to keep track of history and avoid tampering
+- BitSwap nodes activate a connection and exchange their ledger
+  - if ledgers do not match - the ledger is reinitialized from scratch
+    - the accrued credit or debt is lost
+- possible for malicious nodes - trying to erase debts - to
+  purposefully lose the ledger
+  - unlikely that nodes will have accrued enough debt to warrant also
+    losing the accrued trust
+  - partner node is free to count this as misconduct - refuses to trade
+
+    ```Go
+    type Ledger struct {
+        owner        NodeId
+        partner      NodeId
+        bytes_sent      int
+        bytes_recv      int
+        timestamp Timestamp
+    }
+    ```
+
+- nodes are free to keep the ledger history
+  - not necessary for correct operation
+- nodes are free to garbage collect ledgers as necessary
+  - starting with the less useful ledgers
+
+##### BitSwap Specification
+
+- BitSwap nodes follow this simple protocol:
+
+    ```Go
+    // Additional state kept
+    type BitSwap struct {
+        ledgers map[NodeId]Ledger
+        // Ledgers known to this node, inc inactive
+
+        active map[NodeId]Peer
+        // currently open connections to other nodes
+
+        need_list []Multihash
+        // checksums of blocks this node needs
+
+        have_list []Multihash
+        // checksums of blocks this node has
+    }
+
+    type Peer struct {
+        nodeid NodeId
+        ledger Ledger
+        // Ledger between the node and this peer
+
+        last_seen Timestamp
+        // timestamp of last received message
+
+        want_list []Multihash
+        // checksums of all blocks wanted by peer
+        // includes blocks wanted by peer's peers
+    }
+
+    // Protocol interface:
+    interface Peer {
+        open (nodeid :NodeId, ledger :Ledger);
+        send_want_list (want_list :WantList);
+        send_block (block :Block) -> (complete :Bool);
+        close (final :Bool);
+    }
+    ```
+
+- lifetime of a peer connection:
+  1. Open: 
 
 #### Objects
 - Merkle DAG of content addressed immutable objects with links
