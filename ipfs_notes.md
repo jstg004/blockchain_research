@@ -445,9 +445,8 @@ type IPFSRouting interface {
     ```last_seen``` timestamp
     - then compares received ```Ledger``` with its own ```Ledger```
     - if they match - peer creates a new zeroed out ```Ledger``` and sends it
-
 - ```Peer.send_want_list(WantList)```
-  -
+  - .
 
 #### Objects
 - Merkle DAG of content addressed immutable objects with links
