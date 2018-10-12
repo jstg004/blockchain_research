@@ -420,7 +420,34 @@ type IPFSRouting interface {
     ```
 
 - lifetime of a peer connection:
-  1. Open:
+  1. Open: peers send ```ledgers``` until they agree
+  2. Sending: peers exchange ```want_lists``` and ```blocks```
+  3. Close: peers deactivate a connection
+  4. Ignored: (special) a peer is ignored (for the duration of a timeout)
+     - if a node's strategy avoids sending
+
+- ```Peer.open(NodeId, Ledger)```
+  - a node initializes a connectionwith a ```Ledger```
+    - either stored from a connection in the past or a new ```Ledger``` zeroed
+      out
+  - the node then sends an ```Open``` message with the ```Ledger``` to the peer
+  - when an ```Open``` message is received - the peer chooses to activate the
+    connection or not
+    - is the receiver's ```Ledger``` - the sender is not a trusted agent
+      - the receiver may ignore the request
+      - untrusted if the transmission is below 0 or if the sender has a large
+        outstanding debt
+      - ```ignore_cooldown``` timeout is used to probabilistically ignore
+        requests - allows for errors to be corrected
+        - aids in thwarting attacks
+  - receiver activates a connection - receiver initializes a ```Peer```
+    object with the local version of the ```Ledger``` and sets the
+    ```last_seen``` timestamp
+    - then compares received ```Ledger``` with its own ```Ledger```
+    - if they match - peer creates a new zeroed out ```Ledger``` and sends it
+
+- ```Peer.send_want_list(WantList)```
+  -
 
 #### Objects
 - Merkle DAG of content addressed immutable objects with links
