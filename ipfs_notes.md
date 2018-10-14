@@ -446,9 +446,52 @@ type IPFSRouting interface {
     - then compares received ```Ledger``` with its own ```Ledger```
     - if they match - peer creates a new zeroed out ```Ledger``` and sends it
 - ```Peer.send_want_list(WantList)```
-  - .
+  - nodes advertise their ```want_list``` to all connected peers while the
+    connection is open
+  - the ```want_list``` is advertised during the following scenarios:
+    - upon opening the connection
+    - after a randomized periodic timeout
+    - after a change in the ```want_list```
+    - after receiving a new block
+  - when a ```want_list``` is received - a node stores it
+    - then the node checks whether it has any wanted blocks
+    - if wanted blocks are found they are sent to the BitSwap Strategy
+- ```Peer.send_block(Block)```
+  - node transmits the block data to send a block
+  - when all data is received - the receiver computes and verifies the Multihash
+    checksum - then returns confirmation
+  - when the correct transmission of a block is finalized - the receiver moves
+    the block from the ```need_list``` to the ```have_list```
+    - receiver and sender then update their ledgers to reflect additional bytes
+      transmitted
+  - if sender is malfunctioning or attacking the receiver
+    - the transmission verification with fail
+    - the receiver is free to refuse further trades
+  - BitSwap expects to operate on a reliable transmission channel
+    - transmission errors
+    - the could lead to incorrect penalization of an honest sender
+    - expected to be caught before data is given to BitSwap
+- ```Peer.close(Bool)```
+  - this parameter signals wether or not the intention to tear down the\
+    connection is from the sender
+    - if false receiver may opt to re-open connection immediately
+      - avoids premature closes
+  - a peer connection is closed if either of these conditions are met:
+    - ```silence_wait``` timeout has expired without receiving any messages
+      from the peer - default BitSwap timeout is 30 seconds
+      - ```Peer.close(false)``` is issued by the node
+    - node is exiting and BitSwap is being shut down
+      - ```Peer.close(true)``` is issued by the node
+  - after close message - receiver and sender tear down the connection
+    - any stored state is cleared
+  - ```Ledger``` may be stored for the future if useful
+  - ```Non-open``` message on an inactive connection should be ignored
+    - ```send_block``` message - receiver may check the block if it is needed
+      and if it is correct before use
+    - all out-of-order messages trigger a ```close(false)``` message from
+      receiver to force re-initialization of connection
 
-#### Objects
+#### Object Merkle DAG
 - Merkle DAG of content addressed immutable objects with links
 - used to represent arbitrary data structures
   - files hierarchy
