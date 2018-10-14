@@ -126,7 +126,7 @@
 - all SFS instances share a global namespace where name allocation is
   cryptographic - not gate by any centralized body
 
-### IPFS Design
+## IPFS Design
 
 - distributed file system
 - synthesizes successful ideas form previous p2p systems
@@ -282,7 +282,7 @@ type IPFSRouting interface {
   - the interface above must be met as a requirement
 
 
-#### Block Exchange - BitSwap Protocol
+### Block Exchange - BitSwap Protocol
 
 - a protocol inspired by the BitTorrent protocol
 - novel block exchange protocol
@@ -308,7 +308,7 @@ type IPFSRouting interface {
     - this incentivizes nodes to cache and disseminate rare pieces
       - this holds true even if the nodes are not interested in the rare pieces directly
 
-##### BitSwap Credit
+#### BitSwap Credit
 
 - nodes must be incentivized to seed when they do not need anything specific
 - BitSwap nodes send blocks to their peers optimistically
@@ -325,7 +325,7 @@ type IPFSRouting interface {
   - this prevents senders from trying to game the probability
   - default BitSwap is 10 seconds
 
-##### BitSwap Strategy
+#### BitSwap Strategy
 
 1. maximize he trade performance for the node - and entire exchange
 2. prevent freeloaders from exploiting and degrading the exchange
@@ -349,7 +349,7 @@ type IPFSRouting interface {
     - eventually chokes relationships that have deteriorated until
       they improve
 
-##### BitSwap Ledger
+#### BitSwap Ledger
 
 - BitSwap nodes keep ledgers accounting the transfers with other nodes
   - allows doe nodes to keep track of history and avoid tampering
@@ -377,7 +377,7 @@ type IPFSRouting interface {
 - nodes are free to garbage collect ledgers as necessary
   - starting with the less useful ledgers
 
-##### BitSwap Specification
+#### BitSwap Specification
 
 - BitSwap nodes follow this simple protocol:
 
@@ -426,7 +426,8 @@ type IPFSRouting interface {
   4. Ignored: (special) a peer is ignored (for the duration of a timeout)
      - if a node's strategy avoids sending
 
-- ```Peer.open(NodeId, Ledger)```
+##### ```Peer.open(NodeId, Ledger)```
+
   - a node initializes a connectionwith a ```Ledger```
     - either stored from a connection in the past or a new ```Ledger``` zeroed
       out
@@ -445,7 +446,9 @@ type IPFSRouting interface {
     ```last_seen``` timestamp
     - then compares received ```Ledger``` with its own ```Ledger```
     - if they match - peer creates a new zeroed out ```Ledger``` and sends it
-- ```Peer.send_want_list(WantList)```
+
+##### ```Peer.send_want_list(WantList)```
+
   - nodes advertise their ```want_list``` to all connected peers while the
     connection is open
   - the ```want_list``` is advertised during the following scenarios:
@@ -456,7 +459,9 @@ type IPFSRouting interface {
   - when a ```want_list``` is received - a node stores it
     - then the node checks whether it has any wanted blocks
     - if wanted blocks are found they are sent to the BitSwap Strategy
-- ```Peer.send_block(Block)```
+
+##### ```Peer.send_block(Block)```
+
   - node transmits the block data to send a block
   - when all data is received - the receiver computes and verifies the Multihash
     checksum - then returns confirmation
@@ -471,7 +476,9 @@ type IPFSRouting interface {
     - transmission errors
     - the could lead to incorrect penalization of an honest sender
     - expected to be caught before data is given to BitSwap
-- ```Peer.close(Bool)```
+
+##### ```Peer.close(Bool)```
+
   - this parameter signals wether or not the intention to tear down the\
     connection is from the sender
     - if false receiver may opt to re-open connection immediately
@@ -491,16 +498,60 @@ type IPFSRouting interface {
     - all out-of-order messages trigger a ```close(false)``` message from
       receiver to force re-initialization of connection
 
-#### Object Merkle DAG
+### Object Merkle DAG
+
 - Merkle DAG of content addressed immutable objects with links
 - used to represent arbitrary data structures
   - files hierarchy
   - communication systems
+- DHT and BitSwap allow IPFS to form a massive p2p system for storing and
+  distributing blocks quickly and robustly
+- IPFS builds a Merkle DAG - directed acyclic graph where links between objects
+  are cryptographic hashes of the targets embedded in the sources
+  - a generalization of the Git data structure
 
-#### Files
+#### Content Addressing
+
+  - all content is uniquely identified by its multihash checksum
+    - including links
+
+#### Tamper resistance
+
+  - all content is verified with its checksum
+  - if data is tampered with or corrupted - IPFS detects it
+
+#### Deduplication
+
+  - all objects that hold the exact same content are equal
+    - only stored once
+
+#### IPFS Object format
+
+```Go
+    tpye IPFSLink struct {
+        Name string
+        // name or alias of this link
+
+        Hash Multihash
+        // cryptographic hash or target
+
+        Size int
+        // total size of target
+    }
+
+    tpye IPFSObject struct {
+        links []IPFSLink
+        // array of links
+
+        data []byte
+        // opaque content data
+    }
+````
+
+### Files
 - versioned file system hierarchy
 - inspired by Git
 
-#### Naming
+### Naming
 
 - self certifying mutable name system
