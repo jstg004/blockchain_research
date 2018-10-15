@@ -139,9 +139,10 @@
 - nodes connect to each other and transfer objects
   - objects represent files and other data structures
 
-### IPFS protocol is divided into a stack of sub-protocols
+### IPFS protocol
 
-- each protocol is responsible for different functionality
+- divided into a stack of sub-protocols
+- each sub-protocol is responsible for different functionality
 - the subsystems are not independent
   - they are all integrated
   - leverage blended properties
@@ -208,7 +209,7 @@
 - configurable
 - IPFS nodes communicate regularly with other nodes in the network
 
-##### Network stack features
+##### Network Stack Features
 
 - Transport:
   - uses any transport protocol
@@ -257,7 +258,7 @@
   - larger values are stored in the DHT as references
     - ```NodeId``` of peers who can serve the block
 
-#### DSHT interface:
+#### DSHT Interface:
 
 ```Go
 type IPFSRouting interface {
@@ -515,7 +516,7 @@ type IPFSRouting interface {
   - all content is uniquely identified by its multihash checksum
     - including links
 
-#### Tamper resistance
+#### Tamper Resistance
 
   - all content is verified with its checksum
   - if data is tampered with or corrupted - IPFS detects it
@@ -525,7 +526,7 @@ type IPFSRouting interface {
   - all objects that hold the exact same content are equal
     - only stored once
 
-#### IPFS Object format
+#### IPFS Object Format
 
 ```Go
     tpye IPFSLink struct {
@@ -546,7 +547,66 @@ type IPFSRouting interface {
         data []byte
         // opaque content data
     }
-````
+```
+
+- To store data on the IPFS Merkle DAG - object references must be content
+  addressed and encoded in the IPFS Object format
+- applications have complete control over the data field
+  - applications can use any custom data format
+    - IPFS does not need to understand the format
+- IPFS uses a separate in-object link table which allows the following:
+  - list all object references in an object
+    - ```<object multihash> <object size> <link name>```
+  - resolve string path lookups - ```foo/bar/baz```
+    - IPFS resolves the 1st path component to a hash in the object's link table
+    - then fetches the 2nd object
+    - then repeats with the next component
+    - string paths can walk the Merkle DAG regardless of the data formats
+      contained in the Merkle DAG
+  - resolve all objects referenced recursively
+- a raw data field and a common link structure are required components for
+  constructing arbitrary data structures on top of IPFS
+
+##### Potential IPFS Merkle DAG Data Structures
+
+- the following systems can be modeled on top of the IPFS Merkle DAG:
+  - key-value stores
+  - traditional relational databases
+  - linked data triple stores
+  - linked document publishing systems
+  - linked communications platforms
+  -  cryptocurrency blockchains
+- these systems use IPFS as a transport protocol
+
+#### Paths
+
+- IPFS objects cna be traversed with a string path API
+- full path format:
+  - ```/ipfs/<hash-of-object>/<name-path-to-object>```
+- there is no global root
+  - the root is simulated with content addressing
+  - all objects are always accessible via their hash
+- given 3 objects in path ```<foo>/bar/baz```
+  - the last object is accessible by all of the following:
+    - ```/ipfs/<hash-of-foo>/bar/baz```
+    - ```/ipfs/<hash-of-bar>/baz```
+    - ```/ipfs/<hash-of-baz>```
+
+#### Local Objects
+
+- IPFS clients require some local storage
+  - external system on which to store and retrieve local raw data
+    - this data is for the objects IPFS manages
+  - type of storage depends on the node's use case
+- all blocks available in IPFS are in some node's local storage
+  - when users request objects - they are found, downloaded, and stored locally
+    - the data may only be stored temporarily
+  - provides fast lookup for some configurable amount of time for which the
+    data is kept in storage
+
+#### Object Pinning
+
+- ...
 
 ### Files
 - versioned file system hierarchy
