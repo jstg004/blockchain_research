@@ -1,6 +1,10 @@
 # notes from _IPFS - Content Addressed, Versioned, P2P File System_
 
+<<<<<<< HEAD
 ##### _code is written in the Go programming language_
+=======
+##### code contained here is written in the Go programming language
+>>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 
 - InterPlanetary File System (IPFS) is a p2p distributed file system
 - IPFS seeks to connect all computing devices with the same system of files
@@ -580,7 +584,11 @@ type IPFSRouting interface {
 
 #### Paths
 
+<<<<<<< HEAD
 - IPFS objects can be traversed with a string path API
+=======
+- IPFS objects cna be traversed with a string path API
+>>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 - full path format:
   - ```/ipfs/<hash-of-object>/<name-path-to-object>```
 - there is no global root
@@ -606,6 +614,7 @@ type IPFSRouting interface {
 
 #### Object Pinning
 
+<<<<<<< HEAD
 - to ensure the survival of a particular object - nodes can do this by
   ```pinning``` the objects
   - ensures objects are kept in the node's local storage
@@ -695,10 +704,10 @@ type IPFSRouting interface {
   - IPFS files can be represented by both ```lists``` and ```blobs```
   - ```blobs``` have no links
 
-    ```json
+    ```Go
       {
          "data": "some data here",
-         /// blobs have no links
+         // blobs have no links
       }
     ```
 
@@ -716,7 +725,7 @@ type IPFSRouting interface {
 - cycles are not possible
   - this is enforced by hash addressing
 
-    ```json
+    ```Go
       {
         "data": ["blob", "list", "blob"],
         // lists have an array of object types as data
@@ -746,7 +755,7 @@ type IPFSRouting interface {
   - similar to Git - but can reference any type of object
   - also links to author objects
 
-    ```json
+    ```Go
       {
         "data": {
           "type": "tree",
@@ -771,7 +780,7 @@ type IPFSRouting interface {
       }
     ```
 
-    ```json
+    ```Go
       - Sample Object Graph:
                  ccc111
                     |
@@ -835,6 +844,13 @@ type IPFSRouting interface {
 #### Version Control
 
 
+=======
+- ...
+
+### Files
+- versioned file system hierarchy
+- inspired by Git
+>>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 
 ### Naming
 
