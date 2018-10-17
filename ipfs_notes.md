@@ -1,10 +1,6 @@
 # notes from _IPFS - Content Addressed, Versioned, P2P File System_
 
-<<<<<<< HEAD
 ##### _code is written in the Go programming language_
-=======
-##### code contained here is written in the Go programming language
->>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 
 - InterPlanetary File System (IPFS) is a p2p distributed file system
 - IPFS seeks to connect all computing devices with the same system of files
