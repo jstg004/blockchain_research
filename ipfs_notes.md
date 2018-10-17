@@ -584,11 +584,7 @@ type IPFSRouting interface {
 
 #### Paths
 
-<<<<<<< HEAD
 - IPFS objects can be traversed with a string path API
-=======
-- IPFS objects cna be traversed with a string path API
->>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 - full path format:
   - ```/ipfs/<hash-of-object>/<name-path-to-object>```
 - there is no global root
@@ -614,7 +610,6 @@ type IPFSRouting interface {
 
 #### Object Pinning
 
-<<<<<<< HEAD
 - to ensure the survival of a particular object - nodes can do this by
   ```pinning``` the objects
   - ensures objects are kept in the node's local storage
@@ -843,14 +838,34 @@ type IPFSRouting interface {
 
 #### Version Control
 
+- the commit object represents a particular snapshot in the version history of
+  an object
+  - comparing the objects and children to 2 different commits reveals the
+    differences between the 2 versions of the filesystem
+  - if all single ```commit``` and children objects the ```commit``` references
+    are accessible - all preceding versions are retrievable
+    - the full history of the changes made to the filesystem can be accessed
+- Git version control tools are available to IPFS users
+  - Object model is compatible
+  - makes the following possible:
+    - build a modified version of the Git tools which use the IPFS
+      object graph
+    - build a mounted FUSE filesystem which mounts an IPFS ```tree``` as a Git
+      repo
+      - translating Git filesystem read/writes to the IPFS formats
 
-=======
+#### Filesystem Paths
+
+- IPFS objectscan be traversed with a string path API
+- the IPFS file objects are designed to make mounting IPFS onto a UNIX
+  filesystem simple
+  - ```trees``` are restricted to have no data
+    - they are represented as directories
+  - ```commits``` are represented as directories or hidden from the filesystem
+
+#### Splitting Files into Lists and Blobs
+
 - ...
-
-### Files
-- versioned file system hierarchy
-- inspired by Git
->>>>>>> 70fd5f3a419b63c2e836e7c26ed7a41416844a05
 
 ### Naming
 
