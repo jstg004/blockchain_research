@@ -861,8 +861,200 @@ type IPFSRouting interface {
 
 #### Splitting Files into Lists and Blobs
 
-- ...
+- IPFS offers alternatives to splitting large files into independent blocks
+  for versioning and distributing large files
+  - Rabin Fingerprints
+    - LBFS (Low-bandwidth Network File System)
+      - picks suitable block boundaries
+  - rsync rolling-checksum algorithm
+    - detects blocks that have changed between versions
+  - allow users to specify block-splitting functions highly tuned for specific
+    files
 
-### Naming
+#### Path Lookup Performance
+
+- path based access traverses the object graph
+  - to retrieve each object requires the following:
+    - looking up the object's key in the DHT
+    - connecting to peers
+    - retrieving the object's blocks
+
+##### Overhead Mitigation
+
+- tree caching
+  - all objects are hash-addressed
+  - cached indefinitely
+  - ```trees``` are typically small in size
+  - IPFS prioritizes caching ```trees``` over blobs
+- flattened trees
+  - a special ```flattened tree``` can be constructed to list all objects
+    reachable from the ```tree```
+  - names in the ```flattened tree``` are paths parting from the original tree - with slashes
+- Example of ```flattened tree``` from ```ttt111```:
+
+    ```Go
+        {
+            "data":
+                ["tree", "blob", "tree", "list", "blob" "blob"],
+            "links":[
+                {
+                    "hash": "<ttt222-hash>", "size": 1234,
+                    "name": "ttt222-name"
+                },
+                {
+                    "hash": "<bbb111-hash>", "size": 123,
+                    "name": "ttt222-name/bbb111-name"
+                },
+                {
+                    "hash": "<ttt333-hash>", "size": 12334,
+                    "name": "ttt333-name"
+                },
+                {
+                    "hash": "<lll111-hash>", "size": 521,
+                    "name": "ttt333-name/lll111-name"
+                },
+                {
+                    "hash": "<bbb222-hash>", "size": 22,
+                    "name": "ttt333-name/lll111-name/bbb222-name"
+                },
+                {
+                    "hash": "<bbb222-hash>", "size": 12,
+                    "name": "bbb222-name"
+                }
+            ]
+        }
+    ```
+
+### IPNS: Naming and Mutable State
 
 - self certifying mutable name system
+- the IPFS stack forms a p2p block exchange constructing a content addressed DAG
+  of objects
+  - serves to publish and retrieve immutable objects
+  - tracks the version history of these objects
+- objects are permanent
+  - object content addressing constructs a web with the following properties
+    - significant bandwidth optimizations
+    - untrusted content serving
+    - permanent links
+    - ability to make full permanent backups of any object and its references
+
+#### Self-Certified Names
+
+- naming scheme from SFS (Self-Certified File Systems)
+  - allows for construction of self-certified names
+  - cryptographically assigned global namespace
+  - mutable
+
+##### IPFS scheme
+
+- ```NodeId = hash(node.PubKey)```
+- every user is assigned a mutable namespace
+  - located at ```/ipns/<NodeId>```
+- users can publish an object to this path - signed by a private key
+  - ```/ipns/<private_key_here>```
+- other users retrieve the object
+  - check signature if matches the public key and NodeId
+  - verifies the authenticity of the object published by user
+    - this achieves a mutable state retrieval
+- the ```ipns``` (InterPanetary Name Space) separate prefix establishes a
+  distinction between mutable and immutable paths
+- the routing system is the only mutable state distribution system in IPFS
+  - published the object as a regular immutable IPFS object
+  - publishes its hash on the routing system as a metadata value
+    - ```routing.setValue(NodeId, <ns-object-hash>)```
+- any links in the object published act as sub-names in the name space
+  - ```/ipns/<private_key_here>/```
+  - ```/ipns/<private_key_here>/docs```
+  - ```/ipns/<private_key_here>/docs/ipfs```
+- best practice to publish a ```commit``` object - or other object with a
+  version history
+  - this allows clients to find old names
+  - this is a user option
+
+##### Human Friendly Names
+
+###### Peer Links
+
+- users can link other user's objects directly into their own objects
+  - this creates a web of trust
+  - supports old certificate authority model
+
+    ```Go
+        # Alice links to Bob
+        ipfs link /<alice-pk-hash>/friends/bob /<bob-pk-hash>
+
+        # Eve links to Alice
+        ipfs link /<eve-pk-hash>/friends/alice /<alice-pk-hash>
+
+        # Eve also has access to Bob
+        /<eve-pk-hash>/friends/alice/friends/bob
+
+        # access Verisign certified domains
+        /<verisign-pk-hash>/foo.com
+    ```
+
+###### DNS TXT IPNS Records
+
+- if ```/ipns/<domain>``` is a valid domain name
+  - IPFS looks up key ```ipns``` in its ```DNS TXT``` records
+- IPFS interprets the value as either an object hash or another IPNS path
+
+    ```Go
+        # this DNS TXT record
+        ipfs.benet.ai. TXT "ipfs=<key_ipns>"
+
+        # behaves as symlink
+        ln -s /ipns/<key_ipns> /ipns/fs.benet.ai
+    ```
+
+###### Proquint Pronounceable Identifiers
+
+- scheme to encode binary into pronounceable words
+
+    ```Go
+        # this proquint phrase
+        /ipns/afan-sdfd-sadf-jsdf-bsdf-wsdf-sdfs
+
+        # will resolve to corresponding
+        /ipns/KSFNsfOMOfmsidOS
+    ```
+
+###### Name Shortening Services
+
+```Go
+    # user can get a link from
+    /ipns/shorten.er/foobar
+
+    # to their own namespace
+    /ipns/jnbsd32409ew23rrgfhoINF6235Sa4fsdfasLI57fUNrwmds
+```
+
+### Examples of possible IPFS Implementations
+
+- mounted global filesystem
+  - under ```/ipfs``` and ```/ipns```
+- mounted personal sync folder
+  - automatically versions, publishes, backs up any writes
+- encrypted file or data sharing system
+- versioned package manager for all software
+- root filesystem of a virtual machine
+- boot filesystem of a virtual machine
+- database
+  - applications can write directly to the Merkle DAG data model
+  - IPFS provides versioning, caching, and distribution
+- linked and encrypted communications platform
+- integrity checked CDN for large files (without SSL)
+- encrypted CND
+- web CND
+- permanent web - where links do not die
+
+#### IPFS implementations target
+
+- IPFS library
+  - import into applications
+- commandline tools
+  - manipulate objects directly
+- mounted file system
+  - using FUSE
+  - or kernel modules
