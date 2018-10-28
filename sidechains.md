@@ -226,6 +226,7 @@
 
 #### Synchronize the sidechain to the parent chain
 
+- transfer mechanisms from parent chain to sidechain and back are the same
 1. confirmation period of a transfer between sidechains
    - a duration for which a coin must be locked on the parent chain before
      it can transferred to the sidechain
@@ -301,3 +302,37 @@
     - in a symmetric two-way peg - the converse is also true
 
 ### Asymmetric two-way peg
+
+- users of the sidechain are full validators of the parent chain
+- transfers from parent chain to sidechain do not require SPV proofs
+  - all validators are ware of the state of the parent chain
+  - the parent chain is still unaware of the sidechain
+    - SPV proofs are required to transfer back
+- prevents 52% attacker from falsely moving coins from the parent chain to
+  the sidechain
+- the sidechain validators are forced to track the parent chain
+- implies that reorganizations on the parent chain may cause reorganizations
+  on the sidechain
+  - results in significant expansion in complexity
+
+### Drawbacks
+
+#### Complexity
+
+##### Network level complexity
+
+- multiple unsynchronized blockchains that support transfers between each other
+  - must support transaction scripts which can be invalidated by a later
+    reorganization proof
+  - need software which can automatically detects misbehavior as well as
+    produce and publish the proofs
+
+##### Asset level complexity
+
+- individual chains may support arbitrarily many assets
+  - even assets that did not exist when the chain was 1st created
+- each asset is labelled with the chain it was transferred from
+  - ensures their transfers can be unwound correctly
+
+#### Fraudulent transfers
+
