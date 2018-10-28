@@ -499,14 +499,71 @@
 
 ### Hashpower attack resistance
 
+- a two-way peg using SPV proofs are forgeable by a 51% majority
+  - they are blockable by however much hashpower is needed to build a
+    sufficiently long proof during the transfer's contest period
+    - if 33% hashpower can block a proof - then 67% is needed to successfully
+      use a false proof
+
 #### Assurance contracts
+
+- sidechain's transaction fees are withheld from miners unless their hashpower
+  is at least ~66% of that of the parent chain
+- designed into the cryptocurrency from the start
+- serve to increase the cost of blocking transfers
 
 #### Time-shifted fees
 
+- miners receive part of their fees in a block far in the future
+  - or spread across many blocks
+  - incentivized to keep the chain operational
+- could incentivize miners to receive fees out-of-band
+  - avoids the need to wait for future in-chain rewards
+- miners could receive a token enabling them to mine a low-difficulty block far
+  into the future
+  - directly incentivizes its recipient to mine the chain
+
 #### Demurrage
+
+- block subsidies can be given to miners through demurrage to incentivize
+  honest mining
+- only as much can be transferred to the parent chain or other sidechains as
+  was transferred out
+  - fund reallocation would be localized to the sidechain in which it occurs
 
 #### Subsidy
 
+- a sidechain could issue its own separate native currency as a reward
+  - these coins would have a free-floating value
+  - this would not solve the volatility and market fragmentation issues
+
 #### Co-signed SPV proofs
 
+- introduces signer who must sign off on valid SPV proofs
+  - watching for false proofs
+  - results in a direct trade-off between centralization and security against
+    a high hashpower attack
+- trade-offs include:
+  - signers may be required only for high value transfers
+  - signers may be required only when the sidechain hashpower is too small
+    of a percentage of the parent chain's hashpower
+
 #### SNARKs
+
+- space efficient, quickly verifiable zero-knowledge cryptographic proofs which
+  verify the completion of a computation
+- slow to generate - depending on computational power
+- the need of a trusted setup allows for the creator of the system the ability
+  to create false proofs
+- possible for a low value/experimental sidechain which invokes a trusted
+  authority whose only task is to execute trusted setup for a SNARK scheme
+  - then blocks that prove their changes to the unspent output set could be
+    constructed
+    - this must be done in a zero-knowledge in the actual transactions
+  - could commit to the full verification of all previous blocks
+    - allows new users to get up to speed by verifying only the single latest
+      block
+    - these proofs could also replace the DMMS used to move coins from another
+      chain
+      - accomplished by proving that the sending chain is valid according to
+        previously defined rules
