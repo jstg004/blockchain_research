@@ -11,13 +11,14 @@
   - a new type of group signature
   - a digital signature formed by a set of signers which has no fixed size
   - Bitcoin's blockheaders are DMMS
-    - POW has the property that anyone can contribute without enrolling
+    - Proof-of-Work (PoW) has the property that anyone can contribute without
+      enrolling
     - contribution is weighed by computational power
       - allows for anonymous membership without risk of Sybil attack
         - Sybil attack is when 1 party joins many times - has a disproportionate
           input into the signature
   - DMMS could be a solution to the Byzantine Generals Problem
-  - Bitcoin's DMMS is cummulative - blocks are chained together
+  - Bitcoin's DMMS is cumulative - blocks are chained together
     - the 1st block in a chain or a chain fragment of a blockheader is a DMMS
     - computational strength of a chain = sum of strengths of the DMMS
     - the strength of Bitcoin's cumulative DMMS is directly proportional to the
@@ -142,4 +143,76 @@
 
 ## Design rationale
 
-- ...
+### Trustlessness
+
+- the property of not relying on trusting external parties for correct
+  operation of the system
+- enables all parties to verify the accuracy of information on their own
+- Example:
+  - in cryptographic signature systems - trustlessness is an implicit
+    requirement
+    - signatures systems where an attacker can forge signatures are
+      considered broken
+
+### Design goal of pegged sidechains
+
+- minimise additional trust over Bitcoin's model
+- securing transfers of coins between sidechains
+  - receiving chain must see that the coins on the sending chain were
+    correctly locked
+    - using DMMS to achieve this
+
+#### Avoid the introduction of single points of failure
+
+- trusting individual signers
+  - expect them to behave honestly
+  - never be compromised
+  - never leak secret key material
+  - never coerced
+  - never stop participating int he network
+- digital assets are long-lived
+  - any trust requirements must be long lived as well
+- community mistrust
+  - need to eliminate single points of failure to gain trust
+
+## Two-way peg
+
+### Definitions
+
+- coin/asset: digital property whose controller can be cryptographically
+  ascertained
+- block: a collection of transactions describing changes in asset control
+- blockchain: well-ordered collection of blocks - users must come to consensus
+  - determines the history of asset control
+  - provides a computationally unforgeable time ordering for transactions
+- reorganization (reorg): occurs locally in clients when a previously accepted
+  chain is overtaken by a competitor chain with more PoW
+  - causes any blocks on the losing side of the fork to be removed from
+    consensus history
+- sidechain: a blockchain that validates data from other blockchains parent
+  chain
+- two-way peg: mechanism by which coins are transferred between sidechains and
+  back at a fixed or otherwise deterministic exchange rate
+- pegged sidechain: a sidechain whose assets can be imported from and returned
+  to other chains
+  - supports two-way pegged assets
+- Simplified Payment Verification (SPV) proof: a DMMS that an action occurred
+  on a Bitcoin-like PoW blockchain
+  - SPV proof is composed of:
+    1. a list of blockheaders demonstrating PoW
+    2. a cryptographic proof that an output was created in one of the blocks
+       in the list
+    - allows verifiers to check that some amount of work has been committed to
+      the existence of an output
+    - SPV proofs determine history
+      - implicitly trusting that the longest blockchain is also the longest
+        correct blockchain - by SPV clients in Bitcoin
+    - only a dishonest collusion with greater than 50% of the hashpower can
+      persistently fool an SPV client
+      - unless the client is under a long-term Sybil attack
+        - preventing it from seeing the actual longest chain
+      - the honest hashpower will not contribute work to an invalid chain
+    - anyone in possession of an SPV proof can determine the state
+      of the chain without needing to reply to every block
+      - this is accomplished by requiring each blockheader to commit to the
+        blockchain's unspent output set
