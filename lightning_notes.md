@@ -1,0 +1,1 @@
+# notes from _The Bitcoin Lightning Network: Scalable Off-Chain Instant Payments_
