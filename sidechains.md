@@ -156,7 +156,7 @@
 
 ### Design goal of pegged sidechains
 
-- minimise additional trust over Bitcoin's model
+- minimize additional trust over Bitcoin's model
 - securing transfers of coins between sidechains
   - receiving chain must see that the coins on the sending chain were
     correctly locked
@@ -165,11 +165,12 @@
 #### Avoid the introduction of single points of failure
 
 - trusting individual signers
-  - expect them to behave honestly
-  - never be compromised
-  - never leak secret key material
-  - never coerced
-  - never stop participating int he network
+  - expect them to
+    - behave honestly
+    - never be compromised
+    - never leak secret key material
+    - never coerced
+    - never stop participating in the network
 - digital assets are long-lived
   - any trust requirements must be long lived as well
 - community mistrust
