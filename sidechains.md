@@ -202,17 +202,17 @@
     1. a list of blockheaders demonstrating PoW
     2. a cryptographic proof that an output was created in one of the blocks
        in the list
-    - allows verifiers to check that some amount of work has been committed to
-      the existence of an output
-    - SPV proofs determine history
-      - implicitly trusting that the longest blockchain is also the longest
-        correct blockchain - by SPV clients in Bitcoin
-    - only a dishonest collusion with greater than 50% of the hashpower can
-      persistently fool an SPV client
-      - unless the client is under a long-term Sybil attack
-        - preventing it from seeing the actual longest chain
-      - the honest hashpower will not contribute work to an invalid chain
-    - anyone in possession of an SPV proof can determine the state
-      of the chain without needing to reply to every block
-      - this is accomplished by requiring each blockheader to commit to the
-        blockchain's unspent output set
+  - SPV allows verifiers to check that some amount of work has been committed
+    to the existence of an output
+  - SPV proofs determine history
+    - implicitly trusting that the longest blockchain is also the longest
+      correct blockchain - by SPV clients in Bitcoin
+  - only a dishonest collusion with greater than 50% of the hashpower can
+    persistently fool an SPV client
+    - unless the client is under a long-term Sybil attack
+    - preventing it from seeing the actual longest chain
+    - the honest hashpower will not contribute work to an invalid chain
+  - anyone in possession of an SPV proof can determine the state
+    of the chain without needing to reply to every block
+    - this is accomplished by requiring each blockheader to commit to the
+      blockchain's unspent output set
