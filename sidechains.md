@@ -413,3 +413,49 @@
   - could cause loss of isolation of any soft-forked-required sidechain
 
 ## Applications
+
+- Applications to extend Bitcoin
+
+### Altchain experiments
+
+- creating altchains with coins that derive their scarcity and supply from
+  Bitcoin
+- using a sidechain that carries Bitcoins instead of a completely new currency
+  - avoids issues of initial distribution and market vulnerability
+  - avoids barriers to adoption for new users
+    - users do not need to locate a trustworthy marketplace or invest in mining
+      hardware to obtain altcoin assets
+
+#### Technical experimentation
+
+- sidechains are technically fully independent chains
+  - able to change features of Bitcoin such as:
+    - block structure
+    - transaction chaining
+
+##### Fixing undesired transaction malleability
+
+- protocols that involve chains of unconfirmed transactions can be executed
+  safely
+- transaction malleability is a problem in Bitcoin
+  - allows arbitrary users to tweak transaction data
+    - this breaks any later transactions which depend on that tweaked data
+    - actual content of the transaction is unchanged
+- probabilistic payments is an example of a protocol broken by
+  transaction malleability
+
+##### Improved payer privacy
+
+- ring signature scheme used by Monero can reduce the systemic risk of the
+  transactions of particular parties being censored
+  - protects the fungibility of the cryptocurrency
+- ring signatures cna be used with Monero coins
+  - sidechains on Bitcoin could add this feature to Bitcoin
+- provacy improvement suggestions:
+  - Maxwell and Poelstra's _Output distribution obfuscation_
+  - Back's _Bitcoins with homomorphic value (validatable but encrypted)_
+
+##### Script extensions
+
+- support for new cryptographic primitives such as Lamport signatures to
+  potentially secure against quantum computers
