@@ -106,7 +106,7 @@
   - any disruption should be localized to the sidechain on which it occurs
   - sidechains should be fully independent
     - users provide any necessary data from other chains
-  - validators of a sidechainshould only be required to track another chain
+  - validators of a sidechain should only be required to track another chain
     if that is an explicit consensus rule of the sidechain it self
 - users should not be required to track sidechains they are not actively using
 
@@ -115,8 +115,11 @@
 - transfer assets by providing proofs of possession in the transferring
   transactions themselves
   - avoids the need to track the sending chain
-1. when moving assets from one blockchain to another:
-   - create a transaction on the 1st blockchain - locking the asset
+
+#### Moving assets from one blockchain to another
+
+1. create a transaction on the 1st blockchain
+   - locking the asset
 2. create a transaction on the 2nd blockchain
    - inputs contain a cryptographic proof that the asset lock was
      completed correctly
@@ -128,7 +131,7 @@
   - can then be transferred onward to another sidechain
     - can be transferred back and forth between sidechains
   - can always be transferred back to the parent chain from any sidechain
-- sidechains cannot cause unauthorised creation of coins
+- sidechains cannot cause unauthorized creation of coins
   - this is because sidechains transfer existing assets from the parent chain
     - new assets are NOT created
   - relies on the parent chain to maintain the security and scarcity of
