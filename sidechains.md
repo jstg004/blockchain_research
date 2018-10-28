@@ -284,5 +284,19 @@
                 :
         (intra-chain transfers)
                 :
-                |
     ```
+
+- pegged sidechains may carry assets from many chains
+  - assumptions cannot be made about the security of these chains
+  - different assets must not be interchangeable
+    - only by explicit trade
+    - sidechains must treat assets from separate parent chains as separate
+      asset types
+- the parent chain and sidechains should perform SPV validation of data on
+  each other
+  - parent chain clients cannot be expected to observe every sidechain
+  - users import PoW from the sidechain into the parent chain in order to prove
+    possession
+    - in a symmetric two-way peg - the converse is also true
+
+### Asymmetric two-way peg
