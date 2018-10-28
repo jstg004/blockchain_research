@@ -315,11 +315,11 @@
   on the sidechain
   - results in significant expansion in complexity
 
-### Drawbacks
+## Drawbacks
 
-#### Complexity
+### Complexity
 
-##### Network level complexity
+#### Network level complexity
 
 - multiple unsynchronized blockchains that support transfers between each other
   - must support transaction scripts which can be invalidated by a later
@@ -327,12 +327,89 @@
   - need software which can automatically detects misbehavior as well as
     produce and publish the proofs
 
-##### Asset level complexity
+#### Asset level complexity
 
 - individual chains may support arbitrarily many assets
   - even assets that did not exist when the chain was 1st created
 - each asset is labelled with the chain it was transferred from
   - ensures their transfers can be unwound correctly
 
-#### Fraudulent transfers
+### Fraudulent transfers
 
+#### Reorganizations of arbitrary depth
+
+- could allow an attacker to completely transfer coins between sidechains
+  before causing a reorganization longer than the contest period on the
+  sending chain to undo its half of the transfer
+- results in an imbalance between the number of coins on the recipient chain
+  and the amount of locked output value backing them on the sending chain
+- if attacker is allowed to return the transferred coins to the original chain
+- attacker would increase the number of coins in their possession
+  - this is at the expense of other users of the sidechain
+- this risk can be made arbitrarily small by increasing the contest period
+  for transfers
+  - the duration of the contest period could be made a function of the
+    relative hashpower of the 2 chains
+    - the recipient chain might only unlock coins given an SPV proof of a day's
+      worth of its own PoW
+      - this could correspond to several days of the sending chain's PoW
+
+#### Sidechain responses
+
+1. no reaction
+   - results in the sidechain becoming a fractional reserve of the assets it
+     is storing from other chains
+2. the peg and all dependent transactions could be reversed
+   - coins tend to diffuse and histories intermingle
+   - limits fungibility
+3. reduce the amount of all coins while leaving the exchange rate intact
+   - users who transferred coins to the sidechain prior to the attack are
+     disadvantaged relative to new ones
+
+### Risk of mining centralization
+
+- miners receive compensation from the bock subsidy and fees of each chain
+  they provide work for
+  - in the miners economic interest to switch between providing DMMS for
+    different but similarly valued blockchains
+    - following changes in difficulty and movements in market value
+
+#### Merged mining
+
+- the blockheader definition includes a part of the parent chain's DMMS
+  - enables miners to provide a single DMMS that commits to the parent chain and sidechains
+- enables re-use of work for multiple blockchains
+  - miners are able to claim compensation from from each blockchain that they
+    provide DMMS for
+- the more blockchains miners provide work for the more recourses are needed
+  to track and validate all of blockchains
+- miners who provide work for a subset of blockchains (not all) are
+  compensated less than those who provide work for every possible blockchain
+- possible for miners to delegate validation and transaction selection of any
+  subset of the blockchains they provide work for
+  - a delegate authority enables miners to avoid almost all of the additional
+    resource requirements
+    - or provide work for blockchains that they are still in the process of
+      validating
+    - this is centralization for validation and transaction selection for
+      the blockchain - even if work generation is distributed
+    - miners could choose not to provide work for blockchains which they are
+      still in the process of validating
+      - voluntarily giving up some compensation in exchange for increased
+        validation decentralization
+
+### Risk of soft-fork
+
+- a soft-fork is an addition to the protocol which is backwards compatible
+  - designed to strictly reduce the set of valid transactions or blocks
+- a soft-fork can be implemented with a supermajority of the mining
+  computational power participating - not all full nodes are needed
+- participants' security with respect to the soft-forked features in only
+  SPV-level until they upgrade
+- a two-way peg has only SPV security
+  - greater short-term dependence on miner honesty unless all full nodes on
+    both systems inspect each other's chain and demand mutual validity as a
+    soft-forking rule
+  - could cause loss of isolation of any soft-forked-required sidechain
+
+## Applications
