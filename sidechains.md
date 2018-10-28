@@ -216,3 +216,73 @@
     of the chain without needing to reply to every block
     - this is accomplished by requiring each blockheader to commit to the
       blockchain's unspent output set
+
+### Symmetric two-way peg
+
+- to transfer parent chain coins into sidechain coins:
+  - the parent chain coins are sent to a special output on the parent chain
+    that can only be unlocked by an SPV proof of possession on the sidechain
+
+#### Synchronize the sidechain to the parent chain
+
+1. confirmation period of a transfer between sidechains
+   - a duration for which a coin must be locked on the parent chain before
+     it can transferred to the sidechain
+   - allows for sufficient work to be created
+     - making DoS attacks in the next waiting period difficult
+   - after creating the special output on the parent chain:
+     1. user waits out the confirmation period
+     2. user creates a transaction on the sidechain referencing this output
+        - provides SPV proof that the transaction was created and buried
+          under sufficient work on the parent chain
+     - confirmation period is a per-sidechain security parameter
+       - trades cross-chain transfer speed for security
+2. user must wait for the contest period
+   - a duration in which a newly transferred coin may not be spent on the
+     sidechain
+   - a contest period prevents double spending by transferring previously
+     locked coins during a reorganization
+   - reorganization proof:
+     - if during the delay a new proof is published
+       - containing a chain with more aggregate work
+         - not including the block in which the lock output was created
+       - the conversion is retroactively invalidated
+   - all users of the sidechain have an incentive to produce reorganization
+     proofs if possible
+   - if a bad proof is admitted - the value of all coins is diluted
+- the coin locked on teh parent chain can be freely transferred withing the
+  sidechain without further interaction with the parent chain
+  - this coin retains its identity as a parent chain coin
+  - can only be transferred back to the same chain that is came from
+- to transfer coins from the sidechain back to the parent chain:
+  1. send the coins on the sidechain to an SPV-locked output
+  2. produce a sufficient SPV proof that the 1st step was completed
+  3. use the proof to unlock a number of previously locked outputs with equal
+     denomination on the parent chain
+
+    ```None
+         Parent Chain                                  Sidechain
+               |                                           |
+        send to SPV-locked output                          |
+        wait out confirmation period                       |
+               ------------------------SPV Proof---->      |
+                                                wait out contest period
+                                                           |
+                                                           :
+                                                 (intra-chain transfers)
+                                                           :
+                                                           |
+                                                send to SPV-locked output
+                                              wait out confirmation period
+                         <----SPV Proof--------------------
+        contest period begins
+                         <----SPV Reorganization Proof-----
+        contest period ends (failed)
+                         <----New SPV Proof----------------
+        wait out contest period
+                |
+                :
+        (intra-chain transfers)
+                :
+                |
+    ```
