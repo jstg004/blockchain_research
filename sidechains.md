@@ -432,6 +432,9 @@
   - able to change features of Bitcoin such as:
     - block structure
     - transaction chaining
+  - sidechains only affect the transfer of coins not their creation
+    - no need for them to require separate currency
+    - ability for experimentation without much risk for participants
 
 ##### Fixing undesired transaction malleability
 
@@ -459,3 +462,51 @@
 
 - support for new cryptographic primitives such as Lamport signatures to
   potentially secure against quantum computers
+
+#### Economic experimentation
+
+##### Demurrage idea be Freicoin
+
+- alternate mechanism for achieving block rewards on the sidechain
+- in a demurring cryptocurrency all spent outputs lose value over time
+  - the lost value is recollected by miners
+  - keeps currency supply stable while rewarding the miners
+- loss to demurrage is enacted uniformly everywhere and instantaneously
+- mitigates the possibility of ong-unspent lost coins being reanimated at
+  their current valuation and shocking the economy
+- creates incentives to increase monetary velocity and lower interest rates
+- in pegged sidechains - demurrage allows miners to be paid in existing
+  valued currency
+
+### Issued assets
+
+- it is possible for sidechains to produce their own tokens (issues assets)
+  - these tokens carry their own semantics
+  - tokens can be transferred to other sidechains and traded for other assets
+    and currencies - without trusting a central party
+- allows for external protocols to delegate ownership and transfer tracking
+  to the sidechain on which the ownership shares were issued
+- issued asset chains could also support more innovative instruments
+  - such as smart property
+- a suitably extended scripting system and an asset-aware transaction format
+  could allow for the creation of useful transactions from well-audited
+  components
+  - merger of a bid and an ask to form an exchange transaction
+  - enables the creation of completely trustless p2p marketplaces for asset
+    exchange and complex contracts
+
+## Future directions
+
+### Hashpower attack resistance
+
+#### Assurance contracts
+
+#### Time-shifted fees
+
+#### Demurrage
+
+#### Subsidy
+
+#### Co-signed SPV proofs
+
+#### SNARKs
