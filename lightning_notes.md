@@ -402,7 +402,65 @@ can broadcast       can broadcast      can broadcast         can broadcast
      - the new transaction payout can be immediately redeemed after the contract
        is disclosed to the world (broadcasted on the blockchain)
   5. in the event that the contract is disclosed and the new payout structure is
-     not redeemed - the prior revoked payout terms may be redeemed by either party
+     not redeemed
+     - the prior revoked payout terms may be redeemed by either party
      - it is the responsibility of either party to enforce the new terms
 
 #### Timestop
+
+- to mitigate a flood of transactions by a malicious attacker requires a
+  credible threat that the attack will fail
+- timestop proposed by Greg Maxwell:
+> The clock can stop when blocks are full; turning the security risk into more
+> hold-up delay in the event of a DoS attack.
+- a miner can specify whether the current fee paid mempool is presently being
+  flooded with transactions
+  - miner can enter a '1' value into the last bit in the version number of the
+    block header
+  - if the last bit in the block header contains a '1'
+    - then that block will not count towards the relative height maturity for
+      the nSequence value and the block is designated as a congested block
+    - the uncongested block height is always lower than the normal block height
+    - this block height is used for the nSequence value that only counts block
+      maturity confirmations
+- a miner can elect to define the block as a congested block or not
+  - default code could automatically set the congested block flag as a '1' if
+    the mempool is above some size and the average fee for that set size is
+    above some value
+  - a miner has full discretion to change the rules on what automatically sets as
+    a congested block
+    - can also select to permanently set the congestion flag to be permanently
+      on or off
+- if a parent transaction output is spent by a child with nSequence value of 10
+  - one must wait 10 confirmations before the transaction ebcomes valid
+- if the timestop flag has been set - the counting of confirmations stops
+- if 6 confirmations have elapsed - 4 more are necessary for the transaction to
+  be held - and timestop block has been set on the 7th block
+  - that 7th block does not count towards the nSequence requirement of 10
+    confirmations
+  - the child is still at 6 blocks for the relative confirmation value
+    - stored as an auxiliary timestop block height which is used only for
+      tracking the timestop value
+  - when the timestop bit is set - all transactions using an nSequence value
+    will stop counting until the timestop bit has been unset
+  - allows for sufficient time and block-space for transactions at the current
+    auxiliary timestop block height to enter into the blockchain
+  - this can prevent systemic attackers from successfully attacking the system
+  - a flag in the block is required to designate whether it is a timestop block
+- for a lightweight client that is fully SPV compatible the block header needs
+  to be within the 80-byte block header
+  - this flag could be put into either of these sections of the block header:
+    1. in the block time
+       - may not be safe - the last bits are being used as an entropy source
+         for some ASIC miners
+       - a bit may need to be consumed for timestop flags
+       - the flag could be hardcoded into the timestop activation as a hard
+         consensus rule - via block size
+         - this may be less flexible
+       - if sane defaults are set for timestop rules - they can be changed
+         without consensus soft-forks
+    2. in the block version
+       - the contextual information must match the Chain ID used in some
+         merge-mined coins
+
+#### Revocable Commitment Transactions
