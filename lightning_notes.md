@@ -5,7 +5,7 @@
 
 ## The Bitcoin Blockchain Scalability Problem
 
-- the Bitcoin blockchain excells as a distributed ledger
+- the Bitcoin blockchain excels as a distributed ledger
 - as a large scale payment platform it suffers from scaling issues
 - the blockchain is a gossip protocol
   - all state modifications to the ledger are broadcasted to all participants
@@ -52,7 +52,7 @@
   - allows the financial relationships between 2 parties to be trustlessly
     deferred to a later date without risk of counterparty default
 - micropayment channels used real Bitcoin transactions
-  - broadcasts to the blockchain are deferred so that both parties can gaurantee
+  - broadcasts to the blockchain are deferred so that both parties can guarantee
     their current balance on the blockchain
     - real Bitcoin communicated and exchanged off-chain
 
@@ -68,7 +68,7 @@
 - with micropayment channels only 2 states are required
   1. current correct balance
   2. any old deprecated balances
-- there is onle a single correct current balance
+- there is only a single correct current balance
   - can be many old balances which are deprecated
 - it is possible in Bitcoin to devise a Bitcoin script where all old
   transactions are invalidated
@@ -165,8 +165,8 @@
 #### SPending from an Unsigned Transaction
 
 - Lightning Network uses a ```SIGHASH_NOINPUT``` transaction to spend from the
-  2-OF-2 Funding Transaction output
-  - necessary to spend from a tranaction for which the signatures are not yet
+  2-of-2 Funding Transaction output
+  - necessary to spend from a transaction for which the signatures are not yet
     exchanged
   - ```SIGHASH_NOINPUT``` is implemented into Bitcoin by a soft-fork
     - it ensures transactions can be spent from before being signed by all
@@ -194,3 +194,5 @@
        the parent transaction or the inputs to the parent transaction can be
        double-spent - this entire transaction path is invalidated
   7. broadcast the parent on the blockchain
+
+#### Commitment Transactions: Unenforceable Construction
