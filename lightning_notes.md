@@ -196,3 +196,82 @@
   7. broadcast the parent on the blockchain
 
 #### Commitment Transactions: Unenforceable Construction
+
+- when the unsigned/unbroadcasted Funding Transaction has bee created
+  - both parties sign and exchange an initial Commitment Transaction
+  - Commitment Transaction spends from teh 2-of-2 output of the Funding
+    Transaction
+    - only the Funding Transaction is broadcasted on the blockchain
+- when the Funding Transaction has entered into the blockchain
+  - the output is a 2-of-2 multisignature transaction that requires the
+    agreement of both parties to spend from
+- commitment Transactions are used to express the present balance
+- if only 1 2-of-2 signed Commitment Transaction is exchanged between both
+  parties
+  - then both parties will be sure that they are able to get their coins back
+    after the Funding Transaction enters the blockchain
+  - both parties do not broadcast the Commitment Transactions onto the
+    blockchain until they want to close out the current balance in the channel
+    - this is done by broadcasting the present Commitment Transaction
+- Commitment Transactions pay out the respective current balances to each party
+- a naive (broken) implementation would construct an unbroadcast transaction
+  - there would be a 2-of-2 spend from a single transaction that would have 2
+    outputs which would return all current balances to both channel
+    counterparties
+    - this would return all funds to the original party when the initial
+      Commitment Transaction is created
+- Example of a naive broken funding transaction:
+  - the Funding Transaction F is broadcasted on the blockchain after all other
+    transactions are signed
+  - all other transactions spending from the Funding Transaction are not yet
+    broadcast
+    - this allows the counterparties to update their balance
+
+```None
+                    Funding Tx (F)
+                         |
+                         |
+                  Commitment Transaction
+                  Outputs:
+                  0. Alice 0.5 BTC
+                  1. Bob 0.5 BTC
+                  No LockTime
+                         |
+           -------------------------------
+       Output 0                        Output 1
+          |                               |
+    Alice can redeem               Bob can redeem
+    0.05 BTC from the              0.05 BTC from the
+    Commitment Transaction         Commitment Transaction
+
+```
+
+- Commitment Transactions are signed 1st and the keys are exchanged
+  - allows either party to to be able to broadcast the Commitment Transaction at
+    any time
+    - contingent upon the Funding Transaction entering into the blockchain
+    - at this point the Funding Transaction signatures can safely be exchanged
+      - either party is able to redeem their funds by broadcasting the
+        Commitment Transaction
+  - this construction breaks when 1 party attempts to update the present balance
+  - in order to update the balance - they must update their Commitment
+    Transaction output values
+    - this is because the Funding Transaction has already entered into the
+      blockchain and cannot be changed
+- when both parties agree to a new Commitment Transaction and exchange
+  signatures for the new Commitment Transaction:
+  - either Commitment Transaction can be broadcast
+- the output can only be redeemed once
+  - only 1 of the transactions will be valid
+
+#### Commitment Transactions: Ascribing Blame
+
+- any Commitment Transaction can be broadcast on the blockchain
+  - only one can be successfully broadcast
+  - necessary to prevent old Commitment Transactions from being broadcast
+- not possible to revoke many transactions in Bitcoin
+  - it is necessary to construct the channel similar to a Fidelity Bond
+    - both parties make commitments - violations of these commitments are
+      enforced by penalties
+    - if 1 party violates their agreement - then they will lose all the coins
+      in the channel
