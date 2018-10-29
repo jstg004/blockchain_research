@@ -307,7 +307,7 @@
     1. Bob 0.5 BTC                      1. Bob 0.5 BTC
     No LockTime                         No LockTime
          |                                   |
-    -----------------                     ----------------------
+    -----------------                      ---------------------
    |                 |                    |                     |
 Alice can redeem    Bob can Redeem     Alice can redeem      Bob can Redeem
 0.5 BTC from        0.5 BTC from       0.5 BTC from          0.5 BTC from
