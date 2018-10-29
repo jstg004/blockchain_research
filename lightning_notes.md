@@ -267,7 +267,7 @@
 #### Commitment Transactions: Ascribing Blame
 
 - any Commitment Transaction can be broadcast on the blockchain
-  - only one can be successfully broadcast
+  - only one broadcast can be successful
   - necessary to prevent old Commitment Transactions from being broadcast
 - not possible to revoke many transactions in Bitcoin
   - it is necessary to construct the channel similar to a Fidelity Bond
@@ -275,3 +275,58 @@
       enforced by penalties
     - if 1 party violates their agreement - then they will lose all the coins
       in the channel
+  - contract terms:
+    - both parties commit to broadcasting only the most recent transaction
+    - any broadcast of older transactions will cause a violation of contract
+      - if a violation occurs - all funds are given to the other party not in
+        violation
+  - this contract can only be enforced if one is able to ascribe blame for
+    broadcasting an old transaction
+    - the party who broadcasted an older transaction must be able to be
+      uniquely identified
+      - this is accomplished when each counterparty has a uniquely identifiable
+        Commitment Transaction
+      - both parties must sign the inputs to the Commitment Transaction which
+        the other party is responsible for broadcasting
+      - each party holds the signed version of the Commitment Transaction from
+        the other party - a party may only broadcast their own version of the
+        Commitment Transaction
+- in the Lightning Network all Commitment Transactions (spends) from the Funding
+  Transaction output have 2 half-signed transactions
+- Example:
+
+```None
+                        Funding Tx (F)
+                            |
+         -----------------------------------
+        |                                   |
+    Commitment 1a                       Commitment 1b
+    )nly Alice can broadcast            Only Bob can broadcast
+    Outputs:                            Outputs:
+    0. Alice 0.5 BTC                    0. Alice 0.5 BTC
+    1. Bob 0.5 BTC                      1. Bob 0.5 BTC
+    No LockTime                         No LockTime
+         |                                   |
+    -----------------                     ----------------------
+   |                 |                    |                     |
+Alice can redeem    Bob can Redeem     Alice can redeem      Bob can Redeem
+0.5 BTC from        0.5 BTC from       0.5 BTC from          0.5 BTC from
+Commitment          Commitment         Commitment            Commitment
+Transaction         Transaction        Transaction           Transaction
+Only Alice          Only Bob           Only Alice            Only Bob
+can broadcast       can broadcast      can broadcast         can broadcast
+```
+
+- this only allows for allocating blame
+- not possible to enforce the contract on the Bitcoin blockchain
+
+### Creating a Channel with Contract Revocation
+
+- in order to enforce the terms of the contract:
+  - construct a Commitment Transaction along with its spends where a party is
+    able to revoke a transaction
+  - revocation is achievable by using data from when the transaction enters a
+    blockchain and uses the maturity of the transaction to determine validation
+    paths
+
+### Sequence Number Maturity
