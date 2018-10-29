@@ -301,7 +301,7 @@
          -----------------------------------
         |                                   |
     Commitment 1a                       Commitment 1b
-    )nly Alice can broadcast            Only Bob can broadcast
+    Only Alice can broadcast            Only Bob can broadcast
     Outputs:                            Outputs:
     0. Alice 0.5 BTC                    0. Alice 0.5 BTC
     1. Bob 0.5 BTC                      1. Bob 0.5 BTC
