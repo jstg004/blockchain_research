@@ -298,8 +298,8 @@
 ```None
                         Funding Tx (F)
                             |
-         -----------------------------------
-        |                                   |
+          -----------------------------------
+         |                                   |
     Commitment 1a                       Commitment 1b
     Only Alice can broadcast            Only Bob can broadcast
     Outputs:                            Outputs:
@@ -355,17 +355,17 @@ can broadcast       can broadcast      can broadcast         can broadcast
       - a transaction can be revoked with this sequence number behavior by
         creating a restriction with some defined number of blocks defined in
         the sequence number
-        - this results in the spend being only valid after the parent has
-          entered into the blockchain for some defined number of blocks
-        - the parent transaction with this output becomes bonded deposit
-          - attests that there is no revocation
-        - a time period exists which anyone on the blockchain can refute this
+      - this results in the spend being only valid after the parent has
+        entered into the blockchain for some defined number of blocks
+      - the parent transaction with this output becomes bonded deposit
+        - attests that there is no revocation
+      - a time period exists which anyone on the blockchain can refute this
         attestation by broadcasting a spend immediately after the transaction is
         broadcast
 - Example: if one wishes to permit revocable transactions with a
   1000-confirmation delay
   - the output transaction construction would remain a 2-of2 multisig:
-  ```2 <Alice1> <Bob1> 2 OP_CHECKMULTISIG```
+    - ```2 <Alice1> <Bob1> 2 OP_CHECKMULTISIG```
   - the child spending transaction would contain a nSequence value of 1000
   - this transaction required the signature of both counterparties to be valid
     - both parties include the nSequence number of 1000 as a part of the
@@ -389,20 +389,20 @@ can broadcast       can broadcast      can broadcast         can broadcast
 
 ##### Revocable Sequence Maturity Contract (RSMC)
 
-- 2 paths are created with very specific contract terms
-1. all parties pay into a contract with an output enforcing this contract
-2. both parties may agree to send funds to some contract with some waiting period
-   - this is the revocable output balance
-3. 1 or both parties may elect to not broadcast (enforce) the payouts until
-   some future date
-   - either party may redeem the funds after the waiting period at any time
-4. if neither part has broadcasted this transaction (redeemed the funds)
-   - they may revoke the above payouts if and only if both parties agree to do
-     so by placing in a new payout term in a superseding transaction payout
-   - the new transaction payout can be immediately redeemed after the contract
-     is disclosed to the world (broadcasted on the blockchain)
-5. in the event that the contract is disclosed and the new payout structure is
-   not redeemed - the prior revoked payout terms may be redeemed by either party
-   - it is the responsibility of either party to enforce the new terms
+- 2 paths are created with very specific contract terms:
+  1. all parties pay into a contract with an output enforcing this contract
+  2. both parties may agree to send funds to some contract with some waiting period
+     - this is the revocable output balance
+  3. 1 or both parties may elect to not broadcast (enforce) the payouts until
+     some future date
+     - either party may redeem the funds after the waiting period at any time
+  4. if neither part has broadcasted this transaction (redeemed the funds)
+     - they may revoke the above payouts if and only if both parties agree to do
+       so by placing in a new payout term in a superseding transaction payout
+     - the new transaction payout can be immediately redeemed after the contract
+       is disclosed to the world (broadcasted on the blockchain)
+  5. in the event that the contract is disclosed and the new payout structure is
+     not redeemed - the prior revoked payout terms may be redeemed by either party
+     - it is the responsibility of either party to enforce the new terms
 
 #### Timestop
