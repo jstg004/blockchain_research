@@ -57,3 +57,56 @@
     - real Bitcoin communicated and exchanged off-chain
 
 ### Micropayment Channels Do Not Require Trust
+
+- cryptographic signatures allow a blockchain to prove who owns what
+- a blockchain ledger is used as a timestampting system
+- it is desireable to create a system which does not actively use this
+  timestamping system unless absolutely necessary
+  - it is costly to the network to use
+  - both parties could commit to signing a transaction and not broadcasting the
+    transaction
+- with micropayment channels only 2 states are required
+  1. current correct balance
+  2. any old deprecated balances
+- there is onle a single correct current balance
+  - can be many old balances which are deprecated
+- it is possible in Bitcoin to devise a Bitcoin script where all old
+  transactions are invalidated
+  - only the new transaction is valid
+- invalidation is enforced by a Bitcoin output script and dependent transactions
+  which force the other party to give all their funds to the channel
+  counterparty
+  - by taking all funds as a penalty to give to the other - all old transactions
+    are thereby invalidated
+  - this invalidation process can exist through a process of channel consensus
+    where if both parties agree on current ledger states
+    - as well as building new states
+    - then the real balance gets updated
+  - the balance is reflected on the blockchain only when a single party
+    disagrees
+  - this system is not an independent overlay network
+  - this system is a deferral of state on the current system
+    - enforcement is still occurring on the blockchain itself
+      - deferred to future dates and transactions
+
+### A Network of Channels
+
+- micropayment channels only create a relationship between 2 parties
+  - everyone is required to create channels with everyone else
+  - this does not solve the scalability problem
+- Bitcoin scalability can be achieved using a large network of micropayment
+  channels
+- it is possible to create a near-infinite amount of transactions in the network
+  - in a large network of channels on the Bitcoin blockchain where all users are
+    participating on this graph by having at least 1 channel open on the
+    Bitcoin blockchain
+  - only transactions that are broadcasted on the Bitcoin blockchain prematurely
+    are with uncooperative channel counterparties
+- the Bitcoin transaction outputs have a hashlock and a timelock
+  - the channel counterparty is unable to steal funds
+  - Bitcoins can be exchanged without counterparty theft
+  - by using staggered timeouts - it is possible to send funds via multiple
+    intermediaries in a network without risk of intermediary theft of funds
+
+## Bidirectional Payment Channels
+
