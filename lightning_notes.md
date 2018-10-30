@@ -464,3 +464,43 @@ can broadcast       can broadcast      can broadcast         can broadcast
          merge-mined coins
 
 #### Revocable Commitment Transactions
+
+- the combination of having the ability to ascribe blame and revoke a
+  transaction allows for the ability to determine when a party is not abiding
+  by the terms of the contract
+  - penalties can be enforced without trusting the counter party
+- Example:
+
+```None
+                    Funding Tx(f)
+                         |
+         ------------------------------------------------
+        |                                                |
+Commitment Tx 1a (C1a)                       Commitment Tx 1b (C1b)
+Only Alice can broadcast                     Only Bob can broadcast
+Outputs:                                     Outputs:
+0. RSMC Alice&Bob 0.5BTC                     0. Alice 0.5BTC
+1. Bob 0.5BTC                                1. RSMC Alice&Bob 0.5BTC
+No LockTime                                  No LockTime
+  |                                              |
+  Output 0                                       Output 1
+  |__ Revocable Delivery 1a(RD1a)                |__ Revocable Delivery 1b(RD1b)
+  |   Only Alice can broadcast 1000              |   Only Bob can broadcast 1000
+  |   confirmations from C1a's                   |   Confirmations from C1b's
+  |   mined block                                |   mined block
+  |   Output: Alice 0.5                          |   Output: Bob 0.5
+  |   1000-block Relative                        |   1000-block Relative
+  |   Confirmations Lock                         |   Confirmations Lock
+  |                                              |
+  Output 1                                       Output 0
+  |__ Delivery 1a (D1a)                          |__ Delivery 1b (D1b)
+      Bob can spend from this output                 Alice can spend from this
+      immediately when C1a is broadcast              output immediately when
+      Output: Bob 0.5                                C1b is broadcast
+      No LockTime                                    Output: Alice 0.5
+                                                     No LockTime
+```
+
+- Funding Transaction F is broadcast on the blockchain after all other
+  transactions are signed
+- Only the Funding Transaction is broadcast on the blockchain at this time
