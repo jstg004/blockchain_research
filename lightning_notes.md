@@ -504,3 +504,45 @@ No LockTime                                  No LockTime
 - Funding Transaction F is broadcast on the blockchain after all other
   transactions are signed
 - Only the Funding Transaction is broadcast on the blockchain at this time
+- creating a new Commitment Transaction allows for invalidation of all old
+  Commitment Transactions when the new balance is updated with a new
+  Commitment Transaction
+- invalidation of old transactions occurs when an output is converted to a
+  Revocable Sequence Maturity Contract (RSMC)
+- to invalidate a transaction:
+  - a superseding transaction is signed and exchanged by both parties
+    - this transaction gives all funds to the counterparty is an older
+      transaction is incorrectly broadcast
+    - the incorrect broadcast is identified by creating 2 different Commitment
+      Transactions with the same final balance outputs
+      - the payment to oneself is encumbered by an RSMC
+- there are 2 Commitment Transactions from a single Funding Transaction 2-of-2
+  outputs
+  - only 1 of the 2 Commitment Transactions can enter into the blockchain
+  - each party within a channel has 1 version of the contract
+  - when a party broadcasts a Commitment Transaction pair - they are requesting
+    the channel to be closed out
+    - the 1st 2 outputs for the Commitment Transaction include the Delivery
+      Transaction (the payout) of the present unallocated balance to the channel
+      counterparties
+    - the Delivery Transaction is immediately redeemable
+      - it is not encumbered if the Commitment Transaction is broadcast
+- each party's attests that they are broadcasting the most recent Commitment
+  Transaction which they own
+  - the balance paid to the counterparty is assumed to be true
+  - a party has no direct benefit by paying some funds to the counterparty as a
+   penalty
+- the balance paid to the party who broadcasted the Commitment Transaction
+  is unverified
+  - therefore there is a penalty if they do not broadcast their most recent
+    version
+  - the RSMC prevents their funds from being claimed until a set number of
+    confirmations is reached after the Commitment Transaction has been included
+    in a block
+  - if the most recent Commitment Transaction is the one that is broadcasted
+    - there is no revocation transaction superseding the revocable transaction
+    - then funds are able to be received after the set amount of confirmations
+- both parties are able to revoke the Commitment Transaction in the future
+
+#### Redeeming Funds from the Channel: Cooperative Coun- terparties
+
