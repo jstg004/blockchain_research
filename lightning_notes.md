@@ -544,5 +544,59 @@ No LockTime                                  No LockTime
     - then funds are able to be received after the set amount of confirmations
 - both parties are able to revoke the Commitment Transaction in the future
 
-#### Redeeming Funds from the Channel: Cooperative Coun- terparties
+#### Redeeming Funds from the Channel: Cooperative Counterparties
 
+- either party may redeem the funds from the channel
+- the party that broadcasts the Commitment Transaction must wait for the
+  predefined number of confirmations described in the RSMC
+  - the counter party that did not broadcast the Commitment Transaction is
+    able to redeem the funds immediately
+
+#### Creating a new Commitment Transaction and Revoking Prior Commitments
+
+- either party may close out the most recent Commitment Transaction at any time
+  - they may also create a new Commitment Transaction and invalidate the old one
+- when the balance is updated a new pair of Commitment Transactions is
+  generated only if both parties agree
+- 4 possible transactions can exist
+  - a pair with the old commitments
+  - another pair with the new commitments
+- each party inside the channel can only broadcast half of the total commitments
+  (2 each)
+- when a new pair of Commitment Transactions is agreed upon
+  - both parties will sign and exchange signatures for the new Commitment
+    Transactions
+  - the old is then invalidated
+  - the invalidation occurs when both parties sign a Breach Remedy Transaction
+    - this supersedes the Revocable Delivery Transaction
+  - each party hands a half signed revocations to the other from their
+    respective Revocable Delivery
+    - this is a spend from the Commitment Transaction
+- the Breach Remedy Transaction will send all coins to the counterparty within
+  the current balance of the channel
+  - by constructing a Breach Remedy Transaction for the counterparty
+    - one has attested that one will not be broadcasting any prior commitments
+    - this is acceptable to the counterparty on the basis that all the money
+      in the channel will be transferred to the counterparty if the agreement
+      is violated
+- a party should periodically monitor the blockchain to see if one's
+  counterparty has broadcasted an invalidated Commitment Transaction
+  - a 3rd party can be used for this monitoring service
+    - the Breach Remedy Transaction must be delegated to this 3rd party
+    - the 3rd party is incentivized by receiving a fee from the output
+    - this 3rd party has no power to force close the channel
+      - they are only able to take action only if the counterparty acts
+        maliciously
+
+#### Process for Creating Revocable Commitment Transactions
+
+- creating revocable Commitment Transactions requires proper construction of the
+  channel from the beginning
+  - only signing transactions which may be broadcast at any time in the future
+  - ensures that one will not lose out due to uncooperative or malicious
+    counterparties
+  - the public key used for new commitments must be determined
+    - using ```SIGHASH_NOINPUT``` requires using unique keys for each Commitment
+      Transaction RSMC and HTLC output
+      - ```P``` is used to designate pubkeys and ```K``` to designate the
+        corresponding private key used to sign
