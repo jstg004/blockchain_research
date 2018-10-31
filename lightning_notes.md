@@ -600,3 +600,82 @@ No LockTime                                  No LockTime
       Transaction RSMC and HTLC output
       - ```P``` is used to designate pubkeys and ```K``` to designate the
         corresponding private key used to sign
+- when the 1st Commitment Transaction is generated both parties agree to create
+  a multisig output from a Funding Transaction with a single output
+  - this output is a Pay to Script Hash transaction
+    - requires both parties to agree to spend from the Funding Transaction
+    - the Funding Transaction is not yet spendable
+- the Delivery Transaction is either a P2PHK output or a P2SH transaction
+  - a P2PHK output is a Bitcoin address beginning with 1
+  - P2SH transaction is an address beginning with 3
+- output addresses remain the same throughout the channel
+  - funds are fully controlled by its designated recipient after the
+    Commitment Transaction enters the blockchain
+  - pubkeys may be changed for future Commitment Transactions
+- both parties exchange pubkeys which they intend to use for the RSMC and HTLC
+  for the Commitment Transaction
+- each set of Commitment Transactions use their own public keys
+  - these are not reused
+- both parties know all future pubkeys by using ```BIP0032[17] HD Wallet```
+  construction by exchanging Master Public Keys durring channel construction
+- after both parties know the output values form the Commitment Transactions
+  - both parties create the pair of Commitment Transactions
+  - they do not exchange signatures for the Commitment Trnasactions
+  - both parties sign the Revocable Delivery Transaction and exchange signatures
+  - when both parties have the Revocable Delivery Transaction
+    - they exchange signatures for the Commitment Transactions
+    - at this point prior Commitment Transactions and the new one can be
+      broadcast
+- when both Breach Remedy signatures have been exchanged
+  - the channel state is now at the current Commitment and the balances are
+    committed
+  - it is most effective to only disclose the private keys to the counterparty
+    - one party can disclose the private keys used in their own Commitment
+      Transaction
+
+### Cooperativelty Closing Out a Channel
+
+- both parties are able to send as many payments to their counterparty as they
+  wish - as long as they have funds available in the channel
+  - in the event of disagreements - the current state can be broadcast to the
+    blockchain
+- to close out a channel cooperatively both parties contact each other then
+  spend from the Funding Transaction with an output of the most current
+  Commitment Transaction directly with no script encumbering conditions
+  - no further payment is allowed in the channel after this has occurred
+- if both parties are cooperative - the balances in the current Commitment
+  Transaction are spent from the Funding Transaction using an Exercise
+  Settlement Transaction
+  - even in the event of the most recent Commitment Transaction being broadcast
+    instead - then the payout - less the fees is still the same
+- closing out cooperatively reduces the number of transactions that occur on
+  the blockchain
+  - both parties are able to receive their funds immediately
+- channels may remain in perpetuity until they decide to cooperatively close out
+  the transaction (or when 1 party does not cooperate)
+
+### Bidirectional Channel Implications and Summary
+
+- by ensuring channels can update only with the consent of both parties:
+  - it is possible to construct channels which perpetually exist int eh
+    blockchain
+- both parties can update the balance inside the channel with whatever output
+  balances they wish which are equal or less than the total funds committed
+  inside the Funding Transaction
+  - balance can move bidirectionally
+  - if 1 part acts maliciously - either party may immediately close out the
+    channel - broadcasting the most current state to the blockchain
+- the Fidelity Bond Construction (Revocable Delivery Transactions):
+  a party who violates the terms of the channel will loose their funds to their
+  counterparty
+  - this occurs only if the proof of validation (Breach Remedy Transaction)
+    is entered into the blockchain in a timely manner
+  - the channel may remain open indefinitely so long as both parties
+    continuously cooperate
+- this is all possible because adjudication occurs programmatically over the
+  blockchain as part of the Bitcoin consensus
+  - neither part need to trust the other
+  - one's channel counterparty does not posses full custody or control of
+    the funds
+
+## Hashed Timelock Contract (HTLC)
