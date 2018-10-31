@@ -679,3 +679,103 @@ No LockTime                                  No LockTime
     the funds
 
 ## Hashed Timelock Contract (HTLC)
+
+- a bidriectional payment channel only permits secure transfer inside a channel
+- HTLC is required in order to construct secure transfers using a network of
+  channels across multiple hops to the final destination
+- HTLC allows for global state across multiple nodes via hashes
+  - the global state is ensured by time commitments and time-based unencumbering
+    of resources via disclosure of preimages
+  - transaction locking occurs globally via commitments
+    - at any point in time a single participant is responsible for disclosing to
+      the next participant
+    - does not require custodial trust in one's channel counterparty
+- HTLC must be able to create certain transactions which are only valid after
+  a certain date
+  - this is done using ```nLockTime``` and an information disclosure to the
+    channel counterparty
+  - this data must be revocable - the HTLC must be able to be undone
+- HTLC is also a channel contract with one's counterparty
+  - enforced by the blockchain
+- Example:
+  - in a channel the counterparties agree to the following terms for a HTLC:
+
+    ```None
+        1. If Bob can produce to Alice an unknown 20-byte random input data R
+           a known hash H, within 3 days, then Alice will settle the contract
+           by paying Bob 0.1 BTC.
+        2. If 3 days have elapsed, then the above clause is null and void and
+           the clearing process is invalidated, both parties must not attempt
+           to settle and claim payment after 3 days.
+        3. Either party may (and should) pay out according to the terms of this
+           contract in any method of the participants choosing and close out
+           this contract early so long as both participants in this contract
+           agree.
+        4. Violation of the above terms will incur a maximum penalty of the
+           funds locked up in this contract, to be paid to the non-violating
+           counterparty as a fidelity bond.
+    ```
+
+- if one desires to construct a payment which is contingent upon knowledge
+  of ```R``` by the recipient within a certain timeframe
+  - after this timeframe - the funds are refunded back to the sender
+- the contract terms are programatically enforced on the Bitcoin blockchain
+  - they do not require trust in the counterparty in order to adhere to the
+    contract terms
+  - violations are penalized via unilaterally enforced fidelity bonds
+    - these bonds are constructed using penalty transactions spending from
+      commitment states
+- Example:
+    - HTLC is an additional output in a Commitment Transaction with a unique
+      output script:
+
+    ```None
+        OP_IF
+            OP_HASH160 <HASH160(R)> OP_EQUALVERIFY
+            2 <Alice2> <Bob2> OP_CHECKMULTISIG
+        OP_ELSE
+            2 <Alice1> <Bob1> OP_CHECKMULTISIG
+        OP_ENDIF
+    ```
+- the above script has 2 possible paths spending from a single HTLC output:
+  1. the 1st path is defined in the ```OP_IF```
+     - funds are sent to Bob if Bob can produce ```R```
+  2. the 2nd path is redeemed using a 3-day timelocked refund to Alice
+     - the 3-day timelock is enforced using ```nLockTime``` from the spending
+       transaction
+
+### Non-revocable HTLC Construction
+
+- using the above example:
+  - if ```R``` is produced within 3 days, then Bob can redeem the funds by
+    broadcasting the Delivery transaction
+  - a requirement for the Delivery transaction to be valid requires ```R``` to
+    be included with the transaction
+  - if ```R``` is not included  - then the Delivery transaction is invalid
+  - if 3 days have elapsed - the funds can be sent back to Alice by broadcasting
+    transaction Timeout
+  - when 3 days have elapsed and ```R``` has been disclosed - either transaction
+    may be valid
+  - both parties are individually responsible for ensure that they can get their
+    transaction into the blockchain in order to ensure the balances are correct
+    - in order for Bob to receive funds - he must either broadcast the delivery
+      transaction on the Bitcoin blockchain or settle with Alice and
+      cancelling the HTLC
+    - in order for Alice to receive funds - she must broadcast the Timeout
+      in 3 days or cancel the HTLC
+  - when an old Commitment Transaction gets broadcast - either party may attempt
+    to steal funds
+    - if ```R``` gets disclosed 1 year later and an incorrect Commitment
+      Transaction gets broadcast - both paths are valid are redeemable by either
+      party
+      - the contract is not yet enforceable on the blockchain
+    - it is necessary to close out the HTLC in order for Alice to get her refund
+      - Alice must terminate the contract and receive her refund
+    - if Bob discovers ```R``` after 3 days - he may be able to steal the funds
+      which are supposed to be going to Alice
+  - Uncooperative parties make it impossible to terminate an HTLC without
+    broadcasting it to the Bitcoin blockchain
+    - the uncooperative party is unwilling to create a new Commitment
+      Transaction
+
+### Off-chain Revocable HTLC
