@@ -779,3 +779,93 @@ No LockTime                                  No LockTime
       Transaction
 
 ### Off-chain Revocable HTLC
+
+- in order to terminate this contract off-chain without a broadcast to the
+  Bitcoin blockchain requires embedding RSMCs in the output
+  - this is a similar construction to the bidirectional channel
+- Example:
+  - Alice and Bob wish to update their balance in the channel at Commitment 1
+    with a balance of 0.5 BTC to Alice and 0.5 BTC to Bob
+  - Alice wishes to send 0.1 to Bob contingent upon knowledge of ```R``` within
+    3 days
+    - after 3 days Alice wants her money back if Bob does not produce ```R```
+  - the new Commitment Transaction will have a full refund of the current
+    balance to Alice and Bob (Outputs 0 and 1)
+    - output 2 being the HTLC - describes the funds in transit
+  - 0.1 BTC will be encumbered in an HTLC
+    - Alice's balance is reduced to 0.4 BTC and Bob's remains the same - 0.5 BTC
+  - the new Commitment Transaction will have an HTLC output with 2 possible
+    spends
+    - each spend is different depending on each counterparty's version of the
+      Commitment Transaction
+  - when 1 party broadcasts their Commitment - payments to the counterparty will
+    be assumed to be valid and not invalidated
+    - this can occur beacause when a party broadcasts a Commitment Transaction
+      - that party attests that it is the most recent Commitment Transaction
+    - if it is the most recent - then that party attests that the HTLC exists
+      and was not invalidated before
+      - potential payments to the counterparty should be valid
+
+#### HTLC when the Sender Broadcasts the Commitment Transaction
+
+- for the sender - the Delivery transaction is sent as an HTLC Execution
+  Delivery transaction
+  - this is not encumbered in an RSMC
+- this assumes that the HTLC has never been terminated off-chain
+
+#### HTLC when the Receiver Broadcasts the Commitment Transaction
+
+- for the potential receiver - the Timeout of the receipt is refunded as an
+  HTLC Timeout Delivery transaction
+  - this transaction directly refunds the funds to the original sender
+  - it is not encumbered in an RSMC
+  - this assumes that this HTLC has never been terminated off-chain
+
+### HTLC Off-chain Termination
+
+- after an HTLC is constructed - in order to terminate the HTLC off-chain
+  requires both parties to agree on the state of the channel
+- if the recipient can prove knowledge of ```R``` to the counterparty
+  - the recipient is proving that they are able to immediately close out the
+    channel on the Bitcoin blockchain and receive the funds
+    - if both parties wish to keep the channel open - they should terminate the
+      HTLC off-chain and create a new Commitment Transaction reflecting the new
+      balance
+- if the recipient is not able to prove knowledge of ```R``` by
+  disclosing ```R``` - both parties should agree to terminate the HTLC and
+  create a new Commitment Transaction with the balance in the HTLC refunded to
+  the sender
+- if counterparties cannot come to an agreement or become otherwise unresponsive
+  - they should close out the channel by broadcasting the necessary channel
+    transaction on the Bitcoin blockchain
+  - if they are cooperative - they can do so by:
+    - 1st generating a new Commitment Transaction with the new balances
+    - then invalidating the prior Commitment by exchanging Breach Remedy
+      transactions
+  - if they are terminating a particular HTLC they should also exchange some of
+    their own private keys used in the HTLC transactions
+- both parties are able to prove the current state to each other
+  - they can come to agreement on the current balance inside the channel
+  - they may broadcast the current state on the blockchain
+  - they are able to come to agreement on netting out and terminating the HTLC
+    with a new Commitment Transaction
+
+### HTLC Formation and Closing Order
+
+- creating a new HTLC is a similar process to creating a new Commitment
+  Transaction
+  - the difference is that the signatures for the HTLC are exchanged before the
+    new Commitment Transaction's signatures
+- when the HTLC has been closed - the funds are updated so that the present
+  balance in the channel is what would occur if the HTLC contract is completed
+  and broadcast on the blockchain
+  - this is instead done in an off-chain novation by both parties who update
+    their payments inside the channel
+  - it is necessary for both parties to complete off-chain novation within their
+    designated time window
+- if a counterparty is unwilling to novate or stalls - then a party must
+  broadcast the current channel state (including HTLC transactions) onto the
+  Bitcoin blockchain
+
+## Key Storage
+
