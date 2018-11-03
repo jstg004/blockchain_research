@@ -1067,7 +1067,7 @@ No LockTime                                  No LockTime
   as Lightning Network fees to the intermediaries
   - locking up transaction fees on each hop may result in lower overall fees
 
-### Clearing Failure and RErouting
+### Clearing Failure and Rerouting
 
 - if a transaction fails to reach its final destination
   - the receiver should send an equal payment to the sender with the same hash
