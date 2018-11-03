@@ -1250,3 +1250,61 @@ No LockTime                                  No LockTime
 
 ### Inability to Make Necessary Soft-Forks
 
+- malleability soft-fork to Bitcoin is needed for the Lightning Network to
+  function
+- the Lightning Network must be able to securely transact with many users
+  - a scructure og blockheight timestop is desirable
+
+### Colluding Miner Attacks
+
+- miners could potentially refuse to enter in particular transactions in order
+  to assit in timeout coin theft
+  - an attacker could pay off all miners in order to refuse to include certain
+    transactions in their mining pool and blocks
+  - miners could itentify their own blocks in an attempt to prove their
+    behavior to the paying attacker
+  - this could be mitigated by encouraging miners to avoid identifying their
+    own blocks
+  - the risk model of this attack occurring is similar to that of miners
+    colluding to do a reorg attack
+
+## Block Size Increases and Consensus
+
+- the Segregated Witness soft-fork (SegWit) in Bitcoin fixes the malleability
+  issues needed to allow 2nd layer sollutions such as the Lightning Network
+  - SegWit can also alow for larger block sizes if needed
+
+## Use Cases
+
+### Instant Transactions
+
+- Lightning can allow for nearly instant Bitcoin transactions
+
+### Exchange Arbitrage
+
+- it is possible for an exchange to participate in the Lightning Network
+  - this allows for clients to move their funds on and off the exchange
+    almost instantaniously
+  - this lowers client risk on exchanges
+
+### Micropayments
+
+- Lightning allows for near instant micropayments using Bitcoin without a 3rd
+  party custodian
+
+### Financial Smart Contracts and Escrow
+
+- financial contracts are time sensitive
+- these contracts have higher demands on blockchain computation
+- the majority of trustless transactions can be performed off-chain
+- makes it possible to have complex transaction contract terms without ever hitting the blockchain
+
+### Cross-Chain Payments
+
+- if there are similar hash-functions across chains - it is possivble for
+  transactions to be routed over multiple chains with different consensus rules
+  - sender does not have to trust of even know about the other chains
+  - the receiver does not have to know anything about the sender's chain
+    or any other chain
+  - the sender only needs knowledge of a secret on their chain
+  - a payment can be routed by participants in both chains in the hop
