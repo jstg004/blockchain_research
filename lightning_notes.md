@@ -974,9 +974,9 @@ No LockTime                                  No LockTime
   - the transfer path is Alice to Bob to Carol to Dave
 
     ```None
-        Step 1:        Step 2:           Step 3:
-        3 day          2 day             1 day
-        lock           lock              lock
+         Step 1:         Step 2:           Step 3:
+          3 day           2 day             1 day
+          lock            lock              lock
     Alice ---------> Bob ---------> Carol ---------> Dave
     ```
 
@@ -997,10 +997,10 @@ No LockTime                                  No LockTime
 - Example: Settlement of HTLC - Alice's funds get sent to Dave
 
     ```None
-        Step 6:        Step 5:          Step 4:
-        Redeem &       Redeem &         Redeem &
-        replace        replace          replace
-        contract       contract         contract
+         Step 6:        Step 5:          Step 4:
+          Redeem &       Redeem &         Redeem &
+          replace        replace          replace
+          contract       contract         contract
     Alice ---------> Bob ---------> Carol ---------> Dave
     '''
 
@@ -1040,17 +1040,17 @@ No LockTime                                  No LockTime
   - all others settled off-chain via novation
 
     ```None
-         Step 6:                                  Step 4:
-          Redeem &                                 Redeem &
-          replace                                  replace
-          contract                                 contract
+         Step 6:                                   Step 4:
+          Redeem &                                  Redeem &
+          replace                                   replace
+          contract                                  contract
     Alice ---------> Bob ---> Blockchain ---> Carol ---------> Dave
-                             Step 5:
-                             Broadcast to
-                             blockchain and
-                             close channel
-                             between Bob
-                             & Carol
+                           Step 5:
+                            Broadcast to
+                            blockchain and
+                            close channel
+                            between Bob
+                            & Carol
     ```
 
 ### Payment Amount
