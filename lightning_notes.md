@@ -1178,3 +1178,75 @@ No LockTime                                  No LockTime
 
 ### Forced Expiration Spam
 
+- a potential systemic risk with the Lightning Network if forced expiration
+  of many transactions
+  - if a malicious participant creates many channels and forces them all
+    to expire at once
+    - may overwhelm block data capacity - forcing expiration and broadcast to
+      the blockchain
+    - results in mass spam on the Bitcoin network
+    - this spam may delay transactions to the point where other locktimed
+      transactions become invalid
+- a possible mitigation would be to permit 1 transaction replacement on all
+  pending transactions
+  - anti-spam can be implemented by permitting onle 1 transaction replacement
+    of a higher sequence number by the inverse of an even or odd number
+    - if an odd sequence number was broadcasted then it is only permitted to
+      a higher even number only once
+    - transaction use the sequence number in an orderly fashion
+      - replacing other transactions
+    - mitigates the risk if miners are honest
+    - incorrect broadcast of Commitment Transactions entail a full penalty of
+      all funds in the channel
+- it is possible for one to steal HTLC transactions by forcing a timeout
+  transaction to go through when it should not be able to
+  - this is mitigated by making each transfer inside the channel lower than
+    the total transaction fees used
+- large transfers of value can be split into many small transfers
+  - transactions are cheap and do not hit the blockchain with cooperative
+    channel counterparties
+  - this only works if the blocks are completely full for a long period of time
+  - it may be necessary to increase the block size and run a variable blocksize
+    structure and timestop flags
+    - this can create sufficient penalties and disincentives to be highly
+      unprofitable and unsuccessful for attackers
+      - attackers lose all their funds from broadcasting incorrect
+        transactions
+
+### Coin Theft via Cracking
+
+- all parties must be online and using private keys to sign
+  - there is a possibility for coins to be stolen by the attacker if the device
+    where the private keys are stored is compromized
+- intermediary nodes may be able to out compete the other nodes
+  - these nodes should have better security
+- a Funding Transaction may have multiple outputs with multiple Commitment
+  Transactions
+  - the Funding Transaction key and some Commitment Transaction keys could be
+    stroed offline
+- possible to create an equivalent of a checking account and a savings account
+  - funds can be moved between outputs from a Funding Transaction
+  - the savings account can be stored offline
+    - additional signatures from security services could be required
+
+### Data Loss
+
+- when a party loses data is possible for the counterparty to steal funds
+  - this can be mitigated by having a3rd partydata storage service
+    - encrypted data gets sent to this 3rd party service
+      - the party cannot decrypt this
+- one must choose channel counterparties who are responsible and willing to
+  provide the current state
+  - preriodic tests of honesty are a must
+
+### Forgetting to Broadcast the Transaction in Time
+
+- if a party doesn't broadcast a transaction at the correct time
+  - the counterparty may steal funds
+  - this can be mitigated by having a designated 3rd party to send funds
+  - an output fee can be added to create an incentive for this 3rd party
+    to send the funds
+  - can be mitigated by implementing ```OP_CHECKSEQUENCEVERIFY```
+
+### Inability to Make Necessary Soft-Forks
+
