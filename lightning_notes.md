@@ -1002,7 +1002,7 @@ No LockTime                                  No LockTime
           replace        replace          replace
           contract       contract         contract
     Alice ---------> Bob ---------> Carol ---------> Dave
-    '''
+    ```
 
 - decrementing timelocks are used so that all parties along the path know
   the disclosure of ```R``` will allow the disclosing party to pull funds
