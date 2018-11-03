@@ -967,3 +967,90 @@ No LockTime                                  No LockTime
   - makes smart contracts possible
 
 ### Decrementing Timelocks
+
+- Example: Payment over the Lightning Network using HTLCs
+  - Alice wishes to send 0.001 BTC to Dave
+  - Alice locates a route through Bob and Carol
+  - the transfer path is Alice to Bob to Carol to Dave
+
+    ```None
+        Step 1:        Step 2:           Step 3:
+        3 day          2 day             1 day
+        lock           lock              lock
+    Alice ---------> Bob ---------> Carol ---------> Dave
+    ```
+
+- when Alice sends payment to Dave through Bob and Carol - Alice requests
+  from Dave ```hash(R)``` to use for this payment
+  - Alice then counts the amount of hops until the recipient
+    - uses this count as the HTLC expiry
+  - in this example the HTLC expiry is set at 3 days
+  - Bob then creates an HTLC with Carol with an expiry of 2 days
+  - Carol then creates an HTLC with Dave with an expiry  of 1 day
+    - Dave is then free to disclose ```R``` to Carol
+    - both parties will likely agree to immediate settlement via notation with
+      a replacement Commitment Transaction
+      - this occurs step by step back to Alice
+- all this is conducted off-chain and nothing is broadcast to the blockchain
+  when all parties are coorperative
+
+- Example: Settlement of HTLC - Alice's funds get sent to Dave
+
+    ```None
+        Step 6:        Step 5:          Step 4:
+        Redeem &       Redeem &         Redeem &
+        replace        replace          replace
+        contract       contract         contract
+    Alice ---------> Bob ---------> Carol ---------> Dave
+    '''
+
+- decrementing timelocks are used so that all parties along the path know
+  the disclosure of ```R``` will allow the disclosing party to pull funds
+- if Dave does not produce ```R``` within 1 day to Carol
+  - then Carol will be able to close out the HTLC
+- if Dave broadcasts ```R``` after 1 day
+  - then he will not be able to pull funds from Carol
+- Carol's responsibility to Bob occurs on day 2
+  - Carol is not responsible for payment to Dave without the ability to pull
+    funds from Bob
+    - Carol must update her transaction with Dave via transmission to the
+      blockchain or via novation
+- if ```R``` is disclosed to the participants halfway through expiry along
+  the path
+  - it is then possible for some parties along the path to be enriched
+  - sender is able to know ```R```
+    - the payment will have been fulfilled according to Pay to Contract
+      even if the receiver did not receive the funds
+  - the receiver must never disclose ```R``` before receiving an HTLC from
+    their channel counterparty
+    - cannot guarantee receipt of payment from a channel counterparty upon
+      disclosure of the preimage
+- if a party disconnects - the counterparty will be responsible for broadcasting
+  the current Commitment Transaction state in teh channel to the blockchain
+  - the failed non-responsive channel state gets closed out on the blockchain
+  - all other channels shold continue to update their Commitment Transactions
+    via novation inside the channel
+  - counterparty risk for transaction fees are only exposed to direct channel
+    counterparties
+  - if a node along the path becomes unresponsive - the participants not
+    directly connected to that node suffer only decreased timevalue of their
+    funds by not conducting early settlement before the HTLC close
+
+- Example: Only non-responsive channels get broadcast on blockchain
+  - all others settled off-chain via novation
+
+    ```None
+         Step 6:                                  Step 4:
+          Redeem &                                 Redeem &
+          replace                                  replace
+          contract                                 contract
+    Alice ---------> Bob ---> Blockchain ---> Carol ---------> Dave
+                             Step 5:
+                             Broadcast to
+                             blockchain and
+                             close channel
+                             between Bob
+                             & Carol
+    ```
+
+### Payment Amount
