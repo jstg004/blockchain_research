@@ -908,7 +908,7 @@ No LockTime                                  No LockTime
   transactions to ascribe blame to the party who broadcasted the transmission
   on the blockchain
 - knowledge of the broadcaster allows a 3rd party service the ability to hold
-  fees in a 2-of3 multisig escrow
+  fees in a 2-of-3 multisig escrow
 - if a party chooses to broadcast the transaction chain instead of agreeing
   to do a Funding Close or replacement with a new Commitment Transaction
   - the party needs to communicate with the 3rd party and broadcast thr chain
