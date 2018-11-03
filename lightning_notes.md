@@ -1232,7 +1232,7 @@ No LockTime                                  No LockTime
 ### Data Loss
 
 - when a party loses data is possible for the counterparty to steal funds
-  - this can be mitigated by having a3rd partydata storage service
+  - this can be mitigated by having a 3rd party data storage service
     - encrypted data gets sent to this 3rd party service
       - the party cannot decrypt this
 - one must choose channel counterparties who are responsible and willing to
