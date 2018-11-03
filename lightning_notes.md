@@ -903,3 +903,67 @@ No LockTime                                  No LockTime
     without a need for significant storage costs
 
 ## Blockchain Transaction Fees for Bidirectional Channels
+
+- it is possible for each participant to generate different versions of
+  transactions to ascribe blame to the party who broadcasted the transmission
+  on the blockchain
+- knowledge of the broadcaster allows a 3rd party service the ability to hold
+  fees in a 2-of3 multisig escrow
+- if a party chooses to broadcast the transaction chain instead of agreeing
+  to do a Funding Close or replacement with a new Commitment Transaction
+  - the party needs to communicate with the 3rd party and broadcast thr chain
+    to the blockchain
+  - if the counterparty refuses the notice from the 3rd party to cooperate
+    - then the penalty is rewarded to the non-cooperative party
+- trust of the entire network is not required
+- fees are typically derived from the time-value of locking up funds for a
+  particular route
+  - fees should be significantly lower than on-chain transaction fees
+- many transactions on a Lightning Network can be settled into 1 single
+  blockchain transaction
+- on a robust and interconnected network - the fees should asymptotically
+  approach negligibility for many types of transactions
+- low fees and fast transactions allow for scalable micropayments in a high
+  frequency system
+  - IoT applications or per-unit micro billing could benefit from this
+
+### Pay to Contract
+
+- it is possible to construct a cryptographically provable Delivery Verses
+  Payment contract or oay-to-contract as a proof of payment
+  - the proof can be established as knowledge of the input ```R``` from
+    ```hash(R)``` as payment of a vertain value
+- an embedded clause into the contract between the buyer and seller stating:
+  - ```R``` is proof of funds sent
+- the recipient of the funds has no incentive to disclose ```R``` unless they
+  have certainty that they will receive payment
+- when the funds are pulled from teh buyer by their counterparty in their
+  micropayment channel - ```R``` is disclosed as part that pull of funds
+
+## The Bitcoin Lightning Network
+
+- a micropayment channel with contracts encumbered by hashlocks and timelocks
+- makes it possible to clear transactions over a multi-hop payment network
+  using a series of decrementing timelocks without additional central
+  clearinghouses
+- Bitcoin enables programmatic money
+  - possible to create actions without contacting the central clearinghouses
+    which traditional banking requires
+- transactions can execute off-chain with no 3rd party which collects all funds
+  before disbursing
+  - only transactions with uncooperative channel counterparts become
+    automatically adjudicated on the blockchain
+- the chain delegation process allows for obligations to deliver funds to an
+  end-recipient
+  - each participant along the path assumes the obligation to deliver to a
+    particular recipient
+  - each participant passes on this obligation to the next participant in the
+    path
+  - the obligations of each subsequent participant along the path has a shorter
+    time to completion compared to the prior participant
+    - these obligations are defined by HTLCs
+- Bitcoin Transaction Scripting enables systems without trusted custodial
+  clearinghouses or escrow
+  - makes smart contracts possible
+
+### Decrementing Timelocks
