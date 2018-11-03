@@ -1127,3 +1127,54 @@ No LockTime                                  No LockTime
 
 ### Payment Routing
 
+- theoretically possible to build a route map implicitly from observing 2-of-2
+  multisigs on the blockchain to build a routing table
+- it is not feasible with pay-to-script-hash transaction outputs
+  - these can be resolved out-of-band from the Bitcoin protocol via a 3rd party
+    routing service
+- not all participants need to have a full routing table
+- core Teir-1 routes can be online all the time while nodes at the edges
+  can be connected intermittently
+- node discovery can occur along the edges by pre-selecting and offering
+  partial routes to well-known nodes
+
+### Fees
+
+- Lightning Network fees are paid directly between participants within the
+  channel
+- fees pay for time-value of money consuming the channel for a determined max
+  period of time - as well as counterparty risk of non-communicaton
+- counterparty risk for fees only exist with one's direct channel counterparty
+  - if a node 2 hops away decides to disconnect
+    - their transaction gets broadcast onto the blockchain
+    - their counterparties should not broadcast on the blockchain
+    - they should continue to update via novation with a new Commitment
+      Transaction
+- time-value of fees pays for consuming time
+  - conceptually equivalent to a gold lease rate without custodial risk
+  - time-value for using up the acces to money for a very short durration
+- certain paths may become very profitable in 1 direction
+  - it is possible for fees to be negative to encourage the channel to be
+    available for those profitable paths
+
+## Risks
+
+- most risks relate to timelock expiration
+- core nodes and some merchants - keys must be held online for lower latency
+  - end users and nodes are albe to keep private keys firewalled off in
+    cold storage
+
+### Improper Timelocks
+
+- participants must choose timelocks with sufficient ammounts of time
+- if insuficient time is given - it is possible that timelocked transactions
+  believed to be invalid will become valid
+  - this enables coin theft by counterparty
+  - trade off between timelocks and time-value of money
+- when writing wallet and Lightning Network application software:
+  - necesarry to ensure that sufficient time is given
+  - necessary that users are able to have their transactions enter into the
+    blockchain when interacting with non-cooperative or malicious counterparties
+
+### Forced Expiration Spam
+
