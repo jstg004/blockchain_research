@@ -18,7 +18,6 @@ def hash_blocks(blocks):
     prev_hash = None
 
     for block in blocks:
-        block['prev_hash'] = prev_hash
         block_serialized = json.dumps(block, sort_keys=True).encode('utf-8')
         block_hash = hashlib.sha256(block_serialized).hexdigest()
         prev_hash = block_hash
@@ -80,4 +79,5 @@ except:
 TODO:
     check if chain has been tampered with
         - edit an entry, hash it, check the hash
+    add other nodes and add functionality for blockchain syncing
 '''
