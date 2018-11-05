@@ -8,12 +8,12 @@ Testing out building a blockchain from scratch in python.
 '''
 
 
-import hashlib, json, datetime
+import hashlib, json, datetime, asyncio
+
+from kademlia.network import Server
 
 from hashlib import blake2b
 from hmac import compare_digest
-
-from Crypto.PublicKey import RSA
 
 
 date_time = str(datetime.datetime.utcnow())
@@ -108,5 +108,72 @@ TODO:
     check if chain has been tampered with
         - edit an entry, hash it, check the hash
     add other nodes and add functionality for blockchain syncing
-        - try kademlia
+
+
+#try kademlia:
+import asyncio
+from kademlia.network import Server
+
+# Create a node and start listening on port 5678
+node = Server()
+node.listen(5678)
+
+# Bootstrap the node by connecting to other known nodes, in this case
+# replace 123.123.123.123 with the IP of another node and optionally
+# give as many ip/port combos as you can for other nodes.
+loop = asyncio.get_event_loop()
+loop.run_until_complete(node.bootstrap([("123.123.123.123", 5678)]))
+
+# set a value for the key "my-key" on the network
+loop.run_until_complete(node.set("my-key", "my awesome value"))
+
+# get the value associated with "my-key" from the network
+result = loop.run_until_complete(node.get("my-key"))
+print(result)
+
+If you're starting a new network from scratch, just omit the node.bootstrap
+call in the example above. Then, bootstrap other nodes by connecting to the
+first node you started.
+
+
+#try implementing dictionaries using hashing:
+class intDict(object):
+    """A dictionary with integer keys"""
+
+    def __init__(self, numBuckets):
+        """Create an empty dictionary"""
+        self.buckets = []
+        self.numBuckets = numBuckets
+        for i in range(numBuckets):
+            self.buckets.append([])
+
+    def addEntry(self, dictKey, dictVal):
+        """Assumes dictKey an int. Adds an entry."""
+        hashBucket = self.buckets[dictKey%self.numBuckets]
+        for i in range(len(hashBucket)):
+            if hashBucket[i][0] == dictKey:
+                hashBucket[i] = (dictKey, dictVal)
+                return
+        hashBucket.append((dictKey, dictVal))
+
+    def getValue(self, dictKey):
+        """Assumes dictKey an int. Returns entry associated
+           with the key dictKey"""
+        hashBucket = self.buckets[dictKey%self.numBuckets]
+        for e in hashBucket:
+            if e[0] == dictKey:
+                return e[1]
+        return None
+
+    def __str__(self):
+        result = '{'
+        for b in self.buckets:
+            for e in b:
+                result = result + str(e[0]) + ':' + str(e[1]) + ','
+        return result[:-1] + '}' #result[:-1] omits the last comma
+
+
+
+#try merkle tree?
+
 '''
