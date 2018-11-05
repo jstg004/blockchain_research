@@ -77,28 +77,7 @@ except:
 
 
 '''
-
-    block_hash = hash_blocks([block])
-    block['block_hash'] = block_hash
-
-    blockchain['prev_blocks'] = blockchain_load
-    blockchain['current_block'] = block
-
-
-check if chain has been tampered with:
-
-print("original hash")
-print(hash_blocks([block_genesis, block_2, block_3]))
-
-print("tampered block")
-block_genesis = {
-    'prev_hash': None,
-    'data': {
-        'name': 'edit!',
-        'id': 'genesis_id'
-    }
-}
-
-print("tampered hash")
-print(hash_blocks([block_genesis, block_2, block_3]))
+TODO:
+    check if chain has been tampered with
+        - edit an entry, hash it, check the hash
 '''
