@@ -22,7 +22,7 @@
 
 #### Kademlia DHT
 
-- efficient lokup through large networks
+- efficient l0okup through large networks
   - queries on average contact nodes
   - 20 hops are required for a network of 10,000,000 nodes
 - low coordination overhead

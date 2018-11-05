@@ -31,6 +31,8 @@ try:
 
         if blockchain_load["chain"]['genesis'] == True:
             count += 1
+            # when new data is entered into the blockchain it must be broadcast
+            # to other nodes on the network, so all blockchains stay in sync
             # ask for next block data:
             name = input("Enter Name: ")
             name_id = input("Enter ID: ")
