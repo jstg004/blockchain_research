@@ -2,9 +2,56 @@
 test tampered data
 '''
 
-import hashlib, json, datetime
+import hashlib, json, datetime, binascii
+from hashlib import blake2b
+from hmac import compare_digest
+
+date_time = str(datetime.datetime.utcnow())
+
+SECRET_KEY = b''
+AUTH_SIZE = 64
+
+block_genesis = {
+    'prev_hash': None,
+    'genesis': True,
+    'data': {
+        'name': 'genesis',
+        'name_id': 0,
+        'time': date_time
+    }
+}
 
 
+def sign(block):
+     h = blake2b(digest_size=AUTH_SIZE, key=SECRET_KEY)
+     h.update(block)
+     return h.hexdigest().encode('utf-8')
+
+def verify(block, sig):
+    good_sig = sign(block)
+    return compare_digest(good_sig, sig)
+
+def hash_blocks(blocks):
+    prev_hash = None
+
+    for block in blocks:
+        block_serialized = json.dumps(block, sort_keys=True).encode('utf-8')
+        block_hash = hashlib.sha256(block_serialized).hexdigest()
+        prev_hash = block_hash
+
+    return prev_hash
+
+block_to_sig = hash_blocks([block_genesis]).encode('utf-8')
+sig = sign(block_to_sig)
+print(sig)
+verify = verify(block_to_sig, sig)
+print(verify)
+
+
+
+
+
+'''
 with open('test.json') as infile:
     blockchain_load = json.load(infile)
 
@@ -17,7 +64,7 @@ def hash_blocks(blocks):
         prev_hash = block_hash
 
     return prev_hash
-
+'''
 
 
 '''

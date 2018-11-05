@@ -10,6 +10,11 @@ Testing out building a blockchain from scratch in python.
 
 import hashlib, json, datetime
 
+from hashlib import blake2b
+from hmac import compare_digest
+
+from Crypto.PublicKey import RSA
+
 
 date_time = str(datetime.datetime.utcnow())
 
@@ -24,6 +29,22 @@ def hash_blocks(blocks):
 
     return prev_hash
 
+# for signing blocks
+SECRET_KEY = b''
+AUTH_SIZE = 64
+
+# sign a block
+def sign(block):
+     h = blake2b(digest_size=AUTH_SIZE, key=SECRET_KEY)
+     h.update(block)
+     return h.hexdigest().encode('utf-8')
+
+# verify a block signature
+def verify(block, sig):
+    good_sig = sign(block)
+    return compare_digest(good_sig, sig)
+
+
 try:
     with open('blockchain.json') as infile:
         blockchain_load = json.load(infile)
@@ -36,6 +57,7 @@ try:
             # ask for next block data:
             name = input("Enter Name: ")
             name_id = input("Enter ID: ")
+
             date_time = str(datetime.datetime.utcnow())
 
             prev_hash = hash_blocks([blockchain_load])
@@ -50,8 +72,12 @@ try:
                 }
             }
 
-            current_hash = hash_blocks([blockchain_load, block])
-            blockchain_load[current_hash] = block
+            # sign the block which will be added to the bockchain
+            block_to_sig = hash_blocks([blockchain_load]).encode('utf-8')
+            block_sig = str(sign(block_to_sig))
+            #verify = verify(block_to_sig, block_sig)
+
+            blockchain_load[block_sig] = block
 
             with open('blockchain.json', 'w') as outfile:
                 json.dump(blockchain_load, outfile)
@@ -82,4 +108,5 @@ TODO:
     check if chain has been tampered with
         - edit an entry, hash it, check the hash
     add other nodes and add functionality for blockchain syncing
+        - try kademlia
 '''
