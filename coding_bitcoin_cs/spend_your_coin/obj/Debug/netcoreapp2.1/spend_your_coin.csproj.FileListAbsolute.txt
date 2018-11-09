@@ -1,4 +1,0 @@
-/Users/jx01.mb/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/spend_your_coin/obj/Debug/netcoreapp2.1/spend_your_coin.csprojAssemblyReference.cache
-/Users/jx01.mb/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/spend_your_coin/obj/Debug/netcoreapp2.1/spend_your_coin.csproj.CoreCompileInputs.cache
-/Users/jx01.mb/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/spend_your_coin/obj/Debug/netcoreapp2.1/spend_your_coin.AssemblyInfoInputs.cache
-/Users/jx01.mb/Nextcloud/jstg004_github/blockchain_research/blockchain_in_cs_test0/spend_your_coin/obj/Debug/netcoreapp2.1/spend_your_coin.AssemblyInfo.cs
