@@ -2,7 +2,7 @@
 
 - essential to learning Elliptic Curve Cryptography
 
-## Finite Field Defi nition
+## Finite Field Definition
 
 - a finite field is a finite set of numbers and 2 operations
   - the 2 operations are addition and multiplication

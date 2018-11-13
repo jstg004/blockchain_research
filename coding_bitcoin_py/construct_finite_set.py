@@ -22,7 +22,7 @@ class FieldElement:
         #return 'FieldElement_{}({})'.format(self.prime, self.num)
 
 
-    # check if objects in the class 'FieldElement' are = or not
+    # check if objects in the class 'FieldElement' are =
     # only True when 'num' and 'prime' are =
     def __eq__(self, other):
         # python allows '==' operator to be replaced with the '__eq__' method
@@ -30,23 +30,28 @@ class FieldElement:
             return False
         return self.num == other.num and self.prime == other.prime
 
+
+    # check if objects in the class 'FieldElement' are not =
+    # only True when 'num' and 'prime' are not =
+    def __ne__(self, other):
+        if other is None:
+            return False
+        print("*** are = ? ***")
+        return self.num != other.num and self.prime != other.prime
+
+
 # Test run:
 a = FieldElement(7, 13)
-print("a = FieldElement(7, 13), a =", a)
+print("a =", a)
 
-b = FieldElement(6, 13)
-print("b = FieldElement(6, 13), b =", b)
+b = FieldElement(7, 13)
+print("b =", b)
 
 print("a = b?", a == b)
 print("a = a?", a == a)
+print("a != b?", a != b)
+print("a != a?", a != a)
 
-# Prints out:
-'''
-a = FieldElement(7, 13), a = FieldElement_13(7)
-b = FieldElement(6, 13), b = FieldElement_13(6)
-a = b? False
-a = a? True
-'''
 
 #ToDo:
 '''
