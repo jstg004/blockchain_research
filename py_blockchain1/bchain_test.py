@@ -5,6 +5,10 @@ Testing out building a blockchain from scratch in python.
       this code
     - the code will drastically change and include lots of tests and unnecessary
       code for breaking down how each little part works
+
+TODO:
+    Check if changing the previous hash component of the following block
+    changes the hash of the following block, not the hash of the current block.
 '''
 
 
@@ -104,7 +108,7 @@ except:
 
 
 '''
-TODO:
+TODO 2:
     check if chain has been tampered with
         - edit an entry, hash it, check the hash
     add other nodes and add functionality for blockchain syncing
