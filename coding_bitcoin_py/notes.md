@@ -90,7 +90,7 @@ class FieldElement:
 
 - Used to make a field closed under addition, subtraction, multiplication,
   and division.
-- The '%' symbol is used for modulo arithmetic:
+- The _%_ symbol is used for modulo arithmetic:
   - _7 % 3_ will equal _1_
     - 7 divided by 3 equals 2 with the remainder of 1, so the modulo is 1.
 - Very large numbers can be brought down in size using modulo arithmetic.
@@ -103,5 +103,54 @@ class FieldElement:
   - Finite Field of 19
     - _F<sub>19</sub> = {0, 1, 2, ... 18}_
     - where _a and b_ are elements of _F<sub>19</sub>_
+    - +<sub>f</sub> denotes finite field addition
     - Addition being closed:
       - _a +<sub>f</sub> b_ are elements of _F<sub>19</sub>_
+    - Modulo arithmetic can be used to guarantee _a +<sub>f</sub> b_:
+      - _a +<sub>f</sub> b = (a + b) % 19_
+    - _7 +<sub>f</sub> 8 = (7 + 8) % 19 = 15_
+    - _11 +<sub>f</sub> 17 = (11 + 17) % 19 = 9_
+- Take 2 numbers in the set, add and wrap around the end to get the sum.
+- Field addition can be defined as follows:
+  - _a +<sub>f</sub> b = (a + b) % p where a and b are elements of F<sub>p</sub>_
+- Additive inverse can be defined as follows:
+  - _-<sub>f</sub>_ denotes finite field subtraction
+  - _a is an element of F<sub>p</sub>_
+    - implies that _-<sub>f</sub> a is an element of F<sub>p</sub>_
+  - _-<sub>f</sub> a = (-a) % p_
+  - In _F<sub>19</sub>_:
+    - _-<sub>f</sub> 9 = (-9) % 19 = 10_
+      - means _9 +<sub>f</sub> 10 = 0_
+- Field subtraction:
+  - _a -<sub>f</sub> b = (a - b) % p where a and b are elements of F<sub>p</sub>_
+  - In _F<sub>19</sub>_:
+    - _11 -<sub>f</sub> 9 = (11 - 9) % 19 = 2_
+    - _6 -<sub>f</sub> 13 = (6 - 13) % 19 = 12_
+
+#### Coding Addition and Subtraction in Python
+
+- In FieldElement class:
+
+```Python
+    def __add__(self, other):
+        # Elements must be from the same Finite Field:
+        if self.prime != other.prime:
+            raise TypeError('Cannot add 2 numbers in different Fields')
+
+        # Addition in a Finite Field:
+        num = (self.num + other.num) % self.prime
+
+        # Return an instance of the class:
+        return self.__class__(num, self.prime)
+
+    def __sub__(self, other):
+        # Elements must be from the same Finite Field:
+        if self.prime != other.prime:
+            raise TypeError('Cannot subtract 2 numbers in different Fields')
+
+        # Addition in a Finite Field:
+        num = (self.num - other.num) % self.prime
+
+        # Return an instance of the class:
+        return self.__class__(num, self.prime)
+```
