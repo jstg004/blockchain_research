@@ -76,27 +76,32 @@ class FieldElement:
             return False
         return self.num == other.num and self.prime == other.prime
 
-# Test run:
-a = FieldElement(7, 13)
-print("a = FieldElement(7, 13), a =", a)
-
-b = FieldElement(6, 13)
-print("b = FieldElement(6, 13), b =", b)
-
-print("a = b?", a == b)
-print("a = a?", a == a)
-
-# Prints out:
-'''
-a = FieldElement(7, 13), a = FieldElement_13(7)
-b = FieldElement(6, 13), b = FieldElement_13(6)
-a = b? False
-a = a? True
-'''
-
-#ToDo:
-'''
-Write the corresponding method __ne__ which checks if two FieldElement
-objects are not equal to each other.
-'''
+    '''
+    Write the corresponding method __ne__ which checks if two FieldElement
+    objects are not equal to each other.
+    '''
+    def __ne__(self, other):
+        if other is None:
+            return False
+        return self.num != other.num and self.prime != other.prime
 ```
+
+### Modulo Arithmetic
+
+- Used to make a field closed under addition, subtraction, multiplication,
+  and division.
+- The '%' symbol is used for modulo arithmetic:
+  - _7 % 3_ will equal _1_
+    - 7 divided by 3 equals 2 with the remainder of 1, so the modulo is 1.
+- Very large numbers can be brought down in size using modulo arithmetic.
+  - _341234321423165750432 % 60_ = _32_
+
+### Finite Field Addition and Subtraction
+
+- Need to make sure addition in a Finite Field is closed.
+- Example:
+  - Finite Field of 19
+    - _F<sub>19</sub> = {0, 1, 2, ... 18}_
+    - where _a and b_ are elements of _F<sub>19</sub>_
+    - Addition being closed:
+      - _a +<sub>f</sub> b_ are elements of _F<sub>19</sub>_

@@ -1,6 +1,16 @@
 from blockchain import Blockchain
 from hashlib import sha256
 
+import json
+
+
+'''
+TODO:
+- make json persistent
+- if chain exists, then add to it
+- if no chain exists, then create genesis block
+'''
+
 
 block_data0 = {
     'uid': 'dsf34f234sd3dsafp',
@@ -24,14 +34,16 @@ block_data2 = {
 print('')
 print('Before adding data to the blockchain:')
 local_blockchain = Blockchain()
+
 local_blockchain.print_blocks()
 print('-------------------------------------------')
 print('')
 
-
+'''
 local_blockchain.add_block(block_data0)
 local_blockchain.add_block(block_data1)
 local_blockchain.add_block(block_data2)
+
 
 print('')
 print('After adding data to the blockchain:')
@@ -56,7 +68,7 @@ local_blockchain.chain[2].data = fake_block_data
 local_blockchain.print_blocks()
 print('')
 print('Is this blockchain valid?', local_blockchain.validate_chain())
-
+'''
 
 
 
@@ -122,3 +134,102 @@ previous hash: 703c639c85292bd0c1069f44aef3152c61816e8bbbbad06247d74a0633c314c4
 The hash of the current block is not equal to the value that the current block generates.
 Is this blockchain valid? False
 '''
+
+
+"""
+import sqlite3
+
+conn = sqlite3.connect('blockchain.db')
+c = conn.cursor()
+
+# Create table
+c.execute('''CREATE TABLE stocks
+             (date text, trans text, symbol text, qty real, price real)''')
+
+# Insert a row of data
+c.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+
+# Save (commit) the changes
+conn.commit()
+
+# We can also close the connection if we are done with it.
+# Just be sure any changes have been committed or they will be lost.
+conn.close()
+
+# Do this instead
+t = ('RHAT',)
+c.execute('SELECT * FROM stocks WHERE symbol=?', t)
+print(c.fetchone())
+
+# Larger example that inserts many records at a time
+purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
+            ]
+c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)
+
+"""
+
+
+
+"""
+try:
+    with open('blockchain.json') as infile:
+        blockchain_load = json.load(infile)
+        count = 0
+
+        if blockchain_load["chain"]['genesis'] == True:
+            count += 1
+            # when new data is entered into the blockchain it must be broadcast
+            # to other nodes on the network, so all blockchains stay in sync
+            # ask for next block data:
+            name = input("Enter Name: ")
+            name_id = input("Enter ID: ")
+            contact = input("Enter Contact: ")
+
+            block_data = {
+                'uid': name_id,
+                'name': name,
+                'contact': contact
+            }
+
+
+            block = {
+                'prev_hash': prev_hash,
+                'genesis': False,
+                'data': {
+                    'name': name,
+                    'name_id': name_id,
+                    'time': date_time
+                }
+            }
+
+
+            # sign the block which will be added to the bockchain
+            block_to_sig = hash_blocks([blockchain_load]).encode('utf-8')
+            block_sig = str(sign(block_to_sig))
+            #verify = verify(block_to_sig, block_sig)
+
+            blockchain_load[block_sig] = block
+
+            with open('blockchain.json', 'w') as outfile:
+                json.dump(blockchain_load, outfile)
+
+except:
+    blockchain = {}
+    # generate genesis block
+    block_genesis = {
+        'prev_hash': None,
+        'genesis': True,
+        'data': {
+            'name': 'genesis',
+            'name_id': 0,
+            'time': date_time
+        }
+    }
+
+    blockchain['chain'] = block_genesis
+    # add the genesis block to the blockchain json file
+    with open('blockchain.json', 'w') as outfile:
+        json.dump(blockchain, outfile)
+"""

@@ -104,7 +104,14 @@ except:
     with open('blockchain.json', 'w') as outfile:
         json.dump(blockchain, outfile)
 
-
+'''
+            blockchain = {}
+            blockchain['chain'] = self.genesis_block()
+            print(type(blockchain))
+            print(blockchain)
+            #with open('blockchain.json', 'w') as outfile:
+                #json.dump(blockchain, outfile)
+'''
 
 
 '''

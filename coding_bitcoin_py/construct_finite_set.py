@@ -36,25 +36,4 @@ class FieldElement:
     def __ne__(self, other):
         if other is None:
             return False
-        print("*** are = ? ***")
         return self.num != other.num and self.prime != other.prime
-
-
-# Test run:
-a = FieldElement(7, 13)
-print("a =", a)
-
-b = FieldElement(7, 13)
-print("b =", b)
-
-print("a = b?", a == b)
-print("a = a?", a == a)
-print("a != b?", a != b)
-print("a != a?", a != a)
-
-
-#ToDo:
-'''
-Write the corresponding method __ne__ which checks if two FieldElement
-objects are not equal to each other.
-'''

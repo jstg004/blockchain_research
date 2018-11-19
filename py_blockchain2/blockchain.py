@@ -1,6 +1,8 @@
 # Import the Block class from block.py:
 from block import Block
 
+import json
+
 
 class Blockchain:
 
@@ -25,13 +27,20 @@ class Blockchain:
 
     # Prints contents of blockchain:
     def print_blocks(self):
+        #blockchain_json = []
         # Iterates though the chain:
         for i in range(len(self.chain)):
             current_block = self.chain[i]
 
             print(f'Block {i} {current_block}')
 
-            current_block.print_contents()
+            print(current_block.print_contents())
+
+            '''
+            blockchain_json.append(current_block.print_contents())
+            with open('blockchain.json', 'w') as outfile:
+                json.dump(blockchain_json, outfile)
+            '''
 
 
     # Add block to blockchain:
@@ -62,14 +71,16 @@ class Blockchain:
             # Check if the hash of the current block is NOT = to the value that
             # the current block generates:
             if current.hash != current.generate_hash():
-                print('The hash of the current block is not equal to the value that the current block generates.')
+                print('The hash of the current block is not equal to the value')
+                print(' that the current block generates.')
                 # If NOT = then blockchain is invalid.
                 return False
 
-            # Check if the hash of the previous hash of the current block
-            # is NOT = to the value generated over the previous block:
+            # Check if the previous hash of the current block is NOT =
+            # to the value generated over the previous block:
             if current.prev_hash != prev.generate_hash():
-                print("The hash of the previous hash of the current block is not equal to the value generated over the previous block")
+                print("The previous hash of the current block is not")
+                print(' equal to the value generated over the previous block')
                 # If NOT = then blockchain is invalid.
                 return False
 

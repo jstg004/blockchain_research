@@ -1,4 +1,4 @@
-import datetime
+import datetime, json
 
 from hashlib import sha256
 
@@ -25,7 +25,18 @@ class Block:
 
     # Print block contents:
     def print_contents(self):
+        block_contents = {}
+        block_contents['timestamp'] = str(self.timestamp)
+        block_contents['data'] = self.data
+        block_contents['current hash'] = self.generate_hash()
+        block_contents['previous hash'] = self.prev_hash
+        #print(block_contents)
+
+        '''
         print("timestamp:", self.timestamp)
         print("data:", self.data)
         print("current hash:", self.generate_hash())
         print("previous hash:", self.prev_hash)
+        '''
+
+        return block_contents
