@@ -76,10 +76,7 @@ class FieldElement:
             return False
         return self.num == other.num and self.prime == other.prime
 
-    '''
-    Write the corresponding method __ne__ which checks if two FieldElement
-    objects are not equal to each other.
-    '''
+
     def __ne__(self, other):
         if other is None:
             return False
@@ -98,18 +95,16 @@ class FieldElement:
 
 ### Finite Field Addition and Subtraction
 
-- Need to make sure addition in a Finite Field is closed.
-- Example:
-  - Finite Field of 19
-    - _F<sub>19</sub> = {0, 1, 2, ... 18}_
-    - where _a and b_ are elements of _F<sub>19</sub>_
-    - +<sub>f</sub> denotes finite field addition
-    - Addition being closed:
-      - _a +<sub>f</sub> b_ are elements of _F<sub>19</sub>_
-    - Modulo arithmetic can be used to guarantee _a +<sub>f</sub> b_:
-      - _a +<sub>f</sub> b = (a + b) % 19_
-    - _7 +<sub>f</sub> 8 = (7 + 8) % 19 = 15_
-    - _11 +<sub>f</sub> 17 = (11 + 17) % 19 = 9_
+- Finite Field of 19:
+  - _F<sub>19</sub> = {0, 1, 2, ... 18}_
+  - where _a and b_ are elements of _F<sub>19</sub>_
+  - +<sub>f</sub> denotes finite field addition
+  - Addition being closed:
+    - _a +<sub>f</sub> b_ are elements of _F<sub>19</sub>_
+  - Modulo arithmetic can be used to guarantee _a +<sub>f</sub> b_:
+    - _a +<sub>f</sub> b = (a + b) % 19_
+  - _7 +<sub>f</sub> 8 = (7 + 8) % 19 = 15_
+  - _11 +<sub>f</sub> 17 = (11 + 17) % 19 = 9_
 - Take 2 numbers in the set, add and wrap around the end to get the sum.
 - Field addition can be defined as follows:
   - _a +<sub>f</sub> b = (a + b) % p where a and b are elements of F<sub>p</sub>_
@@ -148,9 +143,56 @@ class FieldElement:
         if self.prime != other.prime:
             raise TypeError('Cannot subtract 2 numbers in different Fields')
 
-        # Addition in a Finite Field:
+        # Subtraction in a Finite Field:
         num = (self.num - other.num) % self.prime
 
         # Return an instance of the class:
         return self.__class__(num, self.prime)
 ```
+
+### Finite Field Multiplication and Exponentiation
+
+- By multiplying the same number many times - can define exponentiation/power.
+- Define multiplication on a Finite Field:
+  - _F<sub>19</sub>_:
+    - _5 *<sub>f</sub> 3 = 5 +<sub>f</sub> 5 +<sub>f</sub> 5 = 15 % 19 = 15_
+    - _8 *<sub>f</sub> 17 = 8 +<sub>f</sub> 8 +<sub>f</sub> 8 +<sub>f</sub>..._
+      _(17 total 8's)... +<sub>f</sub> 8 = (8 * 17) % 19 = 136 % 19 = 3_
+- Exponentiation is multiplying a number many times:
+  - _7<sup>3</sup> = 7 * 7 * 7 = 343_
+  - Exponentiation in finite field using modulo arithmetic:
+    - In _F<sub>19</sub>_:
+      - _7<sup>3</sup> = 343 % 19 = 1_
+      - _9<sup>12</sup> = 7_
+
+#### Coding Multiplication in Python
+
+- In FieldElement class:
+
+```Python
+    def __mul__(self, other):
+        # Elements must be from the same Finite Field:
+        if self.prime != other.prime:
+            raise TypeError('Cannot multiply 2 numbers in different Fields')
+
+        # Multiplication in a Finite Field:
+        num = (self.num * other.num) % self.prime
+
+        # Return an instance of the class:
+        return self.__class__(num, self.prime)
+```
+
+#### Coding Exponentiation in Python
+
+- Exponent is not a field element.
+- The exponent is an integer, not another instance of ```FieldElement```
+  - Receive the variable ```exponent``` as an integer.
+
+```Python
+    def __pow__(self, exponent):
+        num = (self.num ** exponent) % self.prime
+
+        return self.__class__(num, self.prime)
+```
+
+### Finite Field Division
