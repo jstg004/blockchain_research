@@ -1,45 +1,45 @@
 # Finite Fields
 
-- essential to learning Elliptic Curve Cryptography
+- 1st step to understand Elliptic Curve Cryptography.
 
 ## Finite Field Definition
 
-- a finite field is a finite set of numbers and 2 operations
-  - the 2 operations are addition and multiplication
-  - a finite field satisfies:
-    - the property closed
-      - if _a_ and _b_ are in a set
-        - then _a + b_ and _a * b_ are also in the set
-      - closed under addition and multiplication
-      - need to define addition and multiplication to make sure the results
+- A finite field is a finite set of numbers and 2 operations
+  - The 2 operations are addition and multiplication
+  - A finite field satisfies:
+    - The property closed
+      - If _a_ and _b_ are in a set
+        - Then _a + b_ and _a * b_ are also in the set
+      - Closed under addition and multiplication
+      - Need to define addition and multiplication to make sure the results
         stay in the set
       - Example:
-        - set containing _{0, 1, 2}_ is not closed under addition
+        - Set containing _{0, 1, 2}_ is not closed under addition
           - _1 + 2 = 3_ and _3_ is not in the set
-        - set containing _{-1, 0, 1}_ is closed under normal multiplication
-          - any 2 numbers can be multiplied for a result in the set
-    - the additive identity _0_ exists
+        - Set containing _{-1, 0, 1}_ is closed under normal multiplication
+          - Any 2 numbers can be multiplied for a result in the set
+    - The additive identity _0_ exists
       - _a + 0 = a_
-    - the multiplicative identity _1_ exists
+    - The multiplicative identity _1_ exists
       - _a * 1 = a_
-    - if _a_ is in the set
-      - then _-a_ is also in the set
-      - the additive inverse:
+    - If _a_ is in the set
+      - Then _-a_ is also in the set
+      - The additive inverse:
         - _-a_ is defined as rhe value that makes _a +(-a) = 0_
-    - if _a_ is in the set and is not _0_
-      - then _a<sup>-1</sup>_ is also in the set
-      - the miltiplicative invers:
+    - If _a_ is in the set and is not _0_
+      - Then _a<sup>-1</sup>_ is also in the set
+      - The miltiplicative invers:
         - _a<sup>-1</sup>_ is defined as the value that makes
           _a * a<sup>-1</sup> = 1_
-- an order of the set
+- An order of the set:
   - _p_ is designated to the size of the set
 
 ## Defining Finite Sets
 
 - Example:
-  - if the order/size of a set is _p_
-    - then the elements of the set are _0, 1, 2, ... p-1_
-      - the numbers are the elements of the set
+  - If the order/size of a set is _p_
+    - Then the elements of the set are _0, 1, 2, ... p-1_
+      - The numbers are the elements of the set.
 
 ### Constructing a Finite Set in Python
 
@@ -254,7 +254,7 @@ class FieldElement:
 - ```__pow__``` method
   - Example: _a<sup>-3</sup>_ needs to be a finite field.
 
-    ```
+    ```Python
     a = FieldElement(7, 13)
     b = FieldElement(8, 13)
     print(a ** -3 == b)
@@ -281,7 +281,7 @@ class FieldElement:
 
 - The above code can be simplified to:
 
-    '''Python
+    ```Python
     def __pow__(self, exponent):
         # Turns 'exponent' into a number within 0 to (p - 1) range.
         # Use modulo to force a negative number to a positive:
@@ -289,4 +289,4 @@ class FieldElement:
         num = pow(self.num, n, self.prime)
 
         return self.__class__(num, self.prime)
-    '''
+    ```
