@@ -196,3 +196,83 @@ class FieldElement:
 ```
 
 ### Finite Field Division
+
+- In _F<sub>19</sub>_:
+  - _3 * 7 = 21 % 19 = 2_ implies that _2 / 7 = 3_
+- Finite fields are closed under division.
+  - Dividing any 2 numbers where the denominator is not 0 will result in
+    another field element
+- Fermat's Little Theorem:
+  - _n<sup>(p - 1)</sup>_ is always _1_ for every _p_ and every _n > 0_
+  - This only works when _p_ is prime
+  - Theorem breakdown:
+    - _n<sup>(p - 1)</sup> % p = 1_ where p is prime
+      - This is always true when operating in prime fields
+    - _{1, 2, 3, …​ p - 2, p - 1} =_
+      _{n % p, 2n % p, 3n % p, …​ (p - 2)n % p, (p - 1)n % p}_
+    - Multiplying every element results in the following:
+      - _1 * 2 * 3 * …​ * (p - 2) * (p - 1) % p =_
+        _n * 2n * 3n * …​ * (p - 2)n* (p - 1)n % p_
+      - The left side is the same as _(p - 1)! % p_
+        - _!_ is the factorial
+        - Example: _5! = 5 * 4 * 3 * 2 * 1_
+      - All the _n_ on right side can be gathered up:
+        - _(p - 1)! * n<sup>(p - 1)</sup> % p_
+      - Results in: _(p - 1)! % p = (p - 1)! * n<sup>(p - 1)</sup> % p_
+        - The _(p - 1)! on both sides can be canceled out, resulting in:
+          - _1 = n<sup>(p - 1)</sup> % p_
+  - Division is multiplication with the inverse.
+    - _a / b = a * (1 / b) = a * b<sup>-1</sup>_
+    - If _b<sup>-1</sup>_ can be figured out, then the division problem can be
+      reduced to a multiplication problem.
+      - _b<sup>(p - 1)</sup> = 1_
+      - Therefore _b_ is prime:
+        - _b<sup>-1</sup> = b<sup>-1</sup> * 1 =_
+          _b<sup>-1</sup> * b<sup>(p - 1)</sup> = b<sup>(p - 2)</sup>
+        - Which equates to: _b<sup>-1</sup> = b<sup>(p - 2)</sup>_
+      - The inverse can be calculated using the exponent function.
+      - In _F<sub>19</sub>_:
+        - _7 / 5 = 7 * 5<sup>(19 - 2)</sup> = 7 * 5<sup>17</sup> =_
+          _5340576171875 % 19 = 9_
+        - This is an expensive calculation.
+          - Exponentiating grows very fast as primes grow bigger.
+          - To make the calculations less expensive, utilize the ```pow```
+            function in Python.
+            - The ```pow``` function exponentiates.
+            - ```pow(7, 17)``` equates to _7 ** 17_
+              - The operator for raising a number to the power of another
+                number is _**_.
+            - The python ```pow``` function has an optional 3rd argument which
+              makes the calculation more efficient.
+            - ```pow``` with modulo by the 3rd argument:
+              - ```pow(7, 7, 19)``` equates to _7 ** 17 % 19_
+                - the ```pow``` will be faster because the modulo function is
+                  done after each round of multiplication.
+
+### Redefining Exponentiation
+
+- ```__pow__``` method
+  - Example: _a<sup>-3</sup>_ needs to be a finite field.
+
+    ```
+    a = FieldElement(7, 13)
+    b = FieldElement(8, 13)
+    print(a ** -3 == b)
+        #prints(True)
+    ```
+
+- Because of Fermat's Little Theorem _a<sup>p - 1</sup> = 1_
+  - This can be multiplied by _a<sup>p - 1</sup>_ as many times as needed.
+  - To do negative exponents:
+
+    ```
+    def __pow__(self, exponent):
+        n = exponent
+
+        while n < 0:
+            n += self.prime - 1
+
+        num = pow(self.num, n, self.prime)
+
+        return self.__class__(num, self.prime)
+    ```
