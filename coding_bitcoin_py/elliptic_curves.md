@@ -96,16 +96,31 @@ class Point:
 - Python does not have infinity numbers.
   - Use ```None``` value
 
+- The ```__init__``` method is modified to not check if the curve equation is
+  satisfied when the point is at infinity:
+
 ```Python
+if self.y ** 2 != self.x ** 3 + self.a * self.x + self.b:
+    raise ValueError(f'Point ({x}, {y}) is not on the curve')
+```
+
+```Python
+# Overload '+' operator:
 def __add__(self, other):
     if self.a != other.a or self.b != other.b:
         raise TypeError
 
+    '''
+    x and y coordinates being None signifies the point at infinity.
+    '''
+
+    # If 'self.x' is None, 'self' is the point at infinity (additive identity)
     if self.x is None:
         return other
 
+    # If 'other.x' is None, 'other' is the point at infinity (additive identity)
     if other.x is None:
         return self
-
-    
 ```
+
+## Point addition when _x<sub>1</sub> != x<sub>2</sub>_
