@@ -78,9 +78,7 @@ class FieldElement:
 
 
     def __ne__(self, other):
-        if other is None:
-            return False
-        return self.num != other.num and self.prime != other.prime
+        return not (self == other)
 ```
 
 ### Modulo Arithmetic

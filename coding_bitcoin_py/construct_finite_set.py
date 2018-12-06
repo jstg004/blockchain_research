@@ -34,6 +34,11 @@ class FieldElement:
     # check if objects in the class 'FieldElement' are not =
     # only True when 'num' and 'prime' are not =
     def __ne__(self, other):
-        if other is None:
-            return False
-        return self.num != other.num and self.prime != other.prime
+        return not (self == other)
+
+    '''
+    ?
+    def __ne__(self, other):
+        # this should be the inverse of the == operator
+    return not (self == other)
+    '''

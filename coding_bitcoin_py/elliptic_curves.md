@@ -32,20 +32,21 @@ class Point:
         self.x = x
         self.y = y
 
+        if self.x is None and self.y is None:
+            return
         # Check if the point is on the curve:
-        if self.y ** 2 != self.x ** 3 + self.a + self.x + self.b:
+        if self.y ** 2 != self.x ** 3 + a * x + b:
             # Throws and error is the point is not on the curve:
             raise ValueError(f'Point ({x}, {y}) is not on the curve')
 
     def __eq__(self, other):
         # Points are equal if and only if they are on the same curve
         # and have the same coordinates:
-        return self.a == other.a and self.b == other.b \
-            and self.x == other.x and self.y == other.y
+        return self.x == other.x and self.y == other.y \
+            and self.a == other.a and self.b == other.b
 
     def __ne__(self, other):
-        return self.a != other.a and self.b != other.b \
-            and self.x != other.x and self.y != other.y
+        return not (self == other)
 ```
 
 ## Point Addition
@@ -65,3 +66,46 @@ class Point:
     - Then reflecting the resulting point over the x-axis.
 
 ## Math of Point Addition
+
+### Identity
+
+- There exists some point (_I_) which when added to a point (_A_)
+  results in _A_.
+  - This point is the point at infinity.
+    - There is 1 extra point in the elliptic curve which makes the vertical
+      line intersect the curve a 3rd time.
+  - _I + A = A_
+  - This is related to invertibility.
+    - For some point _A_, there is some other point _-A_ which results in the
+      identity point.
+      - _A + (-A) = I_
+  - These points are opposite of each other on the elliptic curve.
+
+### Commutativity
+
+- _A + B = B + A_
+- The line going through _A_ and _B_ will intersect the curve a 3rd time in
+  the same place no matter what order.
+
+### Associativity
+
+- _(A + B) + C = A + (B + C)_
+
+## Coding Point Addition
+
+- Python does not have infinity numbers.
+  - Use ```None``` value
+
+```Python
+def __add__(self, other):
+    if self.a != other.a or self.b != other.b:
+        raise TypeError
+
+    if self.x is None:
+        return other
+
+    if other.x is None:
+        return self
+
+    
+```
