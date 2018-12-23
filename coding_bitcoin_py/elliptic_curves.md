@@ -140,9 +140,9 @@ def __add__(self, other):
 
 ### Deriving the point addition formula
 
-- _P<sub>1</sub> = (x<sub>1></sub>, y<sub>1</sub>)_,
-  _P<sub>2</sub> = (x<sub>2></sub>, y<sub>2</sub>)_,
-  _P<sub>3</sub> = (x<sub>3></sub>, y<sub>3</sub>)_
+- _P<sub>1</sub> = (x<sub>1</sub>, y<sub>1</sub>)_,
+  _P<sub>2</sub> = (x<sub>2</sub>, y<sub>2</sub>)_,
+  _P<sub>3</sub> = (x<sub>3</sub>, y<sub>3</sub>)_
 - _P<sub>1</sub> + P<sub>2</sub> = P<sub>3</sub>_
 - To figure out that _P<sub>3</sub>_ is:
   - The line that goes through _P<sub>1</sub>_ and _P<sub>2</sub>_ has the
@@ -157,7 +157,7 @@ def __add__(self, other):
           _x<sup>3</sup> + ax + b_
       - All the terms result in the following polynomial:
         - _x<sup>3</sup> - s<sup>2</sup> * x<sup>2</sup> +_
-          _(a + 2s<sup>2</sup>) * x<sub>1</sub> - 2sy<sub>1</sub>) *_
+          _(a + 2s<sup>2</sup> * x<sub>1</sub> - 2sy<sub>1</sub>) *_
           _x + b - x<sub>1</sub><sup>2</sup> + 2sx<sup>1</sup> *_
           _y<sub>1</sub> - y<sub>1</sub><sup>2</sup> = 0_
       - _x<sup>1</sup>_, _x<sup>2</sup>_, and _x<sup>3</sup>_ are solutions to
