@@ -170,7 +170,7 @@ def __add__(self, other):
         - Then the following can be figured out:
           - _x<sup>3</sup> - s<sup>2</sup> * x<sup>2</sup> +_
             _(a + 2s<sup>2</sup> * x<sub>1</sub> - 2sy<sup>1</sup>) * x + b -_
-            _ x<sub>1</sub><sup>2</sup> + 2sx<sub>1</sub> * y<sub>1</sub> -_
+            _ x<sub>1</sub><sup>2</sup> + 2sx<sub>1<sub> * y<sub>1</sub> -_
             _ y<sub>1</sub><sup>2</sup> = 0_
     - Vieta's Formula states that the coeficients have to equal each other
       if the roots are equal.
