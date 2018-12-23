@@ -230,10 +230,7 @@ if self == other:
   - The slope calculation will end up with a 0 in the denominator.
 
 ```Python
-'''
-If the 2 points are equal and the y coordinate = 0,
-    return the point at infinity.
-'''
+# If the 2 points are equal and the y coordinate = 0
 if self == other and self.y == 0 * self.x:  (1)
     return self.__class__(None, None, self.a, self.b)
 ```

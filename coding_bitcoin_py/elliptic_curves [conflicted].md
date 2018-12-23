@@ -224,16 +224,4 @@ if self == other:
     return self.__class__(x, y, self.a, self.b)
 ```
 
-### Coding the case where the tangent line is vertical
-
-- This can only occur if _P<sub>1</sub> = P<sub>2</sub>_ and y-coordinate = 0.
-  - The slope calculation will end up with a 0 in the denominator.
-
-```Python
-'''
-If the 2 points are equal and the y coordinate = 0,
-    return the point at infinity.
-'''
-if self == other and self.y == 0 * self.x:  (1)
-    return self.__class__(None, None, self.a, self.b)
-```
+### Coding 
