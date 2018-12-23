@@ -175,7 +175,7 @@ def __add__(self, other):
     - Vieta's Formula states that the coeficients have to equal each other
       if the roots are equal.
       - The coefficient in front of _x<sup>2</sup>_:
-        - -s<sup>2</sup> = -(x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub>)_
+        - _-s<sup>2</sup> = -(x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub>)_
         - This can be used to derive the formula for _x<sub>3</sub>_:
           - _x<sub>3</sub> = s<sup>2</sup> - x<sub>1</sub> - x<sub>2</sub>_
           - _y = s(x - x<sub>1</sub>) + y<sub>1</sub>_
