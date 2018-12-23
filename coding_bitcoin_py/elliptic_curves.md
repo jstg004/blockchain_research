@@ -147,7 +147,7 @@ def __add__(self, other):
 - To figure out that _P<sub>3</sub>_ is:
   - The line that goes through _P<sub>1</sub>_ and _P<sub>2</sub>_ has the
     following formula:
-    - _s = (y<sub>2</sub> - y<sub>1</sub>) / (x<sub>2</sub> - x<sub>1)_
+    - _s = (y<sub>2</sub> - y<sub>1</sub>) / (x<sub>2</sub> - x<sub>1</sub>)_
     - _y = s(x - x<sub>1</sub>) + y<sub>1</sub>_
       - This is the equation of the line tha tintersects at both _P<sub>1</sub>_
         and _P<sub>2</sub>_
