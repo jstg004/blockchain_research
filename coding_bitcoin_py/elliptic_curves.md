@@ -124,3 +124,39 @@ def __add__(self, other):
 ```
 
 ## Point addition when _x<sub>1</sub> != x<sub>2</sub>_
+
+- 1st find the slope created by the 2 points
+  - _P<sub>1</sub> = (x<sub>1</sub>, y<sub>1</sub>)_,
+    _P<sub>2</sub> = (x<sub>2</sub>, y<sub>2</sub>)_,
+    _P<sub>3</sub> = (x<sub>3</sub>, y<sub>3</sub>)_
+  - _P<sub>1</sub> + P<sub>2</sub> = P<sub>3</sub>_
+  - _s = (y<sub>2</sub> - y<sub>1</sub>)(x<sub>2</sub> - x<sub>1</sub>)_
+- The slope can be used to calculate _x<sub>3</sub>_
+  - Once _x<sub>3</sub>_ is known, _y<sub>3</sub>_ can be calculated.
+  - _P<sub>3</sub>_ can be derived using the following formula:
+    - _x<sub>3</sub> = s<sup>2</sup> - x<sub>1</sub> - x<sub>2</sub>_
+    - _y<sub>3</sub> = s(x<sub>1</sub>) - x<sub>3</sub>) - y<sub>1</sub>_
+    - _y<sub>3</sub>_ is the reflection over the x-axis
+
+### Deriving the point addition formula
+
+- _P<sub>1</sub> = (x<sub>1></sub>, y<sub>1</sub>)_,
+  _P<sub>2</sub> = (x<sub>2></sub>, y<sub>2</sub>)_,
+  _P<sub>3</sub> = (x<sub>3></sub>, y<sub>3</sub>)_
+- _P<sub>1</sub> + P<sub>2</sub> = P<sub>3</sub>_
+- To figure out that _P<sub>3</sub>_ is:
+  - The line that goes through _P<sub>1</sub>_ and _P<sub>2</sub>_ has the
+    following formula:
+    - _s = (y<sub>2</sub> - y<sub>1) / (x<sub>2</sub> - x<sub>1)_
+    - _y = s(x - x<sub>1</sub>) + y<sub>1</sub>_
+      - This is the equation of the line tha tintersects at both _P<sub>1</sub>_
+        and _P<sub>2</sub>_
+      - Plugging in this formula to the Elliptic Curve equation results in:
+        - _y<sup>2</sup> = x<sup>3</sup> + ax + b_
+        - _y<sup>2</sup> = (s(x - x<sub>1</sub>) + y<sub>1</sub>)<sup>2</sup> =_
+          _x<sup>3</sup> + ax + b_
+        - All the terms result in the following polynomial:
+          - _x<sup>3</sup> - s<sup>2</sup> * x<sup>2</sup> +_
+            _(a + 2s<sup>2</sup>) * x<sub>1</sub> - 2sy<sub>1</sub>) *_
+            _x + b - x<sub>1</sub><sup>2</sup> + 2sx<sup>1</sup> *_
+            _y<sub>1</sub> - y<sub>1</sub><sup>2</sup> = 0_
